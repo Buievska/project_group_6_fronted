@@ -1,36 +1,43 @@
 "use client";
 
-import { checkSession } from "@/lib/api/clientApi";
+import { useLayoutEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/authStore";
-import { useEffect } from "react";
+import { $api } from "@/lib/api/api";
 
-type Props = {
+interface AuthProviderProps {
   children: React.ReactNode;
-};
+}
 
-const AuthProvider = ({ children }: Props) => {
-  const setUser = useAuthStore((state) => state.setUser);
-  const clearIsAuthenticated = useAuthStore(
-    (state) => state.clearIsAuthenticated
-  );
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const { token, logout } = useAuthStore();
+  const router = useRouter();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      // Робимо лише ОДИН запит, який повертає користувача або null
-      const user = await checkSession();
-
-      if (user) {
-        // Якщо користувач є, встановлюємо його в стейт
-        setUser(user);
-      } else {
-        // Якщо користувача немає, очищуємо дані
-        clearIsAuthenticated();
+  useLayoutEffect(() => {
+    const authInterceptor = $api.interceptors.request.use((config) => {
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
       }
+      return config;
+    });
+
+    //  (401)
+    const errorInterceptor = $api.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          logout();
+          router.push("/auth/login");
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      $api.interceptors.request.eject(authInterceptor);
+      $api.interceptors.response.eject(errorInterceptor);
     };
-    fetchUser();
-  }, [setUser, clearIsAuthenticated]);
+  }, [token, logout, router]);
 
-  return children;
+  return <>{children}</>;
 };
-
-export default AuthProvider;
