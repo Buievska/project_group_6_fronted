@@ -1,27 +1,15 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Кольори з макету (ToolNext) */
+  --primary-color: #9333ea;
+  --primary-hover: #7e22ce;
+  --text-main: #1f2937;
+  --text-light: #6b7280;
+  --bg-main: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --footer-bg: #111827;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --header-height: 72px;
+  --container-width: 1200px;
 }
 
 * {
@@ -30,13 +18,40 @@ body {
   margin: 0;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+body {
+  color: var(--text-main);
+  background: var(--bg-main);
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  font-size: 16px;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
 }
