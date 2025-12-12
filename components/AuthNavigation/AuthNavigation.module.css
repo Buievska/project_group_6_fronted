@@ -1,0 +1,48 @@
+.userEmail {
+  color: #2a5d9f;
+  margin-right: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.logoutButton {
+  background: transparent;
+  border: 1px solid white;
+  color: #2a5d9f;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.logoutButton:hover {
+  background: #ffffffa8;
+  color: #2a5d9f;
+}
+
+.navigationItem {
+  display: flex;
+  align-items: center;
+}
+
+.navigationLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #2a5d9f;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.navigationLink:hover {
+  background: #ffffffa8;
+  color: #2a5d9f;
+}
