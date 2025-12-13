@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import FeedbackCard from './FeedbackCard';
@@ -18,58 +18,91 @@ interface Feedback {
   rate: number;
 }
 
-const mockFeedbacks: Feedback[] = [
-  {
-    _id: '1',
-    name: 'Олександр',
-    description: 'Дуже зручний інструмент, оренда пройшла без проблем. Стан був чудовий, працював як новий.',
-    rate: 4.5,
-  },
-  {
-    _id: '2',
-    name: 'Марина',
-    description: 'Бронювання зайняло кілька хвилин, усе швидко та просто. Інструмент допоміг закінчити ремонт вчасно.',
-    rate: 5,
-  },
-  {
-    _id: '3',
-    name: 'Ігор',
-    description: 'Чудовий сервіс, інструмент отримав у гарному стані. Обов\'язково скористаюся ще раз.',
-    rate: 5,
-  },
-  {
-    _id: '4',
-    name: 'Віталій',
-    description: 'Брав на один день для ремонту ванної. Дешевше ніж купувати. Свердлить чудово.',
-    rate: 4.5,
-  },
-  {
-    _id: '5',
-    name: 'Андрій С.',
-    description: 'Нормальна коронка, ресурс ще є. Трохи гріється, треба давати охолонути.',
-    rate: 4,
-  },
-  {
-    _id: '6',
-    name: 'Оксана',
-    description: 'Відмінна послуга! Швидка доставка, інструмент у відмінному стані. Рекомендую!',
-    rate: 5,
-  },
-  {
-    _id: '7',
-    name: 'Дмитро',
-    description: 'Зручний сервіс, доступні ціни. Взяв перфоратор на вихідні - все чудово працювало.',
-    rate: 4.5,
-  },
-  {
-    _id: '8',
-    name: 'Тетяна',
-    description: 'Вперше користувалася послугою оренди. Все пройшло гладко, персонал дуже привітний.',
-    rate: 5,
-  },
-];
+interface FeedbacksResponse {
+  status: string;
+  code: number;
+  page: number;
+  perPage: number;
+  totalFeedbacks: number;
+  totalPages: number;
+  data: {
+    feedbacks: Feedback[];
+  };
+}
 
 const FeedbacksBlock: React.FC = () => {
+  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchFeedbacks = async () => {
+      try {
+        setLoading(true);
+        // Запитуємо перші 10 відгуків (або можна додати сортування на бекенді)
+        const response = await fetch('https://project-group-6-backend.onrender.com/api/feedbacks?page=1&perPage=10');
+        
+        if (!response.ok) {
+          throw new Error('Не вдалося завантажити відгуки');
+        }
+        
+        const result: FeedbacksResponse = await response.json();
+        
+        // Беремо масив відгуків з правильної структури
+        setFeedbacks(result.data.feedbacks);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Невідома помилка');
+        console.error('Помилка завантаження відгуків:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeedbacks();
+  }, []);
+
+  // Loading стан
+  if (loading) {
+    return (
+      <section className={styles.feedbacksSection}>
+        <div className={styles.container}>
+          <h2 className={styles.title}>Останні відгуки</h2>
+          <div className={styles.loadingState}>
+            <p>Завантаження відгуків...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Error стан
+  if (error) {
+    return (
+      <section className={styles.feedbacksSection}>
+        <div className={styles.container}>
+          <h2 className={styles.title}>Останні відгуки</h2>
+          <div className={styles.errorState}>
+            <p>Помилка: {error}</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Якщо немає відгуків
+  if (feedbacks.length === 0) {
+    return (
+      <section className={styles.feedbacksSection}>
+        <div className={styles.container}>
+          <h2 className={styles.title}>Останні відгуки</h2>
+          <div className={styles.emptyState}>
+            <p>Поки що немає відгуків</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className={styles.feedbacksSection}>
       <div className={styles.container}>
@@ -107,7 +140,7 @@ const FeedbacksBlock: React.FC = () => {
             }}
             className={styles.swiper}
           >
-            {mockFeedbacks.map((feedback) => (
+            {feedbacks.map((feedback) => (
               <SwiperSlide key={feedback._id}>
                 <FeedbackCard feedback={feedback} />
               </SwiperSlide>

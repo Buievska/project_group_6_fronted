@@ -334,3 +334,46 @@
     height: 20px;
   }
 }
+
+/* Loading, Error, Empty States */
+.loadingState,
+.errorState,
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 18px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingState p {
+  color: #666;
+}
+
+.errorState p {
+  color: #d32f2f;
+}
+
+.emptyState p {
+  color: #666;
+}
+
+/* Анімація завантаження (опціонально) */
+.loadingState::after {
+  content: '...';
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% {
+    content: '.';
+  }
+  40% {
+    content: '..';
+  }
+  60%, 100% {
+    content: '...';
+  }
+}
