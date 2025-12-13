@@ -1,3 +1,4 @@
+
 import css from "./BenefitsBlock.module.css";
 
 const features = [
@@ -52,3 +53,4 @@ export default function BenefitsBlock() {
     </section>
   );
 }
+
