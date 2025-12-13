@@ -1,4 +1,4 @@
-import FeaturedToolsBlockItem from "./FeaturedToolsBlock/FeaturedToolsBlockItem";
+import FeaturedToolsBlockItem from "./FeaturedToolsBlockItem/FeaturedToolsBlockItem";
 import { getTools } from "@/lib/api/clientApi";
 import css from "./FeaturedToolsBlock.module.css";
 

@@ -13,7 +13,7 @@ interface Tools {
 export default function FeaturedToolsBlockItem({ tools }: Tools) {
   return (
     <>
-      {tools.map((tool: Tool) => (
+      {tools.slice(0, 8).map((tool: Tool) => (
         <li key={tool._id} className={css.featuredToolsBlockItem}>
           <Image
             src={tool.images}
