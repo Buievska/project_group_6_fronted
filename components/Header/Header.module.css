@@ -9,13 +9,13 @@
 }
 
 .container {
-  max-width: 1440px; /* максимальна ширина */
-  margin: 0 auto; /* центр по горизонталі */
-  padding: 16px 64px; /* 16px зверху/знизу, 64px зліва/справа */
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px 64px;
   display: flex;
   align-items: center;
   width: 100%;
-  box-sizing: border-box; /* щоб padding не виходив за межі контейнера */
+  box-sizing: border-box;
 }
 
 /* ==================== LOGO ==================== */
@@ -42,11 +42,34 @@
   gap: 32px;
 }
 
-.navLinks a {
-  text-decoration: none;
-  color: #000;
-  font-size: 14px;
-  font-weight: 500;
+.navLinks a,
+.navMobile a {
+  position: relative;
+  display: inline-block;
+}
+
+/* Лінія */
+.navLinks a::after,
+.navMobile a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px; /* відстань від тексту */
+  width: 0;
+  height: 2px;
+  background-color: #8808cc;
+  transition:
+    width 0.3s ease,
+    left 0.3s ease;
+}
+
+/* Hover / Focus */
+.navLinks a:hover::after,
+.navLinks a:focus::after,
+.navMobile a:hover::after,
+.navMobile a:focus::after {
+  width: 100%;
+  left: 0;
 }
 
 /* ==================== DESKTOP REGISTER ==================== */
@@ -87,8 +110,6 @@
 
 /* ==================== BURGER ==================== */
 .burger {
-  display: none;
-  margin-left: auto;
   background: none;
   border: none;
   padding: 8px;
@@ -134,7 +155,7 @@
 .menuHeader {
   display: flex;
   align-items: center;
-  padding: 16px 32px;
+  padding: 32px 16px;
   border-bottom: 1px solid #eee;
 }
 
@@ -183,7 +204,14 @@
 /* Мобільні екрани: 320px–677px (резинова кнопка) */
 @media (max-width: 677px) {
   .container {
-    padding: 16px; /* можна додатково змінювати по мобільній */
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 16px 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 🔥 ГОЛОВНЕ */
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .registerMobile {
@@ -204,7 +232,7 @@
 /* Планшет: 678px–1440px (фіксована кнопка) */
 @media (min-width: 678px) and (max-width: 1440px) {
   .container {
-    padding: 16px 64px; /* фіксовані падінги */
+    padding: 16px 32px; /* фіксовані падінги */
   }
 
   .registerMobile {
