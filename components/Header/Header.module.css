@@ -1,0 +1,242 @@
+/* ==================== HEADER ==================== */
+.header {
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+.container {
+  max-width: 1440px; /* максимальна ширина */
+  margin: 0 auto; /* центр по горизонталі */
+  padding: 16px 64px; /* 16px зверху/знизу, 64px зліва/справа */
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box; /* щоб padding не виходив за межі контейнера */
+}
+
+/* ==================== LOGO ==================== */
+.logoLink {
+  display: block;
+}
+
+.logo {
+  width: 124px;
+  height: 20px;
+}
+
+/* ==================== DESKTOP ==================== */
+.headerRight {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.navLinks a {
+  text-decoration: none;
+  color: #000;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ==================== DESKTOP REGISTER ==================== */
+
+.register,
+.registerMobile {
+  height: 40px;
+  padding: 10px 24px;
+  background: #8808cc;
+  color: #ffffff;
+  border: 1px solid #8808cc;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.register:hover,
+.register:focus,
+.registerMobile:hover,
+.registerMobile:focus {
+  background: transparent;
+  color: #000000;
+  border: 1px solid #8808cc;
+}
+
+.register:active,
+.registerMobile:active {
+  background: #e7cdf4;
+  color: #000000;
+  border: 1px solid #8808cc;
+}
+
+/* ==================== BURGER ==================== */
+.burger {
+  display: none;
+  margin-left: auto;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  position: relative;
+  z-index: 200;
+}
+
+/* ==================== OVERLAY ==================== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 100;
+}
+
+.overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ==================== MENU ==================== */
+.menu {
+  width: 100vw;
+  height: 100vh;
+  background: #f2f2f2;
+  display: flex;
+  flex-direction: column;
+
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+.overlay.open .menu {
+  transform: translateX(0);
+}
+
+/* ==================== MENU HEADER ==================== */
+/* ВАЖЛИВО: тепер тут ТІЛЬКИ ЛОГО */
+.menuHeader {
+  display: flex;
+  align-items: center;
+  padding: 16px 32px;
+  border-bottom: 1px solid #eee;
+}
+
+.menu .logoLink img {
+  width: 124px;
+  height: 20px;
+  display: block;
+}
+
+/* ==================== NAVIGATION MOBILE ==================== */
+.navMobile {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.navMobile a {
+  font-weight: 400;
+  line-height: 150%;
+  text-decoration: none;
+  font-size: 14px;
+  color: #000;
+  transition: color 0.3s ease;
+}
+
+.navMobile a:hover,
+.navMobile a:focus {
+  color: #7a3cff;
+}
+
+.authMobile {
+  display: flex;
+  justify-content: center;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+/* Базові стилі — десктоп */
+.headerRight,
+.navLinks {
+  display: flex;
+}
+
+/* Мобільні екрани: 320px–677px (резинова кнопка) */
+@media (max-width: 677px) {
+  .container {
+    padding: 16px; /* можна додатково змінювати по мобільній */
+  }
+
+  .registerMobile {
+    width: 100%;
+    max-width: 335px; /* резинова ширина */
+  }
+
+  .headerRight,
+  .navLinks {
+    display: none; /* приховати десктопну навігацію */
+  }
+
+  .burger {
+    display: block;
+  }
+}
+
+/* Планшет: 678px–1440px (фіксована кнопка) */
+@media (min-width: 678px) and (max-width: 1440px) {
+  .container {
+    padding: 16px 64px; /* фіксовані падінги */
+  }
+
+  .registerMobile {
+    width: 158px; /* фіксована ширина кнопки */
+  }
+
+  .headerRight,
+  .navLinks {
+    display: none; /* на планшеті теж ховаємо десктопну навігацію */
+  }
+
+  .burger {
+    display: block;
+  }
+}
+
+/* Десктоп: >1440px */
+@media (min-width: 1441px) {
+  .container {
+    padding: 16px 64px; /* десктопні падінги */
+  }
+
+  .registerMobile {
+    width: 158px; /* можна збільшити, якщо потрібно */
+  }
+
+  .headerRight,
+  .navLinks {
+    display: flex; /* показуємо десктопну навігацію */
+  }
+
+  .burger {
+    display: none;
+  }
+}
