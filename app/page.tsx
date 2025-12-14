@@ -1,10 +1,10 @@
 import styles from "./page.module.css";
 
-import { HeroBlock } from "@/components/HeroBlock/HeroBlock";
 import FeaturedToolsBlock from "../components/FeaturedToolsBlock/FeaturedToolsBlock";
 import BenefitsBlock from "@/components/BenefitsBlock/BenefitsBlock";
 import { FeedbacksBlock } from "@/components/FeedbacksBlock/FeedbacksBlock";
 import { RegistrationBlock } from "@/components/RegistrationBlock/RegistrationBlock";
+import HeroBlock from "@/components/HeroBlock/HeroBlock";
 
 export default function HomePage() {
   return (
