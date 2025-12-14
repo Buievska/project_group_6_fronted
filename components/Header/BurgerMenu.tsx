@@ -24,12 +24,44 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
       onClick={onClose}
     >
       <div className={styles.menu} onClick={(e) => e.stopPropagation()}>
-        {/* LOGO */}
+        {/* HEADER */}
         <div className={styles.menuHeader}>
           <Link href="/" className={styles.logoLink} onClick={onClose}>
             <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
           </Link>
         </div>
+
+        {/* USER BLOCK */}
+        {user && (
+          <div className={styles.mobileUser}>
+            {user.avatar ? (
+              <Image
+                src={user.avatar}
+                alt={user.name}
+                width={32}
+                height={32}
+                className={styles.mobileAvatar}
+              />
+            ) : (
+              <div className={styles.mobileInitial}>
+                {user.name.charAt(0).toUpperCase()}
+              </div>
+            )}
+
+            <span className={styles.mobileUserName}>{user.name}</span>
+
+            <button
+              className={styles.mobileLogout}
+              onClick={() => {
+                onLogout?.();
+                onClose();
+              }}
+              aria-label="Вийти"
+            >
+              <Image src="/button-exit.svg" alt="" width={20} height={20} />
+            </button>
+          </div>
+        )}
 
         {/* NAVIGATION */}
         <nav className={styles.navMobile}>
@@ -54,15 +86,6 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
               <Link href="/create" onClick={onClose}>
                 Опублікувати оголошення
               </Link>
-              <button
-                className={styles.registerMobile}
-                onClick={() => {
-                  onLogout?.();
-                  onClose();
-                }}
-              >
-                Вийти
-              </button>
             </>
           )}
         </nav>

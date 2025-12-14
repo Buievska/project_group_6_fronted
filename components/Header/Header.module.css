@@ -1,24 +1,23 @@
-/* ==================== HEADER ==================== */
+/* HEADER (BASE / MOBILE FIRST) */
 .header {
   width: 100%;
   position: sticky;
   top: 0;
   z-index: 50;
   background: #fff;
-  border-bottom: 1px solid #eee;
 }
 
 .container {
-  max-width: 1440px;
+  width: 100%;
   margin: 0 auto;
-  padding: 16px 64px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
-  width: 100%;
+  justify-content: space-between;
   box-sizing: border-box;
 }
 
-/* ==================== LOGO ==================== */
+/*  LOGO  */
 .logoLink {
   display: block;
 }
@@ -28,42 +27,41 @@
   height: 20px;
 }
 
-/* ==================== DESKTOP ==================== */
+/*  DESKTOP NAV  */
 .headerRight {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 16px;
+  display: none;
 }
 
 .navLinks {
-  display: flex;
-  align-items: center;
-  gap: 32px;
+  display: none;
 }
 
+/*  NAV LINKS  */
 .navLinks a,
 .navMobile a {
   position: relative;
   display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 150%;
+  color: #000;
+  text-decoration: none;
 }
 
-/* Лінія */
 .navLinks a::after,
 .navMobile a::after {
   content: "";
   position: absolute;
   left: 50%;
-  bottom: -6px; /* відстань від тексту */
+  bottom: -6px;
   width: 0;
   height: 2px;
-  background-color: #8808cc;
+  background: #8808cc;
   transition:
     width 0.3s ease,
     left 0.3s ease;
 }
 
-/* Hover / Focus */
 .navLinks a:hover::after,
 .navLinks a:focus::after,
 .navMobile a:hover::after,
@@ -72,14 +70,13 @@
   left: 0;
 }
 
-/* ==================== DESKTOP REGISTER ==================== */
-
+/*  BUTTONS  */
 .register,
 .registerMobile {
   height: 40px;
   padding: 10px 24px;
   background: #8808cc;
-  color: #ffffff;
+  color: #fff;
   border: 1px solid #8808cc;
   border-radius: 6px;
   font-size: 14px;
@@ -97,18 +94,10 @@
 .registerMobile:hover,
 .registerMobile:focus {
   background: transparent;
-  color: #000000;
-  border: 1px solid #8808cc;
+  color: #000;
 }
 
-.register:active,
-.registerMobile:active {
-  background: #e7cdf4;
-  color: #000000;
-  border: 1px solid #8808cc;
-}
-
-/* ==================== BURGER ==================== */
+/*  BURGER  */
 .burger {
   background: none;
   border: none;
@@ -116,9 +105,18 @@
   cursor: pointer;
   position: relative;
   z-index: 200;
+  transition: transform 0.25s ease;
 }
 
-/* ==================== OVERLAY ==================== */
+.burger:hover {
+  transform: scale(1.1);
+}
+
+.burger:active {
+  transform: scale(0.95);
+}
+
+/* OVERLAY  */
 .overlay {
   position: fixed;
   inset: 0;
@@ -134,14 +132,13 @@
   pointer-events: auto;
 }
 
-/* ==================== MENU ==================== */
+/* MOBILE MENU  */
 .menu {
   width: 100vw;
   height: 100vh;
   background: #f2f2f2;
   display: flex;
   flex-direction: column;
-
   transform: translateX(100%);
   transition: transform 0.3s ease;
 }
@@ -150,22 +147,64 @@
   transform: translateX(0);
 }
 
-/* ==================== MENU HEADER ==================== */
-/* ВАЖЛИВО: тепер тут ТІЛЬКИ ЛОГО */
+/*  MENU HEADER  */
 .menuHeader {
-  display: flex;
-  align-items: center;
   padding: 32px 16px;
-  border-bottom: 1px solid #eee;
 }
 
 .menu .logoLink img {
   width: 124px;
   height: 20px;
-  display: block;
 }
 
-/* ==================== NAVIGATION MOBILE ==================== */
+/*  MOBILE USER BLOCK */
+.mobileUser {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 16px;
+}
+
+.mobileAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.mobileInitial {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #8808cc;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobileUserName {
+  font-size: 14px;
+  font-weight: 500;
+  flex-grow: 1;
+}
+
+.mobileLogout {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.mobileLogout:hover svg path {
+  stroke: #8808cc;
+}
+
+/* = MOBILE NAV  */
 .navMobile {
   display: flex;
   flex-direction: column;
@@ -174,97 +213,52 @@
   margin-bottom: 16px;
 }
 
-.navMobile a {
-  font-weight: 400;
-  line-height: 150%;
-  text-decoration: none;
-  font-size: 14px;
-  color: #000;
-  transition: color 0.3s ease;
-}
-
-.navMobile a:hover,
-.navMobile a:focus {
-  color: #7a3cff;
-}
-
+/*  MOBILE AUTH  */
 .authMobile {
   display: flex;
   justify-content: center;
 }
 
-/* ==================== RESPONSIVE ==================== */
+/* BREAKPOINTS  */
 
-/* Базові стилі — десктоп */
-.headerRight,
-.navLinks {
-  display: flex;
+/* -------- 375px: mobile -------- */
+@media (min-width: 375px) {
+  .registerMobile {
+    width: 335px;
+  }
 }
 
-/* Мобільні екрани: 320px–677px (резинова кнопка) */
-@media (max-width: 677px) {
+/* -------- 678px: tablet -------- */
+@media (min-width: 678px) {
   .container {
-    max-width: 1440px;
-    margin: 0 auto;
+    padding: 16px 32px;
+  }
+
+  .registerMobile {
+    width: 158px;
+  }
+}
+
+/* -------- 1440px: desktop -------- */
+@media (min-width: 1440px) {
+  .container {
     padding: 16px 64px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* 🔥 ГОЛОВНЕ */
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .registerMobile {
-    width: 100%;
-    max-width: 335px; /* резинова ширина */
-  }
-
-  .headerRight,
-  .navLinks {
-    display: none; /* приховати десктопну навігацію */
-  }
-
-  .burger {
-    display: block;
-  }
-}
-
-/* Планшет: 678px–1440px (фіксована кнопка) */
-@media (min-width: 678px) and (max-width: 1440px) {
-  .container {
-    padding: 16px 32px; /* фіксовані падінги */
-  }
-
-  .registerMobile {
-    width: 158px; /* фіксована ширина кнопки */
-  }
-
-  .headerRight,
-  .navLinks {
-    display: none; /* на планшеті теж ховаємо десктопну навігацію */
-  }
-
-  .burger {
-    display: block;
-  }
-}
-
-/* Десктоп: >1440px */
-@media (min-width: 1441px) {
-  .container {
-    padding: 16px 64px; /* десктопні падінги */
-  }
-
-  .registerMobile {
-    width: 158px; /* можна збільшити, якщо потрібно */
-  }
-
-  .headerRight,
-  .navLinks {
-    display: flex; /* показуємо десктопну навігацію */
   }
 
   .burger {
     display: none;
+  }
+
+  .headerRight {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: auto;
+  }
+
+  .navLinks {
+    display: flex;
+    align-items: center;
+    gap: 32px;
   }
 }
