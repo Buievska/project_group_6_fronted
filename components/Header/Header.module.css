@@ -1,4 +1,3 @@
-/* HEADER (BASE / MOBILE FIRST) */
 .header {
   width: 100%;
   position: sticky;
@@ -7,7 +6,7 @@
   background: #fff;
 }
 
-.container {
+.containerHeader {
   width: 100%;
   margin: 0 auto;
   padding: 16px 20px;
@@ -17,7 +16,7 @@
   box-sizing: border-box;
 }
 
-/*  LOGO  */
+/* LOGO */
 .logoLink {
   display: block;
 }
@@ -27,7 +26,7 @@
   height: 20px;
 }
 
-/*  DESKTOP NAV  */
+/* DESKTOP NAV */
 .headerRight {
   display: none;
 }
@@ -36,7 +35,7 @@
   display: none;
 }
 
-/*  NAV LINKS  */
+/* NAV LINKS */
 .navLinks a,
 .navMobile a {
   position: relative;
@@ -70,7 +69,7 @@
   left: 0;
 }
 
-/*  BUTTONS  */
+/* BUTTONS */
 .register,
 .registerMobile {
   height: 40px;
@@ -97,7 +96,13 @@
   color: #000;
 }
 
-/*  BURGER  */
+.register:active,
+.registerMobile:active {
+  background: #e7cdf4;
+  color: #000;
+}
+
+/* BURGER */
 .burger {
   background: none;
   border: none;
@@ -116,7 +121,7 @@
   transform: scale(0.95);
 }
 
-/* OVERLAY  */
+/* OVERLAY */
 .overlay {
   position: fixed;
   inset: 0;
@@ -132,7 +137,7 @@
   pointer-events: auto;
 }
 
-/* MOBILE MENU  */
+/* MOBILE MENU */
 .menu {
   width: 100vw;
   height: 100vh;
@@ -147,7 +152,7 @@
   transform: translateX(0);
 }
 
-/*  MENU HEADER  */
+/* MENU HEADER */
 .menuHeader {
   padding: 32px 16px;
 }
@@ -157,7 +162,7 @@
   height: 20px;
 }
 
-/*  MOBILE USER BLOCK */
+/* MOBILE USER BLOCK */
 .mobileUser {
   display: flex;
   align-items: center;
@@ -204,7 +209,7 @@
   stroke: #8808cc;
 }
 
-/* = MOBILE NAV  */
+/* MOBILE NAV */
 .navMobile {
   display: flex;
   flex-direction: column;
@@ -213,24 +218,21 @@
   margin-bottom: 16px;
 }
 
-/*  MOBILE AUTH  */
+/* MOBILE AUTH */
 .authMobile {
   display: flex;
   justify-content: center;
 }
 
-/* BREAKPOINTS  */
-
-/* -------- 375px: mobile -------- */
+/* BREAKPOINTS */
 @media (min-width: 375px) {
   .registerMobile {
     width: 335px;
   }
 }
 
-/* -------- 678px: tablet -------- */
 @media (min-width: 678px) {
-  .container {
+  .containerHeader {
     padding: 16px 32px;
   }
 
@@ -239,9 +241,8 @@
   }
 }
 
-/* -------- 1440px: desktop -------- */
 @media (min-width: 1440px) {
-  .container {
+  .containerHeader {
     padding: 16px 64px;
   }
 

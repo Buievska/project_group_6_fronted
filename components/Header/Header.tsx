@@ -27,7 +27,7 @@ export function Header() {
   return (
     <>
       <header className={styles.header}>
-        <div className={styles.container}>
+        <div className={styles.containerHeader}>
           {/* LOGO */}
           <Link href="/" className={styles.logoLink}>
             <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
