@@ -1,3 +1,4 @@
+
 import styles from "./page.module.css";
 
 import { HeroBlock } from "@/components/HeroBlock/HeroBlock";
