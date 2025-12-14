@@ -1,0 +1,78 @@
+.featuredToolsBlock {
+  padding: 112px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+}
+
+.featuredToolsBlockName {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 36px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.featuredToolsBlockList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.featuredToolsBlockTools {
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  min-width: 211px;
+}
+
+.featuredToolsBlockButton {
+  border: 1px solid rgba(136, 8, 204, 1);
+  background-color: rgba(136, 8, 204, 1);
+  color: white;
+  border-radius: 6px;
+  padding: 10px 86px;
+
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.featuredToolsBlockButton:hover,
+featuredToolsBlockButton:focus {
+  color: black;
+  background-color: white;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.featuredToolsBlockButton:active {
+  color: white;
+  background-color: rgba(136, 8, 204, 1);
+}
+
+@media (min-width: 375px) {
+}
+
+@media (min-width: 768px) {
+  .featuredToolsBlockList {
+    gap: 64px 32px;
+  }
+
+  .featuredToolsBlockName {
+    font-size: 42px;
+  }
+
+  .featuredToolsBlockButton {
+    padding: 10px 24px;
+  }
+}

@@ -14,16 +14,20 @@ export interface ToolFormValues {
 }
 
 export interface Tool {
-  id: string;
+  _id: string;
   name: string;
   pricePerDay: number;
   description: string;
   terms: string;
   specifications?: string;
-  imageUrl: string;
+  images: string;
+  rating: number;
   category: {
     id: string | number;
     name: string;
   };
   ownerId: string;
+  feedbacks: {
+    rate: number;
+  };
 }
