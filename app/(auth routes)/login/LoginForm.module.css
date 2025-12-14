@@ -153,6 +153,13 @@
   font-weight: 500;
 }
 
+.logoLogin {
+  padding-top: 28px;
+  padding-left: 32px;
+  color: #000000;
+  font-weight: 500;
+}
+
 @media (min-width: 768px) and (max-width: 1440px) {
   .containerLogin {
     width: 704px;

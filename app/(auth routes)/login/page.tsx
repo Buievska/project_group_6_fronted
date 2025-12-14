@@ -42,7 +42,9 @@ const SignIn = () => {
   });
   return (
     <div className={css.container}>
-      <p className={css.headerLogin}>ToolNext</p>
+      <Link href="/" className={css.logoLogin}>
+        <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
+      </Link>
       <div className={css.containerLogin}>
         <h1 className={css.loginTitle}>Вхід</h1>
         <Formik
