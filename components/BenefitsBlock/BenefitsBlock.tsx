@@ -3,17 +3,17 @@ import css from "./BenefitsBlock.module.css";
 
 const features = [
   {
-    icon: "icon-booking",
+    icon: "icon-access",
     title: "Легкий доступ до інструментів",
     text: "Знаходьте потрібний інструмент у своєму районі без зайвих дзвінків і пошуків. Просто введіть назву — і отримайте варіанти поруч із вами.",
   },
   {
-    icon: "icon-operation",
+    icon: "icon-booking",
     title: "Швидке бронювання",
     text: "Бронюйте інструменти в кілька кліків. Жодних складних форм чи довгих очікувань — тільки простий та зручний процес.",
   },
   {
-    icon: "icon-access",
+    icon: "icon-operation",
     title: "Зручне управління",
     text: "Додавайте свої інструменти в каталог, редагуйте оголошення та контролюйте оренду. ToolNext допомагає перетворити зайві інструменти на додатковий дохід.",
   },
@@ -31,15 +31,18 @@ export default function BenefitsBlock() {
       </h2>
         <p className={css.description}>
           ToolNext допомагає знайти потрібний інструмент у декілька кліків.
+     <br />
           Користувачі можуть легко орендувати обладнання для ремонту чи хобі, а
-          власники — зручно керувати своїми оголошеннями. Ми створили сервіс,
+          власники — зручно керувати своїми оголошеннями. 
+     <br />
+          Ми створили сервіс,
           щоб зробити процес оренди простим, доступним і вигідним для всіх.
-        </p>
+       </p>
       </div>
 
-      <div className={css.sectionFeatures}>
+      <ul className={css.sectionFeatures}>
         {features.map(({ icon, title, text }) => (
-          <div key={title} className={css.item}>
+          <li key={title} className={css.item}>
             <svg className={css.icon} aria-hidden="true" focusable="false">
               <use href={`${spritePath}#${icon}`} />
             </svg>
@@ -47,9 +50,9 @@ export default function BenefitsBlock() {
               <h3 className={css.sectionFeaturesTitle}>{title}</h3>
               <p className={css.text}>{text}</p>
             </div>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 }
