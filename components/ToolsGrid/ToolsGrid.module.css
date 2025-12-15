@@ -1,0 +1,10 @@
+.toolsList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+.toolsItem {
+  margin-bottom: 32px;
+}

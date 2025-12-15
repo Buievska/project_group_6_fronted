@@ -1,0 +1,42 @@
+.card {
+  width: 375px;
+}
+.name {
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 150%;
+  color: var(--color-scheme-1-text);
+  width: 335px;
+  height: 54px;
+  margin-bottom: 8px;
+}
+
+.image {
+  border-radius: 16px;
+  margin-bottom: 16px;
+}
+
+.rating {
+  margin-bottom: 8px;
+}
+
+.price {
+  font-family: var(--second-family);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 150%;
+  color: var(--color-scheme-1-text);
+  margin-bottom: 16px;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-neutral-darkest);
+  border-radius: 6px;
+  padding: 8px 20px;
+  width: 335px;
+  height: 40px;
+}
