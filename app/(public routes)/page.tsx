@@ -1,4 +1,4 @@
-import styles from "./page.module.css";
+import styles from "../page.module.css";
 import BenefitsBlock from "@/components/BenefitsBlock/BenefitsBlock";
 import FeaturedToolsBlock from "@/components/FeaturedToolsBlock/FeaturedToolsBlock";
 import FeedbacksBlock from "@/components/FeedbacksBlock/FeedbacksBlock";
@@ -25,4 +25,3 @@ export default function HomePage() {
     </main>
   );
 }
-
