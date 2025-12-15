@@ -1,11 +1,11 @@
 'use client';
 
-import css from './Register.module.css';
+import styles from './Register.module.css';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useId, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-
+import Link from "next/link";
 import { register } from '@/lib/api/clientApi';
 import { useAuthStore } from '@/lib/store/authStore';
 import { User } from '@/types/user';
@@ -86,11 +86,17 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className={css.registerPage}>
-      <div className={css.leftSide}>
-        <div className={css.navbar}>svg</div>
-        <div className={css.content}>
-            <h2 className={css.registerTitle}>Реєстрація</h2>
+    <div className={styles.registerPage}>
+      <div className={styles.formSide}>
+        <div className={styles.navbar}>
+          <Link href="/">
+            <a className={styles.logoLink}>
+              <Image src="/logo.svg" alt="RentTools" width={92} height={20} />
+            </a>
+          </Link>
+        </div>
+        <div className={styles.formContent}>
+            <h2 className={styles.registerTitle}>Реєстрація</h2>
 
             <Formik
                 initialValues={initialValues}
@@ -98,45 +104,46 @@ export default function RegisterPage() {
                 onSubmit={handleSubmit}
             >
                 {({ isSubmitting }) => (
-                  <Form noValidate>
-                    <label htmlFor={`${fieldId}-username`}>Імʼя*</label>
-                    <Field name="username" id={`${fieldId}-username`} />
-                    <ErrorMessage name="username" component="p" className={css.error} />
+                  <Form className={styles.registrationForm} noValidate>
+                    <label className={styles.label} htmlFor={`${fieldId}-username`}>Імʼя*</label>
+                    <Field className={styles.inputField} name="username" id={`${fieldId}-username`} />
+                    <ErrorMessage name="username" component="p" className={styles.error} />
 
-                    <label htmlFor={`${fieldId}-email`}>Пошта*</label>
-                    <Field name="email" type="email" id={`${fieldId}-email`} />
-                    <ErrorMessage name="email" component="p" className={css.error} />
+                    <label className={styles.label} htmlFor={`${fieldId}-email`}>Пошта*</label>
+                    <Field className={styles.inputField} name="email" type="email" id={`${fieldId}-email`} />
+                    <ErrorMessage name="email" component="p" className={styles.error} />
 
-                    <label htmlFor={`${fieldId}-password`}>Пароль*</label>
-                    <Field name="password" type="password" id={`${fieldId}-password`} />
-                    <ErrorMessage name="password" component="p" className={css.error} />
+                    <label className={styles.label} htmlFor={`${fieldId}-password`}>Пароль*</label>
+                    <Field className={styles.inputField} name="password" type="password" id={`${fieldId}-password`} />
+                    <ErrorMessage name="password" component="p" className={styles.error} />
 
-                    <label htmlFor={`${fieldId}-confirmPassword`}>Підтвердіть пароль*</label>
-                    <Field name="confirmPassword" type="password" id={`${fieldId}-confirmPassword`} />
-                    <ErrorMessage name="confirmPassword" component="p" className={css.error} />
+                    <label className={styles.label} htmlFor={`${fieldId}-confirmPassword`}>Підтвердіть пароль*</label>
+                    <Field className={styles.inputField} name="confirmPassword" type="password" id={`${fieldId}-confirmPassword`} />
+                    <ErrorMessage name="confirmPassword" component="p" className={styles.error} />
 
-                    {error && <p className={css.serverError}>{error}</p>}
+                    {error && <p className={styles.serverError}>{error}</p>}
 
-                    <button type="submit" disabled={isSubmitting}>
+                    <button className={styles.registrationBtn} type="submit" disabled={isSubmitting}>
                       {isSubmitting ? 'Реєстрація...' : 'Зареєструватись'}
                     </button>
-                  </Form>
+                    <p className={styles.text}>Вже маєте акаунт?{' '}
+                      <a className={styles.loginLink} href="/(auth routes)/login">Вхід</a>
+                    </p>
+              </Form>
                )}
             </Formik>
-
-            <p>Вже маєте акаунт?{' '}
-              <a href="/(auth routes)/login">Вхід</a>
-            </p>
         </div>
-        <div className={css.footer}>
-          <p>© 2025 ToolNext</p>
+        <div className={styles.footer}>
+          <p className={styles.footerText}>© 2025 ToolNext</p>
         </div>
       </div>
-      <div className={css.rightSide}>
+      <div className={styles.imageSide}>
           <Image
-            src="/images/register-placeholder.jpg" // заміни на свій шлях
+            src="@/app/images/register-placeholder.jpg" 
             alt="Registration illustration"
-            className={css.image}
+            width={704}
+            height={900}
+            className={styles.image}
           />
       </div>
     </div>
