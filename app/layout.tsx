@@ -25,19 +25,14 @@ export default function RootLayout({
       <body className={inter.className}>
         <TanStackProvider>
           <AuthProvider>
-            <div className="flex flex-col min-h-screen">
+            <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
               <Header />
-              <main
-                style={{
-                  flex: 1,
-                  minHeight: "calc(100vh - var(--header-height))",
-                }}
-              >
+              <main style={{ flex: 1 }}>
                 {children}
               </main>
-              {modal}
               <Footer />
             </div>
+            {modal}
           </AuthProvider>
         </TanStackProvider>
       </body>
