@@ -1,6 +1,16 @@
+import { $api } from "./api";
 import axios from "axios";
 import { Tool } from "@/types/tool";
 
+export type LoginRequset = {
+  email: string;
+  password: string;
+};
+
+export const login = async (data: LoginRequset) => {
+  const response = await $api.post("auth/login", data);
+  return response.data;
+};
 interface Tools {
   data: {
     tools: Tool[];

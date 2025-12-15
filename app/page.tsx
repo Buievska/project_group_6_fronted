@@ -1,4 +1,3 @@
-
 import styles from "./page.module.css";
 
 import FeaturedToolsBlock from "../components/FeaturedToolsBlock/FeaturedToolsBlock";
