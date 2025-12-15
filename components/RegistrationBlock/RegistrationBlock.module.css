@@ -1,0 +1,78 @@
+.container {
+    padding: 64px 0px;
+    max-width: 335px;
+    margin: 0 auto;
+}
+.content{
+    margin-bottom: 32px;
+}
+.registrationBlockTitle{
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: #000;
+    margin-bottom: 24px;
+}
+.registrationBlockSubtitle{
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #000;
+    margin-bottom: 32px;
+}
+.btnPrimary{
+    max-width: 335px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #8808cc;
+    border-radius: 6px;
+    padding: 10px 24px;
+    background-color:  #8808cc;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #fff;
+}
+.registrationBlockImage{
+    border-radius: 16px;
+}
+
+@media (min-width: 768px) {
+    .container{
+        max-width: 704px;
+    }
+    .registrationBlockTitle{
+        font-size: 30px;
+    }
+    .btnPrimary{
+        width: 186px;
+    }
+    .registrationBlockImage{
+        width: 704px;
+        height: 469px;
+    }
+}
+@media (min-width: 1440px) {
+    .container {
+        padding: 112px 0px;
+        display: flex;
+        gap: 32px;
+        max-width: 1312px;
+    }
+    .content{
+        margin-bottom: 0px;
+    }
+    .registrationBlockTitle{
+        padding-top: 23px;
+        font-size: 42px;
+    }
+    .registrationBlockImage{
+        width: 525px;
+        height: 350px;
+    }
+    .registrationBlockSubtitle{
+        font-size: 18px;
+    }
+}
