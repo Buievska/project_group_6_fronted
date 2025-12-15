@@ -1,14 +1,14 @@
 .container {
   margin: 0 auto;
-
   padding: 0 20px;
-
   width: 100%;
   box-sizing: border-box;
 }
 
+/* ===== Featured tools ===== */
+
 .featuredToolsBlock {
-  padding: 112px 0;
+  padding: 64px 0;
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -18,8 +18,7 @@
 .featuredToolsBlockName {
   font-family: "Inter", sans-serif;
   font-weight: 700;
-  font-style: Bold;
-  font-size: 36px;
+  font-size: 32px;
   line-height: 1.2;
   text-align: center;
 }
@@ -28,7 +27,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 32px;
-  align-items: flex-start;
   justify-content: center;
 }
 
@@ -36,59 +34,53 @@
   border: 1px solid black;
   display: flex;
   justify-content: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px 0;
   min-width: 211px;
 }
 
 .featuredToolsBlockButton {
-  border: 1px solid rgba(136, 8, 204, 1);
-  background-color: rgba(136, 8, 204, 1);
+  border: 1px solid rgb(136, 8, 204);
+  background-color: rgb(136, 8, 204);
   color: white;
   border-radius: 6px;
-  padding: 10px 86px;
-
+  padding: 10px 24px;
   font-family: "Inter", sans-serif;
   font-weight: 500;
-  font-style: Medium;
   font-size: 16px;
   line-height: 1.5;
-}
-
-.featuredToolsBlockButton:hover,
-featuredToolsBlockButton:focus {
-  color: black;
-  background-color: white;
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
 }
 
+.featuredToolsBlockButton:hover,
+.featuredToolsBlockButton:focus {
+  color: black;
+  background-color: white;
+}
+
 .featuredToolsBlockButton:active {
   color: white;
-  background-color: rgba(136, 8, 204, 1);
+  background-color: rgb(136, 8, 204);
 }
 
-@media (min-width: 1440px) {
-  .container {
-    padding: 0 64px;
-  }
-  .featuredToolsBlockList {
-    gap: 64px 32px;
-  }
-}
-
-@media (max-width: 1439px) and (min-width: 768px) {
+@media (min-width: 768px) {
   .container {
     padding: 0 32px;
   }
-  .featuredToolsBlockList {
-    gap: 64px 32px;
-    justify-content: space-between;
+
+  .featuredToolsBlock {
+    padding: 96px 0;
   }
 
   .featuredToolsBlockName {
     font-size: 42px;
+  }
+
+  .featuredToolsBlockList {
+    max-width: 704px;
+    gap: 64px 32px;
+    justify-content: center;
   }
 
   .featuredToolsBlockButton {
@@ -96,8 +88,25 @@ featuredToolsBlockButton:focus {
   }
 }
 
-@media (max-width: 767px) {
+@media (min-width: 1440px) {
   .container {
-    padding: 0 20px;
+    padding: 0 64px;
+  }
+
+  .featuredToolsBlock {
+    padding: 112px 0;
+  }
+
+  .featuredToolsBlockList {
+    max-width: 1312px;
+    gap: 64px 32px;
+  }
+
+  .featuredToolsBlockName {
+    font-size: 36px;
+  }
+
+  .featuredToolsBlockButton {
+    padding: 10px 86px;
   }
 }
