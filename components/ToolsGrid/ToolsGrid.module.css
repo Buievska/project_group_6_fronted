@@ -1,10 +1,40 @@
 .toolsList {
+  width: 335px;
+  margin: 0 auto;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 32px;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  /* gap: 32px; */
 }
 
 .toolsItem {
   margin-bottom: 32px;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .toolsList {
+    width: 100%;
+    max-width: 768px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    row-gap: 64px;
+    gap: 32px;
+  }
+
+  .toolsItem {
+    width: calc((100% - 32px) / 2);
+  }
+}
+
+@media (min-width: 1440px) {
+  .toolsList {
+    max-width: 1440px;
+    /* padding: 0 48px; */
+    gap: 32px;
+  }
+
+  .toolsItem {
+    width: calc((100% - 32px * 3) / 4);
+  }
 }

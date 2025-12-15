@@ -1,5 +1,5 @@
 .card {
-  width: 375px;
+  width: 335px;
 }
 .name {
   font-family: var(--font-family);
@@ -39,4 +39,23 @@
   padding: 8px 20px;
   width: 335px;
   height: 40px;
+}
+
+@media (min-width: 1440px) {
+  .card {
+    width: 304px;
+  }
+  .button {
+    width: 304px;
+  }
+
+  .name {
+    width: 304px;
+  }
+
+  .image {
+    width: auto;
+    display: block;
+    max-width: 100%;
+  }
 }

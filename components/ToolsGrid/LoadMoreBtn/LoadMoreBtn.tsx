@@ -9,8 +9,10 @@ type Props = {
 
 export default function LoadMoreButton({ onClick, loading = false }: Props) {
   return (
-    <button className={css.btn} onClick={onClick} disabled={loading}>
-      {loading ? "Завантаження..." : "Показати більше"}
-    </button>
+    <div className={css.loadMoreWrapper}>
+      <button className={css.btn} onClick={onClick} disabled={loading}>
+        {loading ? "Завантаження..." : "Показати більше"}
+      </button>
+    </div>
   );
 }

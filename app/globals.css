@@ -79,7 +79,7 @@ a {
   transition: color 0.2s;
 }
 
-/* .container {
+.container {
   width: 100%;
   max-width: var(--container-width);
   margin: 0 auto;
@@ -89,30 +89,30 @@ a {
 @media (min-width: 768px) {
   .container {
     padding: 0 32px;
+    max-width: 768px;
   }
 }
 
 @media (min-width: 1440px) {
   .container {
     padding: 0 64px;
+    max-width: 1440px;
   }
-} */
+}
 
-.container {
+/* .container {
   width: 100%;
   max-width: 375px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-/* ≥ 375px */
 @media (min-width: 375px) {
   .container {
     max-width: 375px;
   }
 }
 
-/* ≥ 768px */
 @media (min-width: 768px) {
   .container {
     max-width: 768px;
@@ -120,13 +120,12 @@ a {
   }
 }
 
-/* ≥ 1440px */
 @media (min-width: 1440px) {
   .container {
     max-width: 1440px;
     padding: 0 48px;
   }
-}
+} */
 
 .btn-primary {
   background-color: var(--primary-color);
