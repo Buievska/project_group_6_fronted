@@ -1,0 +1,265 @@
+.header {
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #fff;
+}
+
+.containerHeader {
+  width: 100%;
+  margin: 0 auto;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+/* LOGO */
+.logoLink {
+  display: block;
+}
+
+.logo {
+  width: 124px;
+  height: 20px;
+}
+
+/* DESKTOP NAV */
+.headerRight {
+  display: none;
+}
+
+.navLinks {
+  display: none;
+}
+
+/* NAV LINKS */
+.navLinks a,
+.navMobile a {
+  position: relative;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 150%;
+  color: #000;
+  text-decoration: none;
+}
+
+.navLinks a::after,
+.navMobile a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 0;
+  height: 2px;
+  background: #8808cc;
+  transition:
+    width 0.3s ease,
+    left 0.3s ease;
+}
+
+.navLinks a:hover::after,
+.navLinks a:focus::after,
+.navMobile a:hover::after,
+.navMobile a:focus::after {
+  width: 100%;
+  left: 0;
+}
+
+/* BUTTONS */
+.register,
+.registerMobile {
+  height: 40px;
+  padding: 10px 24px;
+  background: #8808cc;
+  color: #fff;
+  border: 1px solid #8808cc;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.register:hover,
+.register:focus,
+.registerMobile:hover,
+.registerMobile:focus {
+  background: transparent;
+  color: #000;
+}
+
+.register:active,
+.registerMobile:active {
+  background: #e7cdf4;
+  color: #000;
+}
+
+/* BURGER */
+.burger {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  position: relative;
+  z-index: 200;
+  transition: transform 0.25s ease;
+}
+
+.burger:hover {
+  transform: scale(1.1);
+}
+
+.burger:active {
+  transform: scale(0.95);
+}
+
+/* OVERLAY */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 100;
+}
+
+.overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* MOBILE MENU */
+.menu {
+  width: 100vw;
+  height: 100vh;
+  background: #f2f2f2;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+.overlay.open .menu {
+  transform: translateX(0);
+}
+
+/* MENU HEADER */
+.menuHeader {
+  padding: 32px 16px;
+}
+
+.menu .logoLink img {
+  width: 124px;
+  height: 20px;
+}
+
+/* MOBILE USER BLOCK */
+.mobileUser {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 16px;
+}
+
+.mobileAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.mobileInitial {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #8808cc;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobileUserName {
+  font-size: 14px;
+  font-weight: 500;
+  flex-grow: 1;
+}
+
+.mobileLogout {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.mobileLogout:hover svg path {
+  stroke: #8808cc;
+}
+
+/* MOBILE NAV */
+.navMobile {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* MOBILE AUTH */
+.authMobile {
+  display: flex;
+  justify-content: center;
+}
+
+/* BREAKPOINTS */
+@media (min-width: 375px) {
+  .registerMobile {
+    width: 335px;
+  }
+}
+
+@media (min-width: 678px) {
+  .containerHeader {
+    padding: 16px 32px;
+  }
+
+  .registerMobile {
+    width: 158px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .containerHeader {
+    padding: 16px 64px;
+  }
+
+  .burger {
+    display: none;
+  }
+
+  .headerRight {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: auto;
+  }
+
+  .navLinks {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+}

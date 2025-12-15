@@ -1,4 +1,3 @@
-
 import css from "./BenefitsBlock.module.css";
 
 const features = [
@@ -23,34 +22,35 @@ export default function BenefitsBlock() {
   const spritePath = "/sprite.svg";
 
   return (
-
     <section className={css.sectionBenefits}>
-      <div className={css.content}>
-      <h2 className={css.title}>
-        ToolNext — платформа для швидкої та зручної оренди інструментів
-      </h2>
-        <p className={css.description}>
-          ToolNext допомагає знайти потрібний інструмент у декілька кліків.
-          Користувачі можуть легко орендувати обладнання для ремонту чи хобі, а
-          власники — зручно керувати своїми оголошеннями. Ми створили сервіс,
-          щоб зробити процес оренди простим, доступним і вигідним для всіх.
-        </p>
-      </div>
+      <div className={css.container}>
+        <div className={css.content}>
+          <h2 className={css.title}>
+            ToolNext — платформа для швидкої та зручної оренди інструментів
+          </h2>
+          <p className={css.description}>
+            ToolNext допомагає знайти потрібний інструмент у декілька кліків.
+            Користувачі можуть легко орендувати обладнання для ремонту чи хобі,
+            а власники — зручно керувати своїми оголошеннями. Ми створили
+            сервіс, щоб зробити процес оренди простим, доступним і вигідним для
+            всіх.
+          </p>
+        </div>
 
-      <div className={css.sectionFeatures}>
-        {features.map(({ icon, title, text }) => (
-          <div key={title} className={css.item}>
-            <svg className={css.icon} aria-hidden="true" focusable="false">
-              <use href={`${spritePath}#${icon}`} />
-            </svg>
-            <div className={css.sectionFeaturesContent}>
-              <h3 className={css.sectionFeaturesTitle}>{title}</h3>
-              <p className={css.text}>{text}</p>
+        <div className={css.sectionFeatures}>
+          {features.map(({ icon, title, text }) => (
+            <div key={title} className={css.item}>
+              <svg className={css.icon} aria-hidden="true" focusable="false">
+                <use href={`${spritePath}#${icon}`} />
+              </svg>
+              <div className={css.sectionFeaturesContent}>
+                <h3 className={css.sectionFeaturesTitle}>{title}</h3>
+                <p className={css.text}>{text}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
 }
-
