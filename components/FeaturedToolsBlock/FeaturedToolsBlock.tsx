@@ -14,7 +14,10 @@ export default async function FeaturedToolsBlock() {
           <FeaturedToolsBlockItem tools={data.data.tools} />
         </ul>
 
-        <a className={css.featuredToolsBlockButton} href="#">
+        <a
+          className={css.featuredToolsBlockButton}
+          href="../ToolsGrid/ToolsGrid.tsx"
+        >
           До всіх інструментів
         </a>
       </section>

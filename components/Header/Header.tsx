@@ -38,13 +38,13 @@ export function Header() {
             <nav className={styles.navLinks}>
               <Link href="/">Головна</Link>
               <Link href="/tools">Інструменти</Link>
-              {!user && <Link href="/auth/login">Увійти</Link>}
+              {!user && <Link href="/login">Увійти</Link>}
               {user && <Link href="/profile">Мій профіль</Link>}
               {user && <Link href="/create">Опублікувати оголошення</Link>}
             </nav>
 
             {!user ? (
-              <Link href="/auth/register" className={styles.register}>
+              <Link href="/register" className={styles.register}>
                 Зареєструватися
               </Link>
             ) : (
