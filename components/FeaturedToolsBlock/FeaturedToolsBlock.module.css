@@ -1,3 +1,12 @@
+.container {
+  margin: 0 auto;
+
+  padding: 0 20px;
+
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .featuredToolsBlock {
   padding: 112px 0;
   display: flex;
@@ -60,12 +69,22 @@ featuredToolsBlockButton:focus {
   background-color: rgba(136, 8, 204, 1);
 }
 
-@media (min-width: 375px) {
-}
-
-@media (min-width: 768px) {
+@media (min-width: 1440px) {
+  .container {
+    padding: 0 64px;
+  }
   .featuredToolsBlockList {
     gap: 64px 32px;
+  }
+}
+
+@media (max-width: 1439px) and (min-width: 768px) {
+  .container {
+    padding: 0 32px;
+  }
+  .featuredToolsBlockList {
+    gap: 64px 32px;
+    justify-content: space-between;
   }
 
   .featuredToolsBlockName {
@@ -74,5 +93,11 @@ featuredToolsBlockButton:focus {
 
   .featuredToolsBlockButton {
     padding: 10px 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding: 0 20px;
   }
 }
