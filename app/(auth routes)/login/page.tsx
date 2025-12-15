@@ -2,7 +2,7 @@
 import * as Yup from "yup";
 import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import { ApiError } from "@/app/api/api";
 import { login, LoginRequset } from "@/lib/api/clientApi";
 import css from "./LoginForm.module.css";
@@ -16,7 +16,10 @@ const SignIn = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleSubmit = async (values: LoginRequset, setSubmitting) => {
+  const handleSubmit = async (
+    values: LoginRequset,
+    { setSubmitting }: FormikHelpers<LoginRequset>
+  ) => {
     try {
       const response = await login(values);
 
