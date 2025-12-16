@@ -44,7 +44,7 @@ export default function BenefitsBlock() {
         {features.map(({ icon, title, text }) => (
           <li key={title} className={css.item}>
             <svg className={css.icon} aria-hidden="true" focusable="false">
-              <use href={`${spritePath}#${icon}`} />
+              <use href={`${spritePath}#${icon}`}></use>
             </svg>
             <div className={css.sectionFeaturesContent}>
               <h3 className={css.sectionFeaturesTitle}>{title}</h3>
