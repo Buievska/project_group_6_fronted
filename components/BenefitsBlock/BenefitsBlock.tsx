@@ -1,4 +1,3 @@
-
 import css from "./BenefitsBlock.module.css";
 
 const features = [
@@ -23,7 +22,6 @@ export default function BenefitsBlock() {
   const spritePath = "/sprite.svg";
 
   return (
-
     <section className={css.sectionBenefits}>
       <div className={css.content}>
       <h2 className={css.title}>
@@ -53,7 +51,7 @@ export default function BenefitsBlock() {
           </li>
         ))}
       </ul>
+
     </section>
   );
 }
-

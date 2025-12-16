@@ -1,0 +1,91 @@
+.featuredToolsBlockItem {
+  max-width: 335px;
+
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.featuredToolsBlockImage {
+  border-radius: 16px;
+  width: 100%;
+  max-height: 412px;
+}
+
+.featuredToolsBlockInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.featuredToolsBlockName {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-style: Bold;
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 54px;
+}
+
+.featuredToolsBlockPrice {
+  font-family: "Work", sans-serif;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.featuredToolsBlockButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  border: 2px solid black;
+  border-radius: 6px;
+
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-style: Medium;
+  line-height: 1.5;
+}
+
+.featuredToolsBlockButton:hover,
+featuredToolsBlockButton:focus {
+  background-color: rgba(243, 230, 249, 1);
+  transition: background-color 0.3s ease;
+}
+
+.featuredToolsBlockButton:active {
+  background-color: rgba(243, 230, 249, 1);
+}
+
+@media (min-width: 768px) {
+  .featuredToolsBlockName {
+    font-size: 18px;
+  }
+
+  .featuredToolsBlockItem {
+    max-width: 336px;
+  }
+
+  .featuredToolsBlockImage {
+    max-height: 414px;
+  }
+
+  .featuredToolsBlockPrice {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .featuredToolsBlockItem {
+    max-width: 304px;
+  }
+
+  .featuredToolsBlockImage {
+    max-height: 374px;
+  }
+}

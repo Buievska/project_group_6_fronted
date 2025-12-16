@@ -1,14 +1,26 @@
+import FeaturedToolsBlockItem from "./FeaturedToolsBlockItem/FeaturedToolsBlockItem";
+import { getTools } from "@/lib/api/clientApi";
+import css from "./FeaturedToolsBlock.module.css";
 import Link from "next/link";
 
-export const FeaturedToolsBlock = () => {
+export default async function FeaturedToolsBlock() {
+  const data = await getTools();
+
   return (
-    <section className="container">
-      <h2>Популярні інструменти</h2>
-      {/* Тут буде ToolsGrid */}
-      <div>[Сітка інструментів]</div>
-      <Link href="/tools" className="btn-primary">
-        До всіх інструментів
-      </Link>
-    </section>
+    <>
+      <section className={css.container}>
+        <div className={css.featuredToolsBlock}>
+          <h2 className={css.featuredToolsBlockName}>Популярні інструменти</h2>
+
+          <ul className={css.featuredToolsBlockList}>
+            <FeaturedToolsBlockItem tools={data.data.tools} />
+          </ul>
+
+          <Link className={css.featuredToolsBlockButton} href="/tools">
+            До всіх інструментів
+          </Link>
+        </div>
+      </section>
+    </>
   );
-};
+}
