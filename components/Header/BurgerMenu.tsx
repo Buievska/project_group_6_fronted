@@ -37,18 +37,20 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
             {user.avatar ? (
               <Image
                 src={user.avatar}
-                alt={user.name}
+                alt={user.name || "User"}
                 width={32}
                 height={32}
                 className={styles.mobileAvatar}
               />
             ) : (
               <div className={styles.mobileInitial}>
-                {user.name.charAt(0).toUpperCase()}
+                {(user.name?.charAt(0) || "U").toUpperCase()}
               </div>
             )}
 
-            <span className={styles.mobileUserName}>{user.name}</span>
+            <span className={styles.mobileUserName}>
+              {user.name || "Користувач"}
+            </span>
 
             <button
               className={styles.mobileLogout}
@@ -73,7 +75,7 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
           </Link>
 
           {!user && (
-            <Link href="/auth/login" onClick={onClose}>
+            <Link href="/login" onClick={onClose}>
               Увійти
             </Link>
           )}
@@ -93,7 +95,7 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
         {!user && (
           <div className={styles.authMobile}>
             <Link
-              href="/auth/register"
+              href="/register"
               onClick={onClose}
               className={styles.registerMobile}
             >

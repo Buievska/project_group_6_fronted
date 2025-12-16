@@ -1,0 +1,237 @@
+.registerPage {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+/* --- ЛІВА СТОРОНА (БІЛА) --- */
+.formSide {
+  width: 100%;
+  min-height: 100vh; /* Важливо для розтягування */
+  display: flex;
+  flex-direction: column;
+  padding: 32px; /* Відступи від країв екрану */
+  background-color: #fff;
+  position: relative; /* Щоб абсолютні елементи (лого/футер) відштовхувались від цього блоку */
+
+  /* МОБІЛЬНА ВЕРСІЯ: Розкидаємо елементи (Верх - Центр - Низ) */
+  justify-content: space-between;
+}
+
+/* Логотип */
+.navbar {
+  /* На мобільному він просто стоїть зверху завдяки flex-потоку */
+  width: auto;
+}
+
+/* Копірайт */
+.footerText {
+  font-size: 12px;
+  color: #666;
+  /* На мобільному він просто стоїть знизу */
+}
+
+/* Контейнер форми */
+.formContent {
+  width: 100%;
+  max-width: 400px;
+  align-self: center; /* Центруємо сам блок форми по горизонталі */
+  /* margin: 40px 0;  Відступи зверху/знизу, щоб не налізло на лого на маленьких екранах */
+}
+
+.registerTitle {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-align: center;
+  color: #000;
+}
+
+.registrationForm {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* --- ІНПУТИ --- */
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  margin-top: 16px;
+  display: block;
+}
+
+.inputField {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #000;
+  border-radius: 6px;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.inputField:focus {
+  border-color: #8808cc;
+}
+
+.error {
+  color: #d32f2f;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.serverError {
+  color: #d32f2f;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* --- КНОПКА --- */
+.registrationBtn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 32px;
+  margin-bottom: 16px;
+  background-color: #8808cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.registrationBtn:hover {
+  background-color: #6a069e;
+}
+
+.registrationBtn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.text {
+  text-align: center;
+  font-size: 14px;
+}
+
+.loginLink {
+  color: #8808cc;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+.loginLink:hover {
+  text-decoration: underline;
+}
+
+/* --- ПРАВА СТОРОНА (КАРТИНКА) --- */
+.imageSide {
+  display: none;
+}
+
+/* ========================================= */
+/* 💻 DESKTOP (Великі екрани)                */
+/* ========================================= */
+@media (min-width: 1024px) {
+  .formSide {
+    width: 50%;
+    /* На десктопі ми центруємо форму, а лого і футер "приклеюємо" */
+    justify-content: center;
+    align-items: center;
+    padding: 0; /* Прибираємо паддінги, бо позиціонуємо абсолютно */
+  }
+
+  /* 1. ПРИКЛЕЮЄМО ЛОГОТИП */
+  .navbar {
+    position: absolute;
+    top: 40px; /* Відступ зверху */
+    left: 40px; /* Відступ зліва */
+  }
+
+  /* 2. ПРИКЛЕЮЄМО КОПІРАЙТ */
+  .footerText {
+    position: absolute;
+    bottom: 40px; /* Відступ знизу */
+    left: 40px; /* Відступ зліва */
+    text-align: left; /* Текст зліва */
+  }
+
+  /* 3. ФОРМА */
+  .formContent {
+    max-width: 480px; /* Трохи ширша форма */
+    width: 100%;
+    padding: 0 40px; /* Захисні відступи з боків */
+  }
+
+  .registerTitle {
+    font-size: 40px;
+    margin-bottom: 32px;
+  }
+
+  /* 4. КАРТИНКА */
+  .imageSide {
+    display: block;
+    width: 50%;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow: hidden;
+  }
+
+  .registerImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/*.registerPage {
+  display: flex;
+  min-height: 100vh;
+}
+
+.formSide {
+  flex: 0 0 51.1%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 48px;
+  box-sizing: border-box;
+}
+
+.imageSide {
+  flex: 0 0 48.9%;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+@media (max-width: 768px) {
+  .imageSide {
+    display: none;
+  }
+
+  .formSide {
+    flex: 1;
+    padding: 24px;
+  }
+}
+
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+*/

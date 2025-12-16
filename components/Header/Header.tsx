@@ -7,6 +7,7 @@ import styles from "./Header.module.css";
 import BurgerMenu from "./BurgerMenu";
 import { useAuthStore } from "@/lib/store/authStore";
 import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
+import { logoutRequest } from "@/lib/api/clientApi";
 
 export function Header() {
   const { user, logout } = useAuthStore();
@@ -18,10 +19,24 @@ export function Header() {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
   }, [isMenuOpen]);
 
-  const handleConfirmLogout = () => {
+  const handleConfirmLogout = async () => {
+    try {
+      // 1. Просимо сервер видалити куку
+      await logoutRequest();
+      console.log("Cookie видалено сервером");
+    } catch (error) {
+      console.error("Помилка при виході:", error);
+    }
+    localStorage.removeItem("isLoggedIn");
+    // 2. Чистимо Zustand
     logout();
+
+    // 3. Закриваємо модалки
     setIsLogoutOpen(false);
     setIsMenuOpen(false);
+
+    // 4. Перезавантажуємо сторінку
+    window.location.href = "/";
   };
 
   return (
@@ -38,13 +53,13 @@ export function Header() {
             <nav className={styles.navLinks}>
               <Link href="/">Головна</Link>
               <Link href="/tools">Інструменти</Link>
-              {!user && <Link href="/auth/login">Увійти</Link>}
+              {!user && <Link href="/login">Увійти</Link>}
               {user && <Link href="/profile">Мій профіль</Link>}
               {user && <Link href="/create">Опублікувати оголошення</Link>}
             </nav>
 
             {!user ? (
-              <Link href="/auth/register" className={styles.register}>
+              <Link href="/register" className={styles.register}>
                 Зареєструватися
               </Link>
             ) : (
@@ -52,17 +67,21 @@ export function Header() {
                 {user.avatar ? (
                   <Image
                     src={user.avatar}
-                    alt={user.name}
+                    alt={user.name || "User"}
                     width={32}
                     height={32}
                     className={styles.userAvatar}
                   />
                 ) : (
                   <div className={styles.userInitial}>
-                    {user.name.charAt(0).toUpperCase()}
+                    {(user.name?.charAt(0) || "U").toUpperCase()}
                   </div>
                 )}
-                <span className={styles.userName}>{user.name}</span>
+
+                <span className={styles.userName}>
+                  {user.name || "Користувач"}
+                </span>
+
                 <button
                   className={styles.logout}
                   onClick={() => setIsLogoutOpen(true)}
