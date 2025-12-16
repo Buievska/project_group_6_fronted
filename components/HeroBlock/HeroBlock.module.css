@@ -1,7 +1,5 @@
 .heroBlock {
   padding-top: 42px;
-  padding-left: 2rem;
-  padding-right: 2rem;
 
   position: relative;
   display: flex;
@@ -121,9 +119,6 @@
 }
 
 @media screen and (max-width: 399px) {
-  .heroBlock {
-    padding: 1rem;
-  }
   .title {
     font-size: 28px;
     margin-top: 32px;
@@ -191,5 +186,24 @@
 
   .input {
     width: 416px;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 32px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .container {
+    padding: 0 64px;
   }
 }
