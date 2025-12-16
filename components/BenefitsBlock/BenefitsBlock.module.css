@@ -110,12 +110,11 @@ margin-bottom: 32px;
   .sectionBenefits {
     max-width: 1440px;
     padding: 112px 0px;
-    display: flex;
   }
   .content {
     display: flex;
     flex-direction: row;
-    gap: 150px;
+    gap: 80px;
     margin-bottom: 80px;
     flex-wrap: nowrap;
   }
@@ -140,7 +139,7 @@ max-width: 616px;
   .sectionFeatures {
     display: flex;
     align-items: flex-start;
-    justify-content: center;
+   
     flex-direction: row;
     gap: 32px;
     flex-wrap: nowrap;
