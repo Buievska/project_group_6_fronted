@@ -126,14 +126,13 @@
     height: 135px;
   }
 
-  .sectionFeatures {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    flex-direction: row;
-    gap: 32px;
-    flex-wrap: nowrap;
-  }
+.sectionFeatures {
+display: flex;
+align-items: flex-start;
+justify-content: center;
+flex-direction: row;
+gap: 32px;
+}
 
   .sectionFeaturesTitle {
     font-size: 24px;
