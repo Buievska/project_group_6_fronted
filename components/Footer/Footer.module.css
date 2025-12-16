@@ -59,11 +59,16 @@
     width: 32px;
     height: 32px;
     color: #000;
-    transition: color 0.2s;
+    transition: all 0.2s;
 }
 
-.navLink:hover {
+.socialLink:hover {
   color: var(--primary-color);
+  transform: scale(1.1);
+}
+
+.socialLink svg {
+    fill: currentColor; 
 }
 
 .divider {

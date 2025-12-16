@@ -58,12 +58,9 @@ export const Footer = () => {
           className={styles.socialLink}
           aria-label="Facebook"
         >
-          <Image 
-            src="/facebook.svg" 
-            alt="Facebook" 
-            width={32} 
-            height={32}
-          />
+          <svg width="32" height="32">
+            <use href="/symbol-defs.svg#icon-facebook-1"></use>
+          </svg>
         </a>  
         <a
           href="https://instagram.com"
@@ -72,12 +69,9 @@ export const Footer = () => {
           className={styles.socialLink}
           aria-label="Instagram"
         >
-          <Image 
-            src="/instagram.svg" 
-            alt="Instagram" 
-            width={32} 
-            height={32}
-          />
+          <svg width="32" height="32">
+            <use href="/symbol-defs.svg#icon-instagram-2"></use>
+          </svg>
         </a>
       </div>
       </div>
