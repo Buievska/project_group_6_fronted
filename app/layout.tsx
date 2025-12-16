@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import { TanStackProvider } from "@/components/TanStackProvider/TanStackProvider";
 import { AuthProvider } from "@/components/AuthProvider/AuthProvider";
 import "./globals.css";
-
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
