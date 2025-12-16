@@ -1,218 +1,198 @@
 .container {
   display: flex;
-  overflow: hidden;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  background-color: #fff;
 }
 
+/* --- ЛІВА СТОРОНА (ФОРМА) --- */
 .leftContent {
-  padding: 26px 20px;
-  margin: 0 auto;
   width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  background-color: #fff;
+  position: relative; /* База для абсолютних елементів */
+
+  /* Мобільна: розтягуємо елементи (Верх - Центр - Низ) */
+  justify-content: space-between;
 }
 
-.errorMessage {
-  margin-top: 4px;
-  font-size: 12px;
-  color: #ff3b30;
+/* Логотип */
+.logoLogin {
+  width: fit-content;
+  display: block;
+}
+
+/* Контейнер форми */
+.containerLogin {
+  width: 100%;
+  max-width: 400px;
+  align-self: center; /* Центруємо блок форми */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .loginTitle {
-  padding-bottom: 8px;
+  font-size: 32px;
   font-weight: 700;
-  line-height: 120%;
-  letter-spacing: -1%;
+  margin-bottom: 24px;
   text-align: center;
-  color: #000000;
-}
-
-.containerLogin {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-  max-width: 375px;
-  margin: 0 auto;
-  min-height: 100vh;
+  color: #000;
 }
 
 .loginForm {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
+/* --- ІНПУТИ --- */
 .loginLabel {
-  font-weight: 400;
-  line-height: 150%;
-  letter-spacing: 0%;
-
-  padding-top: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  margin-top: 16px;
   display: block;
 }
 
-.loginFoto {
-  display: none;
-}
-
 .loginField {
-  padding: 12px 12px 12px 12px;
-  border: 2px solid black;
-  border-radius: 6px;
   width: 100%;
-  max-width: 335px;
-  box-sizing: border-box;
-  margin-top: 4px;
+  padding: 12px 16px;
+  border: 2px solid #000;
+  border-radius: 6px;
+  font-size: 16px;
   outline: none;
+  box-sizing: border-box;
   transition: border-color 0.2s ease;
-}
-
-.inputError {
-  border-color: #c40202;
-}
-
-.loginField:hover {
-  border-color: #8808cc;
 }
 
 .loginField:focus {
   border-color: #8808cc;
 }
 
+.inputError {
+  border-color: #c40202;
+}
+
+.errorMessage {
+  color: #c40202;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* --- КНОПКА --- */
 .btnLogin {
-  display: flex;
-  justify-content: center;
-  width: 98px;
-  padding: 10px 24px 10px 24px;
-  margin: 24px auto 24px auto;
-  border-radius: 6px;
+  width: 100%;
+  padding: 12px;
+  margin-top: 32px;
+  margin-bottom: 16px;
   background-color: #8808cc;
   color: white;
-  border: 1px solid #8808cc;
-
-  font-weight: 500;
-  line-height: 150%;
-  letter-spacing: 0%;
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  justify-content: center;
 }
 
 .btnLogin:hover {
-  border-color: #8808cc;
-  background-color: white;
-  color: #000000;
-}
-
-.btnLogin:focus {
-  border-color: #8808cc;
-  background-color: white;
-  color: #000000;
-}
-
-.btnLogin:active {
-  border-color: #8808cc;
-  background-color: #e7cdf4;
-  color: #000000;
+  background-color: #6a069e;
 }
 
 .btnLogin:disabled {
-  opacity: 0.4;
+  background-color: #ccc;
   cursor: not-allowed;
 }
 
-.btnLogin:disabled:hover {
-  background-color: #8808cc;
-  color: white;
-}
-.registerLink {
-  text-decoration: underline;
-  transition: color 0.2s ease;
-}
-
-.registerLink:active {
-  color: #8808cc;
-}
-
+/* --- НИЖНІЙ ТЕКСТ --- */
 .registerQuestion {
-  font-weight: 400;
   display: flex;
+  justify-content: center;
   gap: 5px;
-  padding-bottom: 4px;
-}
-
-.privateConfirm {
-  position: fixed;
-  bottom: 0;
-  padding-left: 32px;
-  padding-bottom: 27px;
-  font-weight: 400;
-  line-height: 150%;
-  letter-spacing: 0%;
+  font-size: 14px;
   text-align: center;
 }
 
-.headerLogin {
-  position: fixed;
-  padding-top: 28px;
-  padding-left: 32px;
-  color: #000000;
-  font-weight: 500;
+.registerLink {
+  color: #8808cc;
+  font-weight: 600;
+  text-decoration: none;
 }
 
-.logoLogin {
-  color: #000000;
-  font-weight: 500;
+.registerLink:hover {
+  text-decoration: underline;
 }
 
-@media (min-width: 768px) and (max-width: 1440px) {
-  .containerLogin {
-    width: 704px;
-    max-width: 704px;
-  }
-
-  .loginField {
-    width: 704px;
-    max-width: 704px;
-  }
+/* Копірайт */
+.privateConfirm {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  /* На мобільному він просто внизу потоку */
 }
 
-.loginFoto {
-  display: none;
+/* --- ПРАВА СТОРОНА (КАРТИНКА) --- */
+.imageSide {
+  display: none; /* Ховаємо на мобільному */
 }
 
-@media (min-width: 1440px) {
-  .container {
-    display: flex;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-  }
-
+/* ========================================= */
+/* 💻 DESKTOP (Великі екрани)                */
+/* ========================================= */
+@media (min-width: 1024px) {
   .leftContent {
-    padding: 26px 32px 26px 64px;
-    margin: 0 auto;
+    width: 50%;
+    /* Центруємо форму, а лого і футер фіксуємо */
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+
+  /* 1. Логотип в кут */
+  .logoLogin {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+  }
+
+  /* 2. Копірайт в кут */
+  .privateConfirm {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    text-align: left;
+  }
+
+  /* 3. Форма */
+  .containerLogin {
+    max-width: 480px;
     width: 100%;
-    max-width: 736px;
+    padding: 0 40px;
+  }
+
+  .loginTitle {
+    font-size: 40px;
+    margin-bottom: 32px;
+  }
+
+  .imageSide {
+    display: block;
+    width: 50%;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow: hidden;
   }
 
   .loginFoto {
-    display: flex;
     width: 100%;
-    min-height: 100vh;
     height: 100%;
-    margin: 0px;
-    padding-left: 0px;
-    overflow: hidden;
-  }
-
-  .containerLogin {
-    width: 640px;
-    max-width: 640px;
-  }
-
-  .loginField {
-    width: 640px;
-    max-width: 640px;
+    object-fit: cover;
   }
 }

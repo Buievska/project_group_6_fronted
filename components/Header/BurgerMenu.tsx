@@ -75,7 +75,7 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
           </Link>
 
           {!user && (
-            <Link href="/auth/login" onClick={onClose}>
+            <Link href="/login" onClick={onClose}>
               Увійти
             </Link>
           )}
@@ -95,7 +95,7 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
         {!user && (
           <div className={styles.authMobile}>
             <Link
-              href="/auth/register"
+              href="/register"
               onClick={onClose}
               className={styles.registerMobile}
             >
