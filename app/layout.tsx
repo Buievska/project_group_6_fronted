@@ -10,6 +10,10 @@ const inter = Inter({ subsets: ["latin", "cyrillic"] });
 export const metadata: Metadata = {
   title: "RentTools - Оренда інструментів",
   description: "Знайди потрібний інструмент або здай свій в оренду",
+
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
