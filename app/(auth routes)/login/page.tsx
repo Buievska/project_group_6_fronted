@@ -1,6 +1,6 @@
 "use client";
 import * as Yup from "yup";
-import { useRouter, usePathname } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import { ApiError } from "@/app/api/api";
@@ -10,29 +10,29 @@ import Link from "next/link";
 import loginImg from "../../public/loginImage.png";
 import Image from "next/image";
 
+const currentYear = new Date().getFullYear();
+
 const SignIn = () => {
   const [error, setError] = useState("");
 
-  const router = useRouter();
-  const pathname = usePathname();
+  // const router = useRouter();
+  // const pathname = usePathname();
 
   const handleSubmit = async (
     values: LoginRequset,
     { setSubmitting }: FormikHelpers<LoginRequset>
   ) => {
     try {
-      const response = await login(values);
+      await login(values);
+      localStorage.setItem("isLoggedIn", "true");
 
-      if (response) {
-        router.push(pathname || "/");
-      } else {
-        setError("Wrong email or password");
-      }
+      window.location.href = "/";
     } catch (error) {
+      console.error("Помилка входу:", error);
       setError(
         (error as ApiError).response?.data?.error ??
           (error as ApiError).message ??
-          "Whoops...here some error"
+          "Щось пішло не так..."
       );
     } finally {
       setSubmitting(false);
@@ -45,77 +45,79 @@ const SignIn = () => {
   });
   return (
     <div className={css.container}>
-      <Link href="/" className={css.logoLogin}>
-        <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
-      </Link>
-      <div className={css.containerLogin}>
-        <h1 className={css.loginTitle}>Вхід</h1>
-        <Formik
-          initialValues={{ email: "", password: "" }}
-          onSubmit={handleSubmit}
-          validationSchema={validationSchema}
-        >
-          {({ errors, touched, isSubmitting }) => (
-            <Form className={css.loginForm}>
-              <label htmlFor="email-login" className={css.loginLabel}>
-                Пошта*
-                <Field
-                  className={`${css.loginField} ${
-                    errors.email && touched.email ? css.inputError : ""
-                  }`}
+      <div className={css.leftContent}>
+        <Link href="/" className={css.logoLogin}>
+          <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
+        </Link>
+        <div className={css.containerLogin}>
+          <h1 className={css.loginTitle}>Вхід</h1>
+          <Formik
+            initialValues={{ email: "", password: "" }}
+            onSubmit={handleSubmit}
+            validationSchema={validationSchema}
+          >
+            {({ errors, touched, isSubmitting }) => (
+              <Form className={css.loginForm}>
+                <label htmlFor="email-login" className={css.loginLabel}>
+                  Пошта*
+                  <Field
+                    className={`${css.loginField} ${
+                      errors.email && touched.email ? css.inputError : ""
+                    }`}
+                    name="email"
+                    id="email-login"
+                    type="email"
+                    placeholder="Ваша пошта"
+                  />
+                </label>
+                <ErrorMessage
                   name="email"
-                  id="email-login"
-                  type="email"
-                  placeholder="Ваша пошта"
+                  component="span"
+                  className={css.errorMessage}
                 />
-              </label>
-              <ErrorMessage
-                name="email"
-                component="span"
-                className={css.errorMessage}
-              />
 
-              <label htmlFor="password-login" className={css.loginLabel}>
-                Пароль*
-                <Field
-                  className={`${css.loginField} ${
-                    errors.password && touched.password ? css.inputError : ""
-                  }`}
+                <label htmlFor="password-login" className={css.loginLabel}>
+                  Пароль*
+                  <Field
+                    className={`${css.loginField} ${
+                      errors.password && touched.password ? css.inputError : ""
+                    }`}
+                    name="password"
+                    id="password-login"
+                    type="password"
+                    placeholder="*******"
+                  />
+                </label>
+                <ErrorMessage
                   name="password"
-                  id="password-login"
-                  type="password"
-                  placeholder="*******"
+                  component="span"
+                  className={css.errorMessage}
                 />
-              </label>
-              <ErrorMessage
-                name="password"
-                component="span"
-                className={css.errorMessage}
-              />
 
-              <button
-                type="submit"
-                className={css.btnLogin}
-                disabled={isSubmitting}
-              >
-                Увійти
-              </button>
-            </Form>
-          )}
-        </Formik>
+                <button
+                  type="submit"
+                  className={css.btnLogin}
+                  disabled={isSubmitting}
+                >
+                  Увійти
+                </button>
+              </Form>
+            )}
+          </Formik>
 
-        <div className={css.registerQuestion}>
-          <p>Не маєте аккаунту?</p>
-          <Link href="/sign-up" className={css.registerLink}>
-            Реєстрація
-          </Link>
+          <div className={css.registerQuestion}>
+            <p>Не маєте аккаунту?</p>
+            <Link href="/sign-up" className={css.registerLink}>
+              Реєстрація
+            </Link>
+          </div>
+          {error && <div className={css.errorMessage}>{error}</div>}
         </div>
-        {error && <div className={css.errorMessage}>{error}</div>}
+        <p className={css.privateConfirm}>© {currentYear} ToolNext</p>
       </div>
       <div>
         <Image src={loginImg} alt="Фото" className={css.loginFoto} />
       </div>
-      <p className={css.privateConfirm}>© 2025 ToolNext</p>
     </div>
   );
 };

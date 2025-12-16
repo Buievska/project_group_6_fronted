@@ -1,5 +1,7 @@
 import { Header } from "@/components/Header/Header";
 import { Footer } from "@/components/Footer/Footer";
+import { TanStackProvider } from "@/components/TanStackProvider/TanStackProvider";
+import { AuthProvider } from "@/components/AuthProvider/AuthProvider";
 
 export default function PublicLayout({
   children,
@@ -7,10 +9,12 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <Header />
-      <main>{children}</main>
-      <Footer />
-    </>
+    <TanStackProvider>
+      <AuthProvider>
+        <Header />
+        <main>{children}</main>
+        <Footer />
+      </AuthProvider>
+    </TanStackProvider>
   );
 }
