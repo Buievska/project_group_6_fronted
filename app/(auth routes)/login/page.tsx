@@ -7,7 +7,7 @@ import { ApiError } from "@/app/api/api";
 import { login, LoginRequset } from "@/lib/api/clientApi";
 import css from "./LoginForm.module.css";
 import Link from "next/link";
-import loginImg from "../../public/loginImage.png";
+import loginImg from "../../../public/img/loginImage.png";
 import Image from "next/image";
 
 const currentYear = new Date().getFullYear();
@@ -107,7 +107,7 @@ const SignIn = () => {
 
           <div className={css.registerQuestion}>
             <p>Не маєте аккаунту?</p>
-            <Link href="/sign-up" className={css.registerLink}>
+            <Link href="/register" className={css.registerLink}>
               Реєстрація
             </Link>
           </div>
@@ -115,7 +115,7 @@ const SignIn = () => {
         </div>
         <p className={css.privateConfirm}>© {currentYear} ToolNext</p>
       </div>
-      <div>
+      <div className={css.imageSide}>
         <Image src={loginImg} alt="Фото" className={css.loginFoto} />
       </div>
     </div>
