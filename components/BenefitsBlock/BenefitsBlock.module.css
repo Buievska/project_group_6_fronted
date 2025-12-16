@@ -72,7 +72,9 @@ max-width: 335px;
 
 @media (min-width: 768px) {
 
-
+  .container {
+    padding: 0 32px;
+  }
 .sectionBenefits {
 max-width: 704px;
 }
@@ -107,6 +109,9 @@ margin-bottom: 32px;
 }
 
 @media (min-width: 1440px) {
+  .container {
+    padding: 0 64px;
+  }
   .sectionBenefits {
     max-width: 1440px;
     padding: 112px 0px;
@@ -164,14 +169,3 @@ max-width: 616px;
   padding: 0 20px;
 }
 
-@media (min-width: 768px) {
-  .container {
-    padding: 0 32px;
-  }
-}
-
-@media (min-width: 1440px) {
-  .container {
-    padding: 0 64px;
-  }
-}
