@@ -1,0 +1,218 @@
+.container {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  height: 100vh;
+}
+
+.leftContent {
+  padding: 26px 20px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.errorMessage {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #ff3b30;
+}
+
+.loginTitle {
+  padding-bottom: 8px;
+  font-weight: 700;
+  line-height: 120%;
+  letter-spacing: -1%;
+  text-align: center;
+  color: #000000;
+}
+
+.containerLogin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  max-width: 375px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.loginLabel {
+  font-weight: 400;
+  line-height: 150%;
+  letter-spacing: 0%;
+
+  padding-top: 24px;
+  display: block;
+}
+
+.loginFoto {
+  display: none;
+}
+
+.loginField {
+  padding: 12px 12px 12px 12px;
+  border: 2px solid black;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 335px;
+  box-sizing: border-box;
+  margin-top: 4px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.inputError {
+  border-color: #c40202;
+}
+
+.loginField:hover {
+  border-color: #8808cc;
+}
+
+.loginField:focus {
+  border-color: #8808cc;
+}
+
+.btnLogin {
+  display: flex;
+  justify-content: center;
+  width: 98px;
+  padding: 10px 24px 10px 24px;
+  margin: 24px auto 24px auto;
+  border-radius: 6px;
+  background-color: #8808cc;
+  color: white;
+  border: 1px solid #8808cc;
+
+  font-weight: 500;
+  line-height: 150%;
+  letter-spacing: 0%;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.btnLogin:hover {
+  border-color: #8808cc;
+  background-color: white;
+  color: #000000;
+}
+
+.btnLogin:focus {
+  border-color: #8808cc;
+  background-color: white;
+  color: #000000;
+}
+
+.btnLogin:active {
+  border-color: #8808cc;
+  background-color: #e7cdf4;
+  color: #000000;
+}
+
+.btnLogin:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btnLogin:disabled:hover {
+  background-color: #8808cc;
+  color: white;
+}
+.registerLink {
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.registerLink:active {
+  color: #8808cc;
+}
+
+.registerQuestion {
+  font-weight: 400;
+  display: flex;
+  gap: 5px;
+  padding-bottom: 4px;
+}
+
+.privateConfirm {
+  position: fixed;
+  bottom: 0;
+  padding-left: 32px;
+  padding-bottom: 27px;
+  font-weight: 400;
+  line-height: 150%;
+  letter-spacing: 0%;
+  text-align: center;
+}
+
+.headerLogin {
+  position: fixed;
+  padding-top: 28px;
+  padding-left: 32px;
+  color: #000000;
+  font-weight: 500;
+}
+
+.logoLogin {
+  color: #000000;
+  font-weight: 500;
+}
+
+@media (min-width: 768px) and (max-width: 1440px) {
+  .containerLogin {
+    width: 704px;
+    max-width: 704px;
+  }
+
+  .loginField {
+    width: 704px;
+    max-width: 704px;
+  }
+}
+
+.loginFoto {
+  display: none;
+}
+
+@media (min-width: 1440px) {
+  .container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .leftContent {
+    padding: 26px 32px 26px 64px;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 736px;
+  }
+
+  .loginFoto {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    height: 100%;
+    margin: 0px;
+    padding-left: 0px;
+    overflow: hidden;
+  }
+
+  .containerLogin {
+    width: 640px;
+    max-width: 640px;
+  }
+
+  .loginField {
+    width: 640px;
+    max-width: 640px;
+  }
+}
