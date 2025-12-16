@@ -23,13 +23,13 @@ const SignIn = () => {
       if (response) {
         router.push(pathname || "/");
       } else {
-        setError("Wrong email or password");
+        setError("Неправильна електронна адреса або пароль");
       }
     } catch (error) {
       setError(
         (error as ApiError).response?.data?.error ??
           (error as ApiError).message ??
-          "Whoops...here some error"
+          "Ой... тут якась помилка"
       );
     } finally {
       setSubmitting(false);
@@ -37,8 +37,10 @@ const SignIn = () => {
   };
 
   const validationSchema = Yup.object({
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string().required("Password is required"),
+    email: Yup.string()
+      .email("Недійсна електронна адреса")
+      .required("Необхідно вказати адресу електронної пошти"),
+    password: Yup.string().required("Необхідно ввести пароль"),
   });
   return (
     <div className={css.container}>
