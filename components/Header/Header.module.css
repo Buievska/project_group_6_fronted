@@ -1,3 +1,4 @@
+/* ================= HEADER ================= */
 .header {
   width: 100%;
   position: sticky;
@@ -16,7 +17,7 @@
   box-sizing: border-box;
 }
 
-/* LOGO */
+/* ================= LOGO ================= */
 .logoLink {
   display: block;
 }
@@ -26,7 +27,7 @@
   height: 20px;
 }
 
-/* DESKTOP NAV */
+/* ================= DESKTOP NAV ================= */
 .headerRight {
   display: none;
 }
@@ -35,7 +36,7 @@
   display: none;
 }
 
-/* NAV LINKS */
+/* ================= NAV LINKS ================= */
 .navLinks a,
 .navMobile a {
   position: relative;
@@ -69,7 +70,7 @@
   left: 0;
 }
 
-/* BUTTONS */
+/* ================= BUTTONS ================= */
 .register,
 .registerMobile {
   height: 40px;
@@ -89,9 +90,7 @@
 }
 
 .register:hover,
-.register:focus,
-.registerMobile:hover,
-.registerMobile:focus {
+.registerMobile:hover {
   background: transparent;
   color: #000;
 }
@@ -99,29 +98,18 @@
 .register:active,
 .registerMobile:active {
   background: #e7cdf4;
-  color: #000;
 }
 
-/* BURGER */
+/* ================= BURGER ================= */
 .burger {
   background: none;
   border: none;
   padding: 8px;
   cursor: pointer;
-  position: relative;
   z-index: 200;
-  transition: transform 0.25s ease;
 }
 
-.burger:hover {
-  transform: scale(1.1);
-}
-
-.burger:active {
-  transform: scale(0.95);
-}
-
-/* OVERLAY */
+/* ================= OVERLAY ================= */
 .overlay {
   position: fixed;
   inset: 0;
@@ -137,7 +125,7 @@
   pointer-events: auto;
 }
 
-/* MOBILE MENU */
+/* ================= MOBILE MENU ================= */
 .menu {
   width: 100vw;
   height: 100vh;
@@ -152,32 +140,38 @@
   transform: translateX(0);
 }
 
-/* MENU HEADER */
 .menuHeader {
   padding: 32px 16px;
 }
 
-.menu .logoLink img {
-  width: 124px;
-  height: 20px;
+/* ================= MOBILE NAV ================= */
+.navMobile {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
 }
 
-/* MOBILE USER BLOCK */
-.mobileUser {
+/* ================= MOBILE USER ================= */
+.mobileUserCentered {
+  margin-top: 16px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 24px 16px;
+  justify-content: center;
+  gap: 16px;
 }
 
-.mobileAvatar {
+.mobileAvatar,
+.userAvatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.mobileInitial {
+.mobileInitial,
+.userInitial {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -190,13 +184,15 @@
   justify-content: center;
 }
 
-.mobileUserName {
+.mobileUserName,
+.userName {
   font-size: 14px;
   font-weight: 500;
-  flex-grow: 1;
+  white-space: nowrap;
 }
 
-.mobileLogout {
+.mobileLogout,
+.logout {
   background: none;
   border: none;
   padding: 4px;
@@ -205,26 +201,13 @@
   align-items: center;
 }
 
-.mobileLogout:hover svg path {
-  stroke: #8808cc;
+.userDivider,
+.mobileDivider {
+  opacity: 0.6;
 }
 
-/* MOBILE NAV */
-.navMobile {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: center;
-  margin-bottom: 16px;
-}
+/* ================= BREAKPOINTS ================= */
 
-/* MOBILE AUTH */
-.authMobile {
-  display: flex;
-  justify-content: center;
-}
-
-/* BREAKPOINTS */
 @media (min-width: 375px) {
   .registerMobile {
     width: 335px;
@@ -253,7 +236,7 @@
   .headerRight {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 24px;
     margin-left: auto;
   }
 
@@ -261,5 +244,11 @@
     display: flex;
     align-items: center;
     gap: 32px;
+  }
+
+  .userBlock {
+    display: flex;
+    align-items: center;
+    gap: 16px;
   }
 }

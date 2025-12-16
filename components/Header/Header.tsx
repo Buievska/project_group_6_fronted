@@ -28,19 +28,16 @@ export function Header() {
     <>
       <header className={styles.header}>
         <div className={styles.containerHeader}>
-          {/* LOGO */}
           <Link href="/" className={styles.logoLink}>
             <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
           </Link>
 
-          {/* DESKTOP NAV */}
           <div className={styles.headerRight}>
             <nav className={styles.navLinks}>
               <Link href="/">Головна</Link>
               <Link href="/tools">Інструменти</Link>
               {!user && <Link href="/auth/login">Увійти</Link>}
               {user && <Link href="/profile">Мій профіль</Link>}
-              {user && <Link href="/create">Опублікувати оголошення</Link>}
             </nav>
 
             {!user ? (
@@ -62,22 +59,32 @@ export function Header() {
                     {user.name.charAt(0).toUpperCase()}
                   </div>
                 )}
+
                 <span className={styles.userName}>{user.name}</span>
+
+                <Image
+                  src="/icon-exit.svg"
+                  alt=""
+                  width={1}
+                  height={39}
+                  className={styles.userDivider}
+                />
+
                 <button
                   className={styles.logout}
                   onClick={() => setIsLogoutOpen(true)}
+                  aria-label="Вийти"
                 >
-                  Вийти
+                  <Image src="/button-exit.svg" alt="" width={24} height={24} />
                 </button>
               </div>
             )}
           </div>
 
-          {/* BURGER BUTTON */}
           <button
             className={styles.burger}
             onClick={() => setIsMenuOpen((prev) => !prev)}
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-label="Menu"
           >
             <Image
               src={isMenuOpen ? "/burger-close.svg" : "/burger-open.svg"}
@@ -88,7 +95,6 @@ export function Header() {
           </button>
         </div>
 
-        {/* BURGER MENU */}
         <BurgerMenu
           isOpen={isMenuOpen}
           onClose={() => setIsMenuOpen(false)}
@@ -97,7 +103,6 @@ export function Header() {
         />
       </header>
 
-      {/* LOGOUT CONFIRMATION MODAL */}
       {isLogoutOpen && (
         <ConfirmationModal
           title="Ви впевнені, що хочете вийти?"
