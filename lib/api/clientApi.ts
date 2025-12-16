@@ -1,6 +1,19 @@
-import { $api } from "./api";
+
+import { User } from '@/types/user';
+import { $api }  from './api';
 import axios from "axios";
 import { Tool } from "@/types/tool";
+
+export type UserRequest = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+export const register = async (userData: UserRequest) => {
+  const { data } = await $api.post<User>('/auth/register', userData);
+  return data;
+};
 
 export type LoginRequset = {
   email: string;
@@ -33,3 +46,4 @@ export const getTools = async () => {
   );
   return res.data;
 };
+

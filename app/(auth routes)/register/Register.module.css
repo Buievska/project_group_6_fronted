@@ -1,0 +1,274 @@
+.registerPage {
+  display: flex;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 32px;
+}
+
+.formSide {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.imageSide {
+  display: none; 
+}
+
+.navbar {
+  height: 72px;
+  padding: 26px 0;
+  margin-bottom: 0;
+}
+
+.logoLink:hover,
+.logoLink:focus {
+  border: 1px dashed #9747ff;
+  border-radius: 5px;
+  padding: 16px;
+  width: 187px;
+  height: 52px;   
+}
+
+.formContent{
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 86px 0;
+}
+
+.registerTitle{
+  font-family: var(--font-family);
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 120%;
+  letter-spacing: -0.01em;
+  text-align: center;
+  color: var(--color-scheme-1-text);
+  /*margin-bottom: 32px;*/
+}
+
+.registrationForm{
+  display: flex;
+  flex-direction: column;
+}
+
+.label{
+  display: block;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  color: var(--color-scheme-1-text);
+  margin-bottom: 8px;
+}
+
+.inputField{
+  width: 100%;
+  margin-bottom: 24px;
+  border: 2px solid var(--color-neutral-darkest);
+  border-radius: 6px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  color: var(--color-neutral-darkest);
+}
+
+.inputField:focus {
+  border: 2px solid var(--color-electric-violet);
+}
+
+.inputField::placeholder {
+  background: var(--opacity-transparent);
+  color: var(--color-neutral-darkest-60);
+}
+
+.error{
+  color: var(--color-red-dark);
+  border: 2px solid var(--color-red-dark);
+  background: var(--opacity-transparent);
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.errorMessage{
+  color: var(--color-red-dark);
+  font-size: 12px;
+}
+
+.serverError{
+  color: var(--color-red-dark);
+  font-size: 12px;
+}
+
+.registrationBtn{
+  border: 1px solid var(--color-electric-violet);
+  border-radius: 6px;
+  padding: 10px 24px;
+  width: 186px;
+  height: 44px;
+  background: var(--color-electric-violet);
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  color: var(--color-white);
+  cursor: pointer;
+  margin-bottom: 24px;
+}
+
+.registrationBtn:hover,
+.registrationBtn:focus {
+  background: var(--color-white);
+  border: 2px solid var(--color-electric-violet);
+  color: var(--color-scheme-1-text);
+}
+
+.registrationBtn:active {
+  background: var(--color-electric-violet-lighter);
+  border: 2px solid var(--color-electric-violet);
+  color: var(--color-scheme-1-text);
+}
+
+.registrationBtn:disabled {
+  background: var(--color-electric-violet);
+  opacity: 0.4;
+  border: 1px solid var(--color-electric-violet);
+  color: var(--color-white);
+}
+
+.text{
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  color: var(--color-scheme-1-text);
+}
+
+.loginLink{
+  font-family: var(--second-family);
+  text-decoration: underline;
+  text-decoration-skip-ink: none;
+  text-align: center;
+  margin-left: 5px; 
+}
+
+.loginLink:hover,
+.loginLink:focus {
+  text-decoration: none;
+}
+
+.logoLink:active {
+  color: var(--color-electric-violet);
+}
+
+.footer{
+  text-align: left;
+  padding: 27px 0;
+}
+
+.footerText{
+  font-family: var(--second-family);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 150%;
+  text-align: center;
+  color: var(--color-scheme-1-text);
+}
+
+@media (min-width: 768px) {
+  .registerPage {
+    grid-template-columns: repeat(8, 1fr);
+  }
+
+  .formSide {
+    padding: 32px;
+  }
+
+  .registerTitle{
+    font-size: 30px;
+  }
+
+  .formContent{
+  margin: 0 auto;
+  padding: 90px 0;
+}
+}
+
+@media (min-width: 1440px) {
+  .registerPage {
+    flex-direction: row;
+  }
+
+  .formSide {
+    flex: 0 0 51.1%;
+    padding: 64px;
+  }
+
+  .imageSide {
+    display: flex;
+    flex: 0 0 48.9%;
+  }
+
+  .formContent{
+    padding: 83px 0;
+  }
+
+  .registerTitle{
+    font-size: 42px;
+  }
+  
+  .footerText{
+    font-size: 12px;
+  }
+}
+
+
+
+
+/*.registerPage {
+  display: flex;
+  min-height: 100vh;
+}
+
+.formSide {
+  flex: 0 0 51.1%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 48px;
+  box-sizing: border-box;
+}
+
+.imageSide {
+  flex: 0 0 48.9%;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+@media (max-width: 768px) {
+  .imageSide {
+    display: none;
+  }
+
+  .formSide {
+    flex: 1;
+    padding: 24px;
+  }
+}
+
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+*/
