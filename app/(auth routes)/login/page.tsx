@@ -1,48 +1,47 @@
 "use client";
 import * as Yup from "yup";
+import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
-import { ApiError } from "@/app/api/api";
 import { login, LoginRequset } from "@/lib/api/clientApi";
 import css from "./LoginForm.module.css";
 import Link from "next/link";
-import loginImg from "../../../public/img/loginImage.png"; // Перевірте шлях
+import loginImg from "../../../public/img/loginImage.png";
 import Image from "next/image";
-import { toast } from "react-toastify";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const currentYear = new Date().getFullYear();
 
 const SignIn = () => {
-  // const [error, setError] = useState(""); // <-- Можна прибрати, якщо використовуємо тільки тости
+  const [serverError, setServerError] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (
     values: LoginRequset,
     { setSubmitting }: FormikHelpers<LoginRequset>
   ) => {
+    setServerError("");
+
     try {
       await login(values);
-
-      // 1. Ставимо прапорець
       localStorage.setItem("isLoggedIn", "true");
 
-      // 2. Показуємо успішне повідомлення
-      toast.success("Вхід успішний! Перенаправлення...");
-
-      // 3. Робимо паузу 1 сек, щоб юзер побачив повідомлення, і тоді перезавантажуємо
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 1000);
+      router.push("/");
     } catch (error) {
       console.error("Помилка входу:", error);
+      let errorMsg = "Щось пішло не так...";
 
-      const errorMsg =
-        (error as ApiError).response?.data?.error ??
-        (error as ApiError).message ??
-        "Щось пішло не так...";
+      // Обробка помилки як у реєстрації
+      if (axios.isAxiosError(error)) {
+        errorMsg =
+          error.response?.data?.error ||
+          error.response?.data?.message ||
+          errorMsg;
+      } else if (error instanceof Error) {
+        errorMsg = error.message;
+      }
 
-      // 4. Показуємо помилку через тост
-      toast.error(errorMsg);
-
-      // setError(errorMsg); // Якщо хочете дублювати текст під формою - розкоментуйте
+      setServerError(errorMsg);
     } finally {
       setSubmitting(false);
     }
@@ -57,9 +56,11 @@ const SignIn = () => {
     <div className={css.container}>
       {/* ЛІВА ЧАСТИНА */}
       <div className={css.leftContent}>
-        <Link href="/" className={css.logoLogin}>
-          <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
-        </Link>
+        <div className={css.navbar}>
+          <Link href="/" className={css.logoLogin}>
+            <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
+          </Link>
+        </div>
 
         <div className={css.containerLogin}>
           <h1 className={css.loginTitle}>Вхід</h1>
@@ -106,6 +107,16 @@ const SignIn = () => {
                   className={css.errorMessage}
                 />
 
+                {/* 👇 ВИВЕДЕННЯ ПОМИЛКИ СЕРВЕРА */}
+                {serverError && (
+                  <div
+                    className={css.errorMessage}
+                    style={{ textAlign: "center", marginTop: "10px" }}
+                  >
+                    {serverError}
+                  </div>
+                )}
+
                 <button
                   type="submit"
                   className={css.btnLogin}
@@ -123,7 +134,6 @@ const SignIn = () => {
               Реєстрація
             </Link>
           </div>
-          {/* {error && <div className={css.errorMessage}>{error}</div>} */}
         </div>
 
         <p className={css.privateConfirm}>© {currentYear} ToolNext</p>
