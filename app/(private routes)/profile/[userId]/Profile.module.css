@@ -1,0 +1,77 @@
+/* app/(private routes)/profile/[userId]/Profile.module.css */
+
+/* --- 1. Основний контейнер сторінки --- */
+.mainContent {
+  /* Mobile-First: базовий паддінг (2rem = 32px; 1rem = 16px) */
+  padding: 32px 16px;
+
+  /* Обмежує ширину контенту на десктопах (max 1200px) і центрує його */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* --- 2. Шапка профілю (містить UserProfile та кнопку Редагувати) --- */
+.profileHeader {
+  display: flex;
+  /* Mobile-First: вертикальне розміщення елементів профілю */
+  flex-direction: column;
+  align-items: flex-start;
+  /* Відстань (1.5rem = 24px) */
+  gap: 24px;
+  /* Відстань знизу (2rem = 32px) */
+  margin-bottom: 32px;
+  padding: 16px 0; /* (1rem = 16px) */
+}
+
+@media (min-width: 768px) {
+  .profileHeader {
+    /* На планшетах і десктопах: горизонтальне розміщення */
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+  }
+}
+
+/* --- 3. Заголовок розділу інструментів --- */
+.sectionTitle {
+  /* 1.8rem = 28.8px */
+  font-size: 29px;
+  font-weight: 700;
+  color: #1f2937; /* gray-800 */
+  /* 2rem = 32px; 1.5rem = 24px */
+  margin-top: 32px;
+  margin-bottom: 24px;
+
+  border-bottom: 2px solid #e5e7eb;
+  /* 0.5rem = 8px */
+  padding-bottom: 8px;
+}
+
+/* --- 4. Стилі для кнопки "Редагувати профіль" --- */
+.editProfileButton {
+  /* 0.75rem = 12px; 1.5rem = 24px */
+  padding: 12px 24px;
+  background-color: #f3f4f6;
+  color: #374151;
+  border-radius: 8px; /* 0.5rem = 8px */
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.editProfileButton:hover {
+  background-color: #e5e7eb;
+}
+
+/* --- 5. Стилі для повідомлень про помилки --- */
+.errorText {
+  text-align: center;
+  color: #dc2626;
+  /* 1.125rem = 18px */
+  font-size: 18px;
+  /* 2rem = 32px */
+  padding: 32px;
+  margin-top: 32px;
+}
