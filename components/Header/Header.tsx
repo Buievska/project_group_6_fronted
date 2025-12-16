@@ -8,10 +8,10 @@ import BurgerMenu from "./BurgerMenu";
 import { useAuthStore } from "@/lib/store/authStore";
 import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
 import { logoutRequest } from "@/lib/api/clientApi";
+import { toast } from "react-toastify";
 
 export function Header() {
   const { user, logout } = useAuthStore();
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
@@ -21,21 +21,15 @@ export function Header() {
 
   const handleConfirmLogout = async () => {
     try {
-      // 1. Просимо сервер видалити куку
       await logoutRequest();
-      console.log("Cookie видалено сервером");
     } catch (error) {
       console.error("Помилка при виході:", error);
     }
     localStorage.removeItem("isLoggedIn");
-    // 2. Чистимо Zustand
     logout();
-
-    // 3. Закриваємо модалки
     setIsLogoutOpen(false);
     setIsMenuOpen(false);
-
-    // 4. Перезавантажуємо сторінку
+    toast.success("Ви успішно вийшли з профілю");
     window.location.href = "/";
   };
 
@@ -48,51 +42,76 @@ export function Header() {
             <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
           </Link>
 
-          {/* DESKTOP NAV */}
-          <div className={styles.headerRight}>
-            <nav className={styles.navLinks}>
-              <Link href="/">Головна</Link>
-              <Link href="/tools">Інструменти</Link>
-              {!user && <Link href="/login">Увійти</Link>}
-              {user && <Link href="/profile">Мій профіль</Link>}
-              {user && <Link href="/create">Опублікувати оголошення</Link>}
-            </nav>
-
+          {/* === DESKTOP PART (ПК) === */}
+          <div className={styles.desktopContainer}>
+            {/* ВАРІАНТ 1: ГІСТЬ (НЕ ЗАЛОГОВАНИЙ) */}
             {!user ? (
-              <Link href="/register" className={styles.register}>
-                Зареєструватися
-              </Link>
+              <>
+                <nav className={styles.navLinks}>
+                  <Link href="/">Головна</Link>
+                  <Link href="/tools">Інструменти</Link>
+                  <Link href="/login">Увійти</Link> {/* Увійти як посилання */}
+                </nav>
+                <Link href="/register" className={styles.registerBtn}>
+                  Зареєструватися
+                </Link>
+              </>
             ) : (
-              <div className={styles.userBlock}>
-                {user.avatar ? (
-                  <Image
-                    src={user.avatar}
-                    alt={user.name || "User"}
-                    width={32}
-                    height={32}
-                    className={styles.userAvatar}
-                  />
-                ) : (
-                  <div className={styles.userInitial}>
-                    {(user.name?.charAt(0) || "U").toUpperCase()}
+              /* ВАРІАНТ 2: КОРИСТУВАЧ (ЗАЛОГОВАНИЙ) */
+              <>
+                <nav className={styles.navLinks}>
+                  <Link href="/">Головна</Link>
+                  <Link href="/tools">Інструменти</Link>
+                  <Link href="/profile">Мій профіль</Link>
+                </nav>
+
+                <div className={styles.userActions}>
+                  {/* Кнопка Опублікувати */}
+                  <Link href="/create" className={styles.publishBtn}>
+                    Опублікувати оголошення
+                  </Link>
+
+                  {/* Аватар та Ім'я */}
+                  <div className={styles.userInfo}>
+                    {user.avatar ? (
+                      <Image
+                        src={user.avatar}
+                        alt={user.name || "User"}
+                        width={32}
+                        height={32}
+                        className={styles.userAvatar}
+                      />
+                    ) : (
+                      <div className={styles.userInitial}>
+                        {(user.name?.charAt(0) || "U").toUpperCase()}
+                      </div>
+                    )}
+                    <span className={styles.userName}>
+                      {user.name || "Користувач"}
+                    </span>
                   </div>
-                )}
 
-                <span className={styles.userName}>
-                  {user.name || "Користувач"}
-                </span>
+                  {/* Розділювач */}
+                  <div className={styles.divider}></div>
 
-                <button
-                  className={styles.logout}
-                  onClick={() => setIsLogoutOpen(true)}
-                >
-                  Вийти
-                </button>
-              </div>
+                  {/* Кнопка Вийти */}
+                  <button
+                    className={styles.logoutBtn}
+                    onClick={() => setIsLogoutOpen(true)}
+                  >
+                    <Image
+                      src="/button-exit.svg"
+                      alt="Вихід"
+                      width={24}
+                      height={24}
+                    />
+                  </button>
+                </div>
+              </>
             )}
           </div>
 
-          {/* BURGER BUTTON */}
+          {/* BURGER BUTTON (Тільки мобілка) */}
           <button
             className={styles.burger}
             onClick={() => setIsMenuOpen((prev) => !prev)}
@@ -107,7 +126,7 @@ export function Header() {
           </button>
         </div>
 
-        {/* BURGER MENU */}
+        {/* Мобільне меню (ваше існуюче) */}
         <BurgerMenu
           isOpen={isMenuOpen}
           onClose={() => setIsMenuOpen(false)}
@@ -116,7 +135,7 @@ export function Header() {
         />
       </header>
 
-      {/* LOGOUT CONFIRMATION MODAL */}
+      {/* Модалка виходу */}
       {isLogoutOpen && (
         <ConfirmationModal
           title="Ви впевнені, що хочете вийти?"

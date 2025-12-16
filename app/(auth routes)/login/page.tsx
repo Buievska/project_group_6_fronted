@@ -1,22 +1,18 @@
 "use client";
 import * as Yup from "yup";
-// import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import { ApiError } from "@/app/api/api";
 import { login, LoginRequset } from "@/lib/api/clientApi";
 import css from "./LoginForm.module.css";
 import Link from "next/link";
-import loginImg from "../../../public/img/loginImage.png";
+import loginImg from "../../../public/img/loginImage.png"; // Перевірте шлях
 import Image from "next/image";
+import { toast } from "react-toastify";
 
 const currentYear = new Date().getFullYear();
 
 const SignIn = () => {
-  const [error, setError] = useState("");
-
-  // const router = useRouter();
-  // const pathname = usePathname();
+  // const [error, setError] = useState(""); // <-- Можна прибрати, якщо використовуємо тільки тости
 
   const handleSubmit = async (
     values: LoginRequset,
@@ -24,16 +20,29 @@ const SignIn = () => {
   ) => {
     try {
       await login(values);
+
+      // 1. Ставимо прапорець
       localStorage.setItem("isLoggedIn", "true");
 
-      window.location.href = "/";
+      // 2. Показуємо успішне повідомлення
+      toast.success("Вхід успішний! Перенаправлення...");
+
+      // 3. Робимо паузу 1 сек, щоб юзер побачив повідомлення, і тоді перезавантажуємо
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1000);
     } catch (error) {
       console.error("Помилка входу:", error);
-      setError(
+
+      const errorMsg =
         (error as ApiError).response?.data?.error ??
-          (error as ApiError).message ??
-          "Щось пішло не так..."
-      );
+        (error as ApiError).message ??
+        "Щось пішло не так...";
+
+      // 4. Показуємо помилку через тост
+      toast.error(errorMsg);
+
+      // setError(errorMsg); // Якщо хочете дублювати текст під формою - розкоментуйте
     } finally {
       setSubmitting(false);
     }
@@ -43,12 +52,15 @@ const SignIn = () => {
     email: Yup.string().email("Invalid email").required("Email is required"),
     password: Yup.string().required("Password is required"),
   });
+
   return (
     <div className={css.container}>
+      {/* ЛІВА ЧАСТИНА */}
       <div className={css.leftContent}>
         <Link href="/" className={css.logoLogin}>
           <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
         </Link>
+
         <div className={css.containerLogin}>
           <h1 className={css.loginTitle}>Вхід</h1>
           <Formik
@@ -99,7 +111,7 @@ const SignIn = () => {
                   className={css.btnLogin}
                   disabled={isSubmitting}
                 >
-                  Увійти
+                  {isSubmitting ? "Вхід..." : "Увійти"}
                 </button>
               </Form>
             )}
@@ -111,12 +123,15 @@ const SignIn = () => {
               Реєстрація
             </Link>
           </div>
-          {error && <div className={css.errorMessage}>{error}</div>}
+          {/* {error && <div className={css.errorMessage}>{error}</div>} */}
         </div>
+
         <p className={css.privateConfirm}>© {currentYear} ToolNext</p>
       </div>
+
+      {/* ПРАВА ЧАСТИНА */}
       <div className={css.imageSide}>
-        <Image src={loginImg} alt="Фото" className={css.loginFoto} />
+        <Image src={loginImg} alt="Фото" className={css.loginFoto} priority />
       </div>
     </div>
   );

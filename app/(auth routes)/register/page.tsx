@@ -1,17 +1,17 @@
 "use client";
-
+import axios from "axios";
 import styles from "./Register.module.css";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useId, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useId } from "react";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
 import { register } from "@/lib/api/clientApi";
 import { useAuthStore } from "@/lib/store/authStore";
 import { User } from "@/types/user";
-import axios from "axios";
 import Image from "next/image";
 import registerImage from "../../../public/img/registerImage.jpg";
+import { toast } from "react-toastify";
 
 /* ================= TYPES ================= */
 
@@ -50,18 +50,13 @@ const validationSchema = Yup.object({
 
 export default function RegisterPage() {
   const fieldId = useId();
-  const router = useRouter();
   const searchParams = useSearchParams();
-
-  const [error, setError] = useState<string>("");
   const login = useAuthStore((state) => state.login);
 
   const handleSubmit = async (
     values: RegisterFormValues,
     { setSubmitting }: FormikHelpers<RegisterFormValues>
   ) => {
-    setError("");
-
     try {
       const user: User = await register({
         name: values.username,
@@ -69,18 +64,26 @@ export default function RegisterPage() {
         password: values.password,
       });
 
-      // авторизація після реєстрації
       login(user);
+      localStorage.setItem("isLoggedIn", "true");
+      toast.success("Реєстрація успішна! Ласкаво просимо.");
 
-      // редірект на попередню сторінку або на головну
       const redirectTo = searchParams.get("from") || "/";
-      router.push(redirectTo);
+
+      setTimeout(() => {
+        window.location.href = redirectTo;
+      }, 1000);
     } catch (err: unknown) {
+      console.error("Помилка реєстрації:", err);
+      let errorMsg = "Помилка реєстрації. Спробуйте ще раз.";
+
       if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || "Помилка реєстрації");
-      } else {
-        setError("Невідома помилка. Спробуйте ще раз.");
+        errorMsg =
+          err.response?.data?.message || err.response?.data?.error || errorMsg;
+      } else if (err instanceof Error) {
+        errorMsg = err.message;
       }
+      toast.error(errorMsg);
     } finally {
       setSubmitting(false);
     }
@@ -88,10 +91,11 @@ export default function RegisterPage() {
 
   return (
     <div className={styles.registerPage}>
+      {/* ЛІВА ЧАСТИНА (Форма) */}
       <div className={styles.formSide}>
         <div className={styles.navbar}>
           <Link href="/" className={styles.logoLink}>
-            <Image src="/logo.svg" alt="RentTools" width={124} height={20} />
+            <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
           </Link>
         </div>
 
@@ -103,15 +107,24 @@ export default function RegisterPage() {
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
           >
-            {({ isSubmitting }) => (
-              <Form className={styles.registrationForm} noValidate>
+            {({ isSubmitting, errors, touched }) => (
+              <Form
+                className={styles.registrationForm}
+                noValidate
+                autoComplete="off"
+              >
+                {/* Ім'я */}
                 <label className={styles.label} htmlFor={`${fieldId}-username`}>
                   Імʼя*
                 </label>
                 <Field
-                  className={styles.inputField}
+                  className={`${styles.inputField} ${
+                    errors.username && touched.username ? styles.inputError : ""
+                  }`}
                   name="username"
                   id={`${fieldId}-username`}
+                  placeholder="Ваше ім'я"
+                  autoComplete="off"
                 />
                 <ErrorMessage
                   name="username"
@@ -119,14 +132,19 @@ export default function RegisterPage() {
                   className={styles.error}
                 />
 
+                {/* Пошта */}
                 <label className={styles.label} htmlFor={`${fieldId}-email`}>
                   Пошта*
                 </label>
                 <Field
-                  className={styles.inputField}
+                  className={`${styles.inputField} ${
+                    errors.email && touched.email ? styles.inputError : ""
+                  }`}
                   name="email"
                   type="email"
                   id={`${fieldId}-email`}
+                  placeholder="Ваша пошта"
+                  autoComplete="off"
                 />
                 <ErrorMessage
                   name="email"
@@ -134,14 +152,19 @@ export default function RegisterPage() {
                   className={styles.error}
                 />
 
+                {/* Пароль */}
                 <label className={styles.label} htmlFor={`${fieldId}-password`}>
                   Пароль*
                 </label>
                 <Field
-                  className={styles.inputField}
+                  className={`${styles.inputField} ${
+                    errors.password && touched.password ? styles.inputError : ""
+                  }`}
                   name="password"
                   type="password"
                   id={`${fieldId}-password`}
+                  placeholder="*******"
+                  autoComplete="new-password"
                 />
                 <ErrorMessage
                   name="password"
@@ -149,6 +172,7 @@ export default function RegisterPage() {
                   className={styles.error}
                 />
 
+                {/* Підтвердження паролю */}
                 <label
                   className={styles.label}
                   htmlFor={`${fieldId}-confirmPassword`}
@@ -156,18 +180,22 @@ export default function RegisterPage() {
                   Підтвердіть пароль*
                 </label>
                 <Field
-                  className={styles.inputField}
+                  className={`${styles.inputField} ${
+                    errors.confirmPassword && touched.confirmPassword
+                      ? styles.inputError
+                      : ""
+                  }`}
                   name="confirmPassword"
                   type="password"
                   id={`${fieldId}-confirmPassword`}
+                  placeholder="*******"
+                  autoComplete="new-password"
                 />
                 <ErrorMessage
                   name="confirmPassword"
                   component="p"
                   className={styles.error}
                 />
-
-                {error && <p className={styles.serverError}>{error}</p>}
 
                 <button
                   className={styles.registrationBtn}
@@ -176,6 +204,7 @@ export default function RegisterPage() {
                 >
                   {isSubmitting ? "Реєстрація..." : "Зареєструватись"}
                 </button>
+
                 <p className={styles.text}>
                   Вже маєте акаунт?{" "}
                   <Link href="/login" className={styles.loginLink}>
@@ -186,13 +215,17 @@ export default function RegisterPage() {
             )}
           </Formik>
         </div>
+
         <p className={styles.footerText}>© {currentYear} ToolNext</p>
       </div>
+
+      {/* ПРАВА ЧАСТИНА (Картинка) */}
       <div className={styles.imageSide}>
         <Image
           src={registerImage}
           alt="Registration illustration"
           className={styles.registerImage}
+          priority
         />
       </div>
     </div>

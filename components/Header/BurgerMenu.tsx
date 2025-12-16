@@ -60,7 +60,12 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
               }}
               aria-label="Вийти"
             >
-              <Image src="/button-exit.svg" alt="" width={20} height={20} />
+              <Image
+                src="/button-exit.svg"
+                alt="Вихід"
+                width={20}
+                height={20}
+              />
             </button>
           </div>
         )}
