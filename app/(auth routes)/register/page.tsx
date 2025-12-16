@@ -1,8 +1,8 @@
 "use client";
 import axios from "axios";
 import styles from "./Register.module.css";
-import { useSearchParams } from "next/navigation";
-import { useId } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useId, useState } from "react"; // Додали useState
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
@@ -11,7 +11,6 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { User } from "@/types/user";
 import Image from "next/image";
 import registerImage from "../../../public/img/registerImage.jpg";
-import { toast } from "react-toastify";
 
 /* ================= TYPES ================= */
 
@@ -52,11 +51,17 @@ export default function RegisterPage() {
   const fieldId = useId();
   const searchParams = useSearchParams();
   const login = useAuthStore((state) => state.login);
+  const router = useRouter();
+
+  // Стейт для відображення помилки сервера текстом
+  const [serverError, setServerError] = useState("");
 
   const handleSubmit = async (
     values: RegisterFormValues,
     { setSubmitting }: FormikHelpers<RegisterFormValues>
   ) => {
+    setServerError(""); // Очищуємо помилки перед новим запитом
+
     try {
       const user: User = await register({
         name: values.username,
@@ -66,13 +71,9 @@ export default function RegisterPage() {
 
       login(user);
       localStorage.setItem("isLoggedIn", "true");
-      toast.success("Реєстрація успішна! Ласкаво просимо.");
 
       const redirectTo = searchParams.get("from") || "/";
-
-      setTimeout(() => {
-        window.location.href = redirectTo;
-      }, 1000);
+      router.push(redirectTo);
     } catch (err: unknown) {
       console.error("Помилка реєстрації:", err);
       let errorMsg = "Помилка реєстрації. Спробуйте ще раз.";
@@ -83,7 +84,8 @@ export default function RegisterPage() {
       } else if (err instanceof Error) {
         errorMsg = err.message;
       }
-      toast.error(errorMsg);
+
+      setServerError(errorMsg);
     } finally {
       setSubmitting(false);
     }
@@ -196,6 +198,11 @@ export default function RegisterPage() {
                   component="p"
                   className={styles.error}
                 />
+
+                {/* Виведення помилки сервера (замість тоста) */}
+                {serverError && (
+                  <div className={styles.serverError}>{serverError}</div>
+                )}
 
                 <button
                   className={styles.registrationBtn}

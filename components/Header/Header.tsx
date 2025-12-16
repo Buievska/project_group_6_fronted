@@ -8,12 +8,13 @@ import BurgerMenu from "./BurgerMenu";
 import { useAuthStore } from "@/lib/store/authStore";
 import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
 import { logoutRequest } from "@/lib/api/clientApi";
-import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export function Header() {
   const { user, logout } = useAuthStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
@@ -25,12 +26,19 @@ export function Header() {
     } catch (error) {
       console.error("Помилка при виході:", error);
     }
+
+    // Очищення даних
     localStorage.removeItem("isLoggedIn");
     logout();
+
+    // Закриття меню та модалок
     setIsLogoutOpen(false);
     setIsMenuOpen(false);
-    toast.success("Ви успішно вийшли з профілю");
-    window.location.href = "/";
+
+    // Видалено toast.success(...)
+
+    // Редірект на головну
+    router.push("/");
   };
 
   return (
@@ -126,7 +134,7 @@ export function Header() {
           </button>
         </div>
 
-        {/* Мобільне меню (ваше існуюче) */}
+        {/* Мобільне меню */}
         <BurgerMenu
           isOpen={isMenuOpen}
           onClose={() => setIsMenuOpen(false)}

@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 import { TanStackProvider } from "@/components/TanStackProvider/TanStackProvider";
 import { AuthProvider } from "@/components/AuthProvider/AuthProvider";
@@ -39,7 +37,6 @@ export default function RootLayout({
               <main style={{ flex: 1 }}>{children}</main>
             </div>
             {modal}
-            <ToastContainer position="top-right" />
           </AuthProvider>
         </TanStackProvider>
       </body>
