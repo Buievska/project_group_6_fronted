@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/img/tools-next/**",
       },
+      {
+        protocol: "https",
+        hostname: "ac.goit.global",
+      },
     ],
   },
 };
