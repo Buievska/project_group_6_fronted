@@ -1,0 +1,185 @@
+.container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.sectionBenefits {
+  max-width: 368px;
+  padding: 64px 0px;
+  margin: 0 auto;
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  gap: 24px;
+}
+
+.title {
+font-weight: 700;
+font-size: 32px;
+line-height: 1.2;
+letter-spacing: -0.01em;
+color: #000;
+max-width: 335px;
+display: flex;
+align-items: flex-start;
+justify-content: flex-start;
+margin-bottom: 24px;
+
+}
+
+.description {
+font-weight: 400;
+font-size: 16px;
+line-height: 1.5;
+color: #000;
+max-width: 616px;
+
+}
+
+.sectionFeatures {
+list-style: none;
+padding: 0;
+margin: 0;
+display: flex;
+flex-wrap: wrap;
+
+}
+
+.sectionFeaturesTitle {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: #000;
+
+  margin-bottom: 24px;
+}
+
+.text {
+font-weight: 400;
+font-size: 16px;
+line-height: 1.5;
+color: #000;
+max-width: 335px;
+
+
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 24px;
+  margin-top: 15px;
+}
+
+@media (min-width: 768px) {
+
+  .container {
+    padding: 0 32px;
+  }
+.sectionBenefits {
+max-width: 704px;
+}
+
+
+
+.title {
+font-size: 28px;
+max-width: 704px;
+}
+
+.description {
+
+max-width: 704px;
+
+}
+
+  .sectionFeatures {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .sectionFeaturesTitle {
+    width: 704px;
+  }
+
+.text {
+max-width: 704px;
+margin-bottom: 32px;
+}
+
+}
+
+@media (min-width: 1440px) {
+  .container {
+    padding: 0 64px;
+  }
+  .sectionBenefits {
+    max-width: 1440px;
+    padding: 112px 0px;
+  }
+  .content {
+    display: flex;
+    flex-direction: row;
+    gap: 80px;
+    margin-bottom: 80px;
+    flex-wrap: nowrap;
+  }
+
+.title {
+font-weight: 700;
+font-size: 40px;
+line-height: 1.2;
+letter-spacing: -0.01em;
+color: #000;
+max-width: 616px;
+
+}
+
+  .description {
+    font-weight: 400;
+    font-size: 18px;
+    width: 616px;
+    height: 135px;
+  }
+.description {
+font-weight: 400;
+font-size: 18px;
+max-width: 616px;
+
+}
+
+.sectionFeatures {
+display: flex;
+align-items: flex-start;
+justify-content: center;
+flex-direction: row;
+gap: 32px;
+}
+  .sectionFeatures {
+    display: flex;
+    align-items: flex-start;
+   
+    flex-direction: row;
+    gap: 32px;
+    flex-wrap: nowrap;
+  }
+
+  .sectionFeaturesTitle {
+    font-size: 24px;
+    width: 416px;
+  }
+
+  .text {
+    width: 416px;
+    height: 72px;
+    margin-bottom: 0px;
+  }
+}
+
+
