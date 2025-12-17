@@ -27,17 +27,12 @@ export function Header() {
       console.error("Помилка при виході:", error);
     }
 
-    // Очищення даних
     localStorage.removeItem("isLoggedIn");
     logout();
 
-    // Закриття меню та модалок
     setIsLogoutOpen(false);
     setIsMenuOpen(false);
 
-    // Видалено toast.success(...)
-
-    // Редірект на головну
     router.push("/");
   };
 
@@ -49,27 +44,19 @@ export function Header() {
             <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
           </Link>
 
-
           <div className={styles.headerRight}>
-            <nav className={styles.navLinks}>
-              <Link href="/">Головна</Link>
-              <Link href="/tools">Інструменти</Link>
-              {!user && <Link href="/auth/login">Увійти</Link>}
-              {user && <Link href="/profile">Мій профіль</Link>}
-            </nav>
             {!user ? (
               <>
                 <nav className={styles.navLinks}>
                   <Link href="/">Головна</Link>
                   <Link href="/tools">Інструменти</Link>
-                  <Link href="/login">Увійти</Link> {/* Увійти як посилання */}
+                  <Link href="/login">Увійти</Link>
                 </nav>
                 <Link href="/register" className={styles.registerBtn}>
                   Зареєструватися
                 </Link>
               </>
             ) : (
-              /* ВАРІАНТ 2: КОРИСТУВАЧ (ЗАЛОГОВАНИЙ) */
               <>
                 <nav className={styles.navLinks}>
                   <Link href="/">Головна</Link>
@@ -78,12 +65,10 @@ export function Header() {
                 </nav>
 
                 <div className={styles.userActions}>
-                  {/* Кнопка Опублікувати */}
                   <Link href="/create" className={styles.publishBtn}>
                     Опублікувати оголошення
                   </Link>
 
-                  {/* Аватар та Ім'я */}
                   <div className={styles.userInfo}>
                     {user.avatar ? (
                       <Image
@@ -102,26 +87,29 @@ export function Header() {
                       {user.name || "Користувач"}
                     </span>
                   </div>
-                )}
 
-                <span className={styles.userName}>{user.name}</span>
+                  <Image
+                    src="/icon-exit.svg"
+                    alt=""
+                    width={1}
+                    height={39}
+                    className={styles.userDivider}
+                  />
 
-                <Image
-                  src="/icon-exit.svg"
-                  alt=""
-                  width={1}
-                  height={39}
-                  className={styles.userDivider}
-                />
-
-                <button
-                  className={styles.logout}
-                  onClick={() => setIsLogoutOpen(true)}
-                  aria-label="Вийти"
-                >
-                  <Image src="/button-exit.svg" alt="" width={24} height={24} />
-                </button>
-              </div>
+                  <button
+                    className={styles.logout}
+                    onClick={() => setIsLogoutOpen(true)}
+                    aria-label="Вийти"
+                  >
+                    <Image
+                      src="/button-exit.svg"
+                      alt=""
+                      width={24}
+                      height={24}
+                    />
+                  </button>
+                </div>
+              </>
             )}
           </div>
 
