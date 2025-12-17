@@ -16,7 +16,6 @@
 .pageLayout {
   display: flex;
   flex-direction: column;
-
   padding-top: 40px;
   padding-bottom: 80px;
 }
@@ -40,9 +39,6 @@
 
   .leftColumn {
     width: 50%;
-
-    position: sticky;
-    top: 100px;
   }
 
   .rightColumn {

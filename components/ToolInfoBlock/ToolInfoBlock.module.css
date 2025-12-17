@@ -24,18 +24,21 @@
 
 .ownerBlock {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
   margin-top: 24px;
 }
 
 .avatarWrapper {
   flex-shrink: 0;
+  display: flex;
 }
 
 .avatar {
   border-radius: 50%;
   object-fit: cover;
+  width: 80px;
+  height: 80px;
 }
 
 .initialAvatar {
@@ -85,8 +88,14 @@
 
 .section {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.section .text {
+  margin-top: 0;
 }
 
 .label {
@@ -189,5 +198,14 @@
   .price {
     font-size: 28px;
     margin-top: 8px;
+  }
+
+  .section {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .text {
+    margin-top: 0;
   }
 }
