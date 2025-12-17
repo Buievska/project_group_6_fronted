@@ -1,0 +1,270 @@
+.feedbacksSection {
+  padding: 60px 0;
+  background-color: #f5f5f5;
+  font-family: "Work Sans", sans-serif;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.swiperWrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.title {
+  margin-bottom: 48px;
+  color: #000;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.swiper {
+  margin-bottom: 32px;
+}
+
+/* Feedback Card */
+.feedbackCard {
+  border-radius: 12px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Star Rating */
+.starRating {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.starRating svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.starFilled {
+  fill: #000;
+}
+
+.starEmpty {
+  fill: #e0e0e0;
+}
+
+/* Text */
+.feedbackText {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #000;
+  flex-grow: 1;
+  margin: 0;
+}
+
+.feedbackAuthor {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #000;
+  margin: 0;
+}
+
+/* Navigation */
+.navigationBlock {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+}
+
+.customPagination {
+  position: absolute;
+  left: 40px !important;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex !important;
+  gap: 8px;
+  align-items: center;
+  width: auto !important;
+}
+
+.navigationButtons {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 12px;
+}
+
+/* Buttons */
+.navigationButtons :global(.swiper-button-prev-custom),
+.navigationButtons :global(.swiper-button-next-custom) {
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #fff;
+  transition: all 0.3s ease;
+}
+
+.navigationButtons svg {
+  width: 20px;
+  height: 20px;
+}
+
+.navigationButtons svg {
+  fill: #000;
+}
+
+/* Hover / Focus */
+.navigationButtons :global(.swiper-button-prev-custom:hover),
+.navigationButtons :global(.swiper-button-next-custom:hover),
+.navigationButtons :global(.swiper-button-prev-custom:focus),
+.navigationButtons :global(.swiper-button-next-custom:focus) {
+  background: #e7cdf4;
+  border-radius: 6px;
+}
+
+/* Active */
+.navigationButtons :global(.swiper-button-prev-custom:active),
+.navigationButtons :global(.swiper-button-next-custom:active) {
+  background: #8808cc;
+  border: 2px solid #fff;
+}
+
+.navigationButtons :global(.swiper-button-prev-custom:active) svg,
+.navigationButtons :global(.swiper-button-next-custom:active) svg {
+  fill: #fff;
+}
+
+/* Disabled */
+.navigationButtons :global(.swiper-button-disabled) {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Pagination */
+.customPagination :global(.swiper-pagination-bullet) {
+  background: #666;
+  opacity: 0.3;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.customPagination :global(.swiper-pagination-bullet-active) {
+  background: #000;
+  opacity: 1;
+  width: 12px;
+  height: 12px;
+}
+
+/* States */
+.loadingState,
+.errorState,
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 18px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .feedbacksSection {
+    padding: 60px 0;
+  }
+
+  .container {
+    padding: 0 32px;
+  }
+
+  .title {
+    font-size: 36px;
+    margin-bottom: 60px;
+  }
+
+  .feedbackCard {
+    gap: 24px;
+  }
+
+  .feedbackText {
+    font-size: 18px;
+  }
+
+  .feedbackAuthor {
+    font-size: 14px;
+  }
+
+  .starRating svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .swiper {
+    margin-bottom: 40px;
+  }
+
+  .navigationBlock {
+    height: 44px;
+  }
+
+  .navigationButtons :global(.swiper-button-prev-custom),
+  .navigationButtons :global(.swiper-button-next-custom) {
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+  }
+
+  .navigationButtons svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .feedbacksSection {
+    padding: 80px 0;
+  }
+
+  .container {
+    padding: 0 64px;
+  }
+
+  .title {
+    font-size: 48px;
+    margin-bottom: 80px;
+  }
+
+  .feedbackText {
+    font-size: 20px;
+  }
+
+  .feedbackAuthor {
+    font-size: 16px;
+  }
+
+  .swiper {
+    margin-bottom: 48px;
+  }
+}

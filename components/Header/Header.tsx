@@ -7,21 +7,38 @@ import styles from "./Header.module.css";
 import BurgerMenu from "./BurgerMenu";
 import { useAuthStore } from "@/lib/store/authStore";
 import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
+import { logoutRequest } from "@/lib/api/clientApi";
+import { useRouter } from "next/navigation";
 
 export function Header() {
   const { user, logout } = useAuthStore();
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
   }, [isMenuOpen]);
 
-  const handleConfirmLogout = () => {
+  const handleConfirmLogout = async () => {
+    try {
+      await logoutRequest();
+    } catch (error) {
+      console.error("Помилка при виході:", error);
+    }
+
+    // Очищення даних
+    localStorage.removeItem("isLoggedIn");
     logout();
+
+    // Закриття меню та модалок
     setIsLogoutOpen(false);
     setIsMenuOpen(false);
+
+    // Видалено toast.success(...)
+
+    // Редірект на головну
+    router.push("/");
   };
 
   return (
@@ -32,6 +49,7 @@ export function Header() {
             <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
           </Link>
 
+
           <div className={styles.headerRight}>
             <nav className={styles.navLinks}>
               <Link href="/">Головна</Link>
@@ -39,24 +57,50 @@ export function Header() {
               {!user && <Link href="/auth/login">Увійти</Link>}
               {user && <Link href="/profile">Мій профіль</Link>}
             </nav>
-
             {!user ? (
-              <Link href="/auth/register" className={styles.register}>
-                Зареєструватися
-              </Link>
+              <>
+                <nav className={styles.navLinks}>
+                  <Link href="/">Головна</Link>
+                  <Link href="/tools">Інструменти</Link>
+                  <Link href="/login">Увійти</Link> {/* Увійти як посилання */}
+                </nav>
+                <Link href="/register" className={styles.registerBtn}>
+                  Зареєструватися
+                </Link>
+              </>
             ) : (
-              <div className={styles.userBlock}>
-                {user.avatar ? (
-                  <Image
-                    src={user.avatar}
-                    alt={user.name}
-                    width={32}
-                    height={32}
-                    className={styles.userAvatar}
-                  />
-                ) : (
-                  <div className={styles.userInitial}>
-                    {user.name.charAt(0).toUpperCase()}
+              /* ВАРІАНТ 2: КОРИСТУВАЧ (ЗАЛОГОВАНИЙ) */
+              <>
+                <nav className={styles.navLinks}>
+                  <Link href="/">Головна</Link>
+                  <Link href="/tools">Інструменти</Link>
+                  <Link href="/profile">Мій профіль</Link>
+                </nav>
+
+                <div className={styles.userActions}>
+                  {/* Кнопка Опублікувати */}
+                  <Link href="/create" className={styles.publishBtn}>
+                    Опублікувати оголошення
+                  </Link>
+
+                  {/* Аватар та Ім'я */}
+                  <div className={styles.userInfo}>
+                    {user.avatar ? (
+                      <Image
+                        src={user.avatar}
+                        alt={user.name || "User"}
+                        width={32}
+                        height={32}
+                        className={styles.userAvatar}
+                      />
+                    ) : (
+                      <div className={styles.userInitial}>
+                        {(user.name?.charAt(0) || "U").toUpperCase()}
+                      </div>
+                    )}
+                    <span className={styles.userName}>
+                      {user.name || "Користувач"}
+                    </span>
                   </div>
                 )}
 
