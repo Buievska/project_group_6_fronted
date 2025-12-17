@@ -1,7 +1,8 @@
-import { User } from "@/types/user";
+
 import { $api } from "./api";
 import axios from "axios";
 import { Tool } from "@/types/tool";
+import { User, UserProfile } from "@/types/user";
 
 export type UserRequest = {
   name: string;
@@ -97,3 +98,14 @@ export async function fetchToolsPage(
 
   return res.data.data;
 }
+
+export const getToolById = async (id: string) => {
+  const { data } = await $api.get<Tool>(`/tools/${id}`);
+  return data;
+};
+
+export const getUserById = async (userId: string) => {
+  const { data } = await $api.get<UserProfile>(`/users/${userId}`);
+  return data;
+};
+

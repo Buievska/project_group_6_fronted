@@ -26,30 +26,29 @@ const SignIn = () => {
       await login(values);
       localStorage.setItem("isLoggedIn", "true");
 
-      router.push("/");
-    } catch (error) {
-      console.error("Помилка входу:", error);
-      let errorMsg = "Щось пішло не так...";
 
-      // Обробка помилки як у реєстрації
-      if (axios.isAxiosError(error)) {
-        errorMsg =
-          error.response?.data?.error ||
-          error.response?.data?.message ||
-          errorMsg;
-      } else if (error instanceof Error) {
-        errorMsg = error.message;
+      if (response) {
+        router.push(pathname || "/");
+      } else {
+        setError("Неправильна електронна адреса або пароль");
       }
+    } catch (error) {
+      setError(
+        (error as ApiError).response?.data?.error ??
+          (error as ApiError).message ??
+          "Ой... тут якась помилка"
+      );
 
-      setServerError(errorMsg);
     } finally {
       setSubmitting(false);
     }
   };
 
   const validationSchema = Yup.object({
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string().required("Password is required"),
+    email: Yup.string()
+      .email("Недійсна електронна адреса")
+      .required("Необхідно вказати адресу електронної пошти"),
+    password: Yup.string().required("Необхідно ввести пароль"),
   });
 
   return (
