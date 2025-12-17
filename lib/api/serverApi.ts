@@ -5,8 +5,8 @@ import { Tool } from "@/types/tool";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
-const getAuthHeaders = () => {
-  const cookieStore = cookies();
+const getAuthHeaders = async () => {
+  const cookieStore = await cookies();
   const token = cookieStore.get("auth_token")?.value;
 
   return {
@@ -18,7 +18,8 @@ const getAuthHeaders = () => {
 
 export async function getCurrentAuthUser(): Promise<UserProfile | null> {
   try {
-    const response = await axios.get(`${API_URL}/users/me`, getAuthHeaders());
+    const config = await getAuthHeaders();
+    const response = await axios.get(`${API_URL}/users/me`, config);
     return response.data;
   } catch {
     return null;
