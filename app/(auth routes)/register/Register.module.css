@@ -8,36 +8,28 @@
 /* --- ЛІВА СТОРОНА (БІЛА) --- */
 .formSide {
   width: 100%;
-  min-height: 100vh; /* Важливо для розтягування */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 32px; /* Відступи від країв екрану */
+  padding: 32px;
   background-color: #fff;
-  position: relative; /* Щоб абсолютні елементи (лого/футер) відштовхувались від цього блоку */
-
-  /* МОБІЛЬНА ВЕРСІЯ: Розкидаємо елементи (Верх - Центр - Низ) */
+  position: relative;
   justify-content: space-between;
 }
 
-/* Логотип */
 .navbar {
-  /* На мобільному він просто стоїть зверху завдяки flex-потоку */
   width: auto;
 }
 
-/* Копірайт */
 .footerText {
   font-size: 12px;
   color: #666;
-  /* На мобільному він просто стоїть знизу */
 }
 
-/* Контейнер форми */
 .formContent {
   width: 100%;
   max-width: 400px;
-  align-self: center; /* Центруємо сам блок форми по горизонталі */
-  /* margin: 40px 0;  Відступи зверху/знизу, щоб не налізло на лого на маленьких екранах */
+  align-self: center;
 }
 
 .registerTitle {
@@ -136,38 +128,32 @@
   display: none;
 }
 
-/* ========================================= */
-/* 💻 DESKTOP (Великі екрани)                */
-/* ========================================= */
-@media (min-width: 1024px) {
+@media (min-width: 1440px) {
   .formSide {
     width: 50%;
-    /* На десктопі ми центруємо форму, а лого і футер "приклеюємо" */
+
     justify-content: center;
     align-items: center;
-    padding: 0; /* Прибираємо паддінги, бо позиціонуємо абсолютно */
+    padding: 0;
   }
 
-  /* 1. ПРИКЛЕЮЄМО ЛОГОТИП */
   .navbar {
     position: absolute;
-    top: 40px; /* Відступ зверху */
-    left: 40px; /* Відступ зліва */
+    top: 40px;
+    left: 40px;
   }
 
-  /* 2. ПРИКЛЕЮЄМО КОПІРАЙТ */
   .footerText {
     position: absolute;
-    bottom: 40px; /* Відступ знизу */
-    left: 40px; /* Відступ зліва */
-    text-align: left; /* Текст зліва */
+    bottom: 40px;
+    left: 40px;
+    text-align: left;
   }
 
-  /* 3. ФОРМА */
   .formContent {
-    max-width: 480px; /* Трохи ширша форма */
+    max-width: 480px;
     width: 100%;
-    padding: 0 40px; /* Захисні відступи з боків */
+    padding: 0 40px;
   }
 
   .registerTitle {
@@ -175,7 +161,6 @@
     margin-bottom: 32px;
   }
 
-  /* 4. КАРТИНКА */
   .imageSide {
     display: block;
     width: 50%;
@@ -191,47 +176,3 @@
     object-fit: cover;
   }
 }
-
-/*.registerPage {
-  display: flex;
-  min-height: 100vh;
-}
-
-.formSide {
-  flex: 0 0 51.1%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 48px;
-  box-sizing: border-box;
-}
-
-.imageSide {
-  flex: 0 0 48.9%;
-}
-
-.image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-
-@media (max-width: 768px) {
-  .imageSide {
-    display: none;
-  }
-
-  .formSide {
-    flex: 1;
-    padding: 24px;
-  }
-}
-
-
-.image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-*/
