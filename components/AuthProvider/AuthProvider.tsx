@@ -1,43 +1,45 @@
 "use client";
 
-import { useLayoutEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/lib/store/authStore";
-import { $api } from "@/lib/api/api";
+import { useEffect } from "react";
+import { useAuthStore, AuthState } from "@/lib/store/authStore";
+import { getCurrentUser } from "@/lib/api/clientApi";
 
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const { user, setUser } = useAuthStore((state: AuthState) => state);
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const { token, logout } = useAuthStore();
-  const router = useRouter();
+  useEffect(() => {
+    const initAuth = async () => {
+      // 1. Перевіряємо, чи є "прапорець" входу
+      const shouldCheckAuth = localStorage.getItem("isLoggedIn");
 
-  useLayoutEffect(() => {
-    const authInterceptor = $api.interceptors.request.use((config) => {
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      return config;
-    });
+      // 2. Якщо юзера немає в стейті І є прапорець - робим запит
+      if (!user && shouldCheckAuth) {
+        try {
+          const response = await getCurrentUser();
 
-    //  (401)
-    const errorInterceptor = $api.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (error.response?.status === 401) {
-          logout();
-          router.push("/auth/login");
+          // 3. Витягуємо правильні дані (як ми налаштували раніше)
+          const userData = response.data || response.user || response;
+
+          const adaptedUser = {
+            id: userData._id || userData.id,
+            name: userData.name,
+            email: userData.email,
+            avatar: userData.avatarUrl || userData.avatar,
+          };
+
+          // 4. Зберігаємо в Zustand
+          if (setUser) setUser(adaptedUser);
+        } catch {
+          console.log("Сесія неактивна, видаляю прапорець.");
+          localStorage.removeItem("isLoggedIn");
         }
-        return Promise.reject(error);
       }
-    );
-
-    return () => {
-      $api.interceptors.request.eject(authInterceptor);
-      $api.interceptors.response.eject(errorInterceptor);
     };
-  }, [token, logout, router]);
+
+    initAuth();
+  }, [user, setUser]);
 
   return <>{children}</>;
 };
+
+export default AuthProvider;

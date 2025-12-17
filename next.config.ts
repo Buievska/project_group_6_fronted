@@ -7,7 +7,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "ftp.goit.study",
         port: "",
-        pathname: "/img/tools-next/**",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "ac.goit.global",
       },
     ],
   },

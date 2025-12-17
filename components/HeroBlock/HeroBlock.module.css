@@ -1,7 +1,8 @@
 .heroBlock {
-  padding-top: 42px;
-
   position: relative;
+  padding-top: 42px;
+  padding-bottom: 42px;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -15,13 +16,17 @@
 
 .overlay {
   position: absolute !important;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 0 !important;
   pointer-events: none;
+}
+
+.container {
+  width: 100%;
+  max-width: 375px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .heroBlock > * {
@@ -29,14 +34,25 @@
   z-index: 1;
 }
 
+.content {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Title */
+
 .title {
+  margin-top: 32px;
+  margin-bottom: 32px;
   font-weight: 700;
   font-size: 40px;
   line-height: 1.2;
   letter-spacing: -0.01em;
   color: #fff;
-  margin-bottom: 32px;
 }
+
+/* Search */
 
 .heroSearch {
   display: flex;
@@ -49,57 +65,70 @@
 .inputWrapper {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 1px;
   width: 100%;
 }
 
 .error {
-  color: #c40202;
-  font-size: 12px;
-  min-height: 20px;
   margin-top: 4px;
+  min-height: 20px;
+
+  font-size: 12px;
+  color: #c40202;
   text-align: left;
 }
 
-.input.inputError {
-  border: 2px solid #c40202;
-}
-
 .input {
-  border: 2px solid #fff;
-  border-radius: 6px;
-  padding: 8px 12px;
   width: 100%;
   height: 40px;
+  padding: 8px 12px;
+
+  border: 2px solid #fff;
+  border-radius: 6px;
   background-color: transparent;
+
   color: #fff;
   font-size: 16px;
+
   transition:
     border-color 0.3s ease,
     box-shadow 0.3s ease;
 }
 
 .input::placeholder {
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 1.5;
   color: rgba(255, 255, 255, 0.6);
 }
+
+.input.inputError {
+  border-color: #c40202;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #9747ff;
+  box-shadow: 0 0 0 2px rgba(151, 71, 255, 0.3);
+}
+
+/* Button */
 
 .button {
   width: 100%;
   height: 44px;
   padding: 10px 24px;
+
   border-radius: 6px;
   border: 1px solid #8808cc;
   background-color: #8808cc;
+
   color: #fff;
   font-weight: 600;
   font-size: 16px;
+
   cursor: pointer;
   transition:
     background-color 0.3s ease,
-    border-color 0.3s ease;
+    border-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .heroSearch .button {
@@ -112,32 +141,21 @@
   border-color: #000;
   color: #000;
 }
-.input:focus {
-  outline: none;
-  border-color: #9747ff;
-  box-shadow: 0 0 0 2px rgba(151, 71, 255, 0.3);
-}
 
-@media screen and (max-width: 399px) {
-  .title {
-    font-size: 28px;
-    margin-top: 32px;
-    margin-bottom: 24px;
-  }
-  .heroSearch {
-    max-width: 335px;
-  }
-  .input,
-  .button {
-    width: 100%;
-  }
-}
-
-/*tablet*/
-@media screen and (min-width: 768px) {
+@media (min-width: 768px) {
   .heroBlock {
     padding-top: 103px;
     padding-bottom: 103px;
+  }
+
+  .container {
+    max-width: 768px;
+    padding: 0 32px;
+    margin: 0 auto;
+  }
+
+  .content {
+    flex-direction: column;
   }
 
   .title {
@@ -147,18 +165,33 @@
 
   .heroSearch {
     flex-direction: row;
-    gap: 12px;
+    align-items: center;
     justify-content: center;
-    width: 100%;
+    gap: 32px;
     max-width: 540px;
   }
 
-  .input {
-    width: 428px;
+  .heroSearch .button {
+    margin-bottom: 0;
   }
 
   .inputWrapper {
-    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+  }
+
+  .error {
+    min-height: 20px;
+    line-height: 20px;
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+  }
+
+  .input {
+    width: 100%;
   }
 
   .button {
@@ -167,17 +200,19 @@
   }
 }
 
-/*desktop*/
-
-@media screen and (min-width: 1440px) {
+@media (min-width: 1440px) {
   .heroBlock {
     padding-top: 192px;
     padding-bottom: 192px;
   }
 
+  .container {
+    max-width: 1440px;
+    padding: 0 64px;
+  }
+
   .title {
     font-size: 48px;
-    padding-left: 90px;
   }
 
   .heroSearch {
@@ -186,24 +221,5 @@
 
   .input {
     width: 416px;
-  }
-}
-
-.container {
-  width: 100%;
-  max-width: var(--container-width);
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-@media (min-width: 768px) {
-  .container {
-    padding: 0 32px;
-  }
-}
-
-@media (min-width: 1440px) {
-  .container {
-    padding: 0 64px;
   }
 }

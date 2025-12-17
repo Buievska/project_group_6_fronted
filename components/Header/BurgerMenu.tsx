@@ -31,38 +31,6 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
           </Link>
         </div>
 
-        {/* USER BLOCK */}
-        {user && (
-          <div className={styles.mobileUser}>
-            {user.avatar ? (
-              <Image
-                src={user.avatar}
-                alt={user.name}
-                width={32}
-                height={32}
-                className={styles.mobileAvatar}
-              />
-            ) : (
-              <div className={styles.mobileInitial}>
-                {user.name.charAt(0).toUpperCase()}
-              </div>
-            )}
-
-            <span className={styles.mobileUserName}>{user.name}</span>
-
-            <button
-              className={styles.mobileLogout}
-              onClick={() => {
-                onLogout?.();
-                onClose();
-              }}
-              aria-label="Вийти"
-            >
-              <Image src="/button-exit.svg" alt="" width={20} height={20} />
-            </button>
-          </div>
-        )}
-
         {/* NAVIGATION */}
         <nav className={styles.navMobile}>
           <Link href="/" onClick={onClose}>
@@ -79,21 +47,64 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
           )}
 
           {user && (
-            <>
-              <Link href="/profile" onClick={onClose}>
-                Мій профіль
-              </Link>
-              <Link href="/create" onClick={onClose}>
-                Опублікувати оголошення
-              </Link>
-            </>
+            <Link href="/profile" onClick={onClose}>
+              Мій профіль
+            </Link>
           )}
         </nav>
+
+        {/* USER BLOCK — ВНИЗУ */}
+        {user && (
+          <div className={styles.mobileUserCentered}>
+            {user.avatar ? (
+              <Image
+                src={user.avatar}
+                alt={user.name || "User"}
+                width={32}
+                height={32}
+                className={styles.mobileAvatar}
+              />
+            ) : (
+              <div className={styles.mobileInitial}>
+                {(user.name?.charAt(0) || "U").toUpperCase()}
+              </div>
+            )}
+
+            <span className={styles.mobileUserName}>
+              {user.name || "Користувач"}
+            </span>
+
+            {/* РИСКА */}
+            <Image
+              src="/icon-exit.svg"
+              alt=""
+              width={1}
+              height={39}
+              className={styles.mobileDivider}
+            />
+
+            <button
+              className={styles.mobileLogout}
+              onClick={() => {
+                onLogout?.();
+                onClose();
+              }}
+              aria-label="Вийти"
+            >
+
+              <Image src="/button-exit.svg" alt="" width={24} height={24} />
+
+            </button>
+          </div>
+        )}
+
+
+        {/* REGISTER (тільки для гостя) */}
 
         {!user && (
           <div className={styles.authMobile}>
             <Link
-              href="/auth/register"
+              href="/register"
               onClick={onClose}
               className={styles.registerMobile}
             >

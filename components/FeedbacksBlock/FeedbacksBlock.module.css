@@ -1,13 +1,12 @@
 .feedbacksSection {
-  padding: 80px 0;
+  padding: 60px 0;
   background-color: #f5f5f5;
   font-family: "Work Sans", sans-serif;
 }
 
 .container {
-  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 100px;
+  padding: 0 20px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -18,29 +17,29 @@
 }
 
 .title {
-  margin-bottom: 80px;
+  margin-bottom: 48px;
   color: #000;
   font-weight: 700;
-  font-size: 48px;
+  font-size: 32px;
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
 
 .swiper {
-  margin-bottom: 48px;
+  margin-bottom: 32px;
 }
 
-/* Feedback Card Styles */
+/* Feedback Card */
 .feedbackCard {
   border-radius: 12px;
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 20px;
   width: 100%;
 }
 
-/* Star Rating Styles */
+/* Star Rating */
 .starRating {
   display: flex;
   gap: 4px;
@@ -48,23 +47,23 @@
 }
 
 .starRating svg {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
 }
 
 .starFilled {
-  fill: #000000;
+  fill: #000;
 }
 
 .starEmpty {
-  fill: #E0E0E0;
+  fill: #e0e0e0;
 }
 
-/* Feedback Text */
+/* Text */
 .feedbackText {
   font-weight: 400;
-  font-size: 20px;
+  font-size: 16px;
   line-height: 1.5;
   color: #000;
   flex-grow: 1;
@@ -73,24 +72,24 @@
 
 .feedbackAuthor {
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.5;
   color: #000;
   margin: 0;
 }
 
-/* Navigation Block */
+/* Navigation */
 .navigationBlock {
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 48px;
+  height: 40px;
 }
 
 .customPagination {
   position: absolute;
-  left: 40 !important;
+  left: 40px !important;
   top: 50%;
   transform: translateY(-50%);
   display: flex !important;
@@ -108,12 +107,12 @@
   gap: 12px;
 }
 
-/* Navigation Buttons - Normal State */
+/* Buttons */
 .navigationButtons :global(.swiper-button-prev-custom),
 .navigationButtons :global(.swiper-button-next-custom) {
-  width: 48px;
-  height: 48px;
-  padding: 12px;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
   border: 2px solid #000;
   border-radius: 4px;
   display: flex;
@@ -124,35 +123,29 @@
   transition: all 0.3s ease;
 }
 
-.navigationButtons :global(.swiper-button-prev-custom) svg,
-.navigationButtons :global(.swiper-button-next-custom) svg {
-  fill: #000;
-  transition: fill 0.3s ease;
+.navigationButtons svg {
+  width: 20px;
+  height: 20px;
 }
 
-/* Hover/Focus State */
+.navigationButtons svg {
+  fill: #000;
+}
+
+/* Hover / Focus */
 .navigationButtons :global(.swiper-button-prev-custom:hover),
 .navigationButtons :global(.swiper-button-next-custom:hover),
 .navigationButtons :global(.swiper-button-prev-custom:focus),
 .navigationButtons :global(.swiper-button-next-custom:focus) {
   background: #e7cdf4;
-  border: 2px solid #000;
   border-radius: 6px;
 }
 
-.navigationButtons :global(.swiper-button-prev-custom:hover) svg,
-.navigationButtons :global(.swiper-button-next-custom:hover) svg,
-.navigationButtons :global(.swiper-button-prev-custom:focus) svg,
-.navigationButtons :global(.swiper-button-next-custom:focus) svg {
-  fill: #000;
-}
-
-/* Active State */
+/* Active */
 .navigationButtons :global(.swiper-button-prev-custom:active),
 .navigationButtons :global(.swiper-button-next-custom:active) {
   background: #8808cc;
   border: 2px solid #fff;
-  border-radius: 6px;
 }
 
 .navigationButtons :global(.swiper-button-prev-custom:active) svg,
@@ -160,29 +153,19 @@
   fill: #fff;
 }
 
-/* Disabled State */
-.navigationButtons :global(.swiper-button-prev-custom.swiper-button-disabled),
-.navigationButtons :global(.swiper-button-next-custom.swiper-button-disabled) {
-  background: #fff;
-  border: 2px solid #000;
-  border-radius: 4px;
+/* Disabled */
+.navigationButtons :global(.swiper-button-disabled) {
   opacity: 0.4;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-.navigationButtons :global(.swiper-button-prev-custom.swiper-button-disabled) svg,
-.navigationButtons :global(.swiper-button-next-custom.swiper-button-disabled) svg {
-  fill: #000;
-}
-
-/* Pagination Styles */
+/* Pagination */
 .customPagination :global(.swiper-pagination-bullet) {
   background: #666;
   opacity: 0.3;
   width: 10px;
   height: 10px;
-  margin: 0 !important;
   border-radius: 50%;
   transition: all 0.3s ease;
 }
@@ -194,43 +177,20 @@
   height: 12px;
 }
 
-.customPagination :global(.swiper-pagination-bullet-active-main) {
-  background: #000;
-  opacity: 1;
+/* States */
+.loadingState,
+.errorState,
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 18px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.customPagination :global(.swiper-pagination-bullet-active-prev),
-.customPagination :global(.swiper-pagination-bullet-active-next) {
-  background: #666;
-  opacity: 0.5;
-}
-
-/* Desktop 1440px */
-@media (min-width: 1440px) {
-  .container {
-    padding: 0 100px;
-  }
-
-  .title {
-    font-size: 48px;
-    margin-bottom: 80px;
-  }
-
-  .feedbackText {
-    font-size: 20px;
-  }
-
-  .feedbackAuthor {
-    font-size: 16px;
-  }
-
-  .swiper {
-    margin-bottom: 48px;
-  }
-}
-
-/* Tablet 768px */
-@media (max-width: 1439px) and (min-width: 768px) {
+@media (min-width: 768px) {
   .feedbacksSection {
     padding: 60px 0;
   }
@@ -282,98 +242,29 @@
   }
 }
 
-/* Mobile 375px */
-@media (max-width: 767px) {
+@media (min-width: 1440px) {
   .feedbacksSection {
-    padding: 60px 0;
+    padding: 80px 0;
   }
 
   .container {
-    padding: 0 20px;
+    padding: 0 64px;
   }
 
   .title {
-    font-size: 32px;
-    margin-bottom: 48px;
-  }
-
-  .feedbackCard {
-    gap: 20px;
+    font-size: 48px;
+    margin-bottom: 80px;
   }
 
   .feedbackText {
-    font-size: 16px;
+    font-size: 20px;
   }
 
   .feedbackAuthor {
-    font-size: 14px;
-  }
-
-  .starRating svg {
-    width: 18px;
-    height: 18px;
+    font-size: 16px;
   }
 
   .swiper {
-    margin-bottom: 32px;
-  }
-
-  .navigationBlock {
-    height: 40px;
-  }
-
-  .navigationButtons :global(.swiper-button-prev-custom),
-  .navigationButtons :global(.swiper-button-next-custom) {
-    width: 40px;
-    height: 40px;
-    padding: 8px;
-  }
-
-  .navigationButtons svg {
-    width: 20px;
-    height: 20px;
-  }
-}
-
-/* Loading, Error, Empty States */
-.loadingState,
-.errorState,
-.emptyState {
-  text-align: center;
-  padding: 60px 20px;
-  font-size: 18px;
-  min-height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.loadingState p {
-  color: #666;
-}
-
-.errorState p {
-  color: #d32f2f;
-}
-
-.emptyState p {
-  color: #666;
-}
-
-/* Анімація завантаження (опціонально) */
-.loadingState::after {
-  content: '...';
-  animation: dots 1.5s steps(4, end) infinite;
-}
-
-@keyframes dots {
-  0%, 20% {
-    content: '.';
-  }
-  40% {
-    content: '..';
-  }
-  60%, 100% {
-    content: '...';
+    margin-bottom: 48px;
   }
 }
