@@ -1,6 +1,5 @@
-
-import { User } from '@/types/user';
-import { $api }  from './api';
+import { User } from "@/types/user";
+import { $api } from "./api";
 import axios from "axios";
 import { Tool } from "@/types/tool";
 
@@ -11,7 +10,7 @@ export type UserRequest = {
 };
 
 export const register = async (userData: UserRequest) => {
-  const { data } = await $api.post<User>('/auth/register', userData);
+  const { data } = await $api.post<User>("/auth/register", userData);
   return data;
 };
 
@@ -47,3 +46,12 @@ export const getTools = async () => {
   return res.data;
 };
 
+export const getToolById = async (id: string) => {
+  const { data } = await $api.get<Tool>(`/tools/${id}`);
+  return data;
+};
+
+export const getUserById = async (userId: string) => {
+  const response = await $api.get(`/users/${userId}`);
+  return response.data;
+};
