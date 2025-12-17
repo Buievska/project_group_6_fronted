@@ -1,20 +1,30 @@
 import FilterBar from "@/components/FilterBar/FilterBar";
-import css from "./page.module.css";
 import ToolsGrid from "@/components/ToolsGrid/ToolsGrid";
+import css from "./page.module.css";
 
-export default function ToolsPage({
+type SearchParams = Promise<{
+  page?: string;
+  category?: string;
+  search?: string;
+}>;
+
+export default async function ToolsPage({
   searchParams,
 }: {
-  searchParams?: { page?: string };
+  searchParams?: SearchParams;
 }) {
-  const page = Math.max(1, Number(searchParams?.page ?? 1) || 1);
+  const sp = (await searchParams) ?? {};
+
+  const page = Math.max(1, Number(sp.page ?? 1) || 1);
+  const category = sp.category ?? "all";
+  const search = sp.search ?? "";
 
   return (
     <section>
       <div className="container">
         <h1 className={css.header}>Всі інструменти</h1>
-        <FilterBar />
-        <ToolsGrid page={page} />
+        <FilterBar selected={category} search={search} />
+        <ToolsGrid page={page} category={category} search={search} />
       </div>
     </section>
   );

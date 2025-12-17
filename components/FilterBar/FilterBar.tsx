@@ -1,33 +1,27 @@
-"use client";
-
 import css from "./FilterBar.module.css";
-import { Category, fetchCategories } from "@/lib/api/clientApi";
-import { useEffect, useState } from "react";
+import { fetchCategories } from "@/lib/api/clientApi";
+import FilterSelectClient from "./FilterSelectCLient";
 
-const FilterBar = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    const load = async () => {
-      const data = await fetchCategories();
-      setCategories(data);
-    };
-    load();
-  }, []);
+export default async function FilterBar({
+  selected,
+  search,
+}: {
+  selected: string;
+  search: string;
+}) {
+  const categories = await fetchCategories();
 
   return (
     <div className={css.wrapper}>
-      <select className={css.select}>
-        <option value="all">Всі категорії</option>
-        {categories.map((category) => (
-          <option key={category._id} value={category._id}>
-            {category.title}
-          </option>
-        ))}
-      </select>
-      <button className={css.filter_button}>Скинути фільтри</button>
+      <FilterSelectClient
+        categories={categories}
+        selected={selected}
+        search={search}
+      />
+
+      <a className={css.filter_button} href="/tools">
+        Скинути фільтри
+      </a>
     </div>
   );
-};
-
-export default FilterBar;
+}

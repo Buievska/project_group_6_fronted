@@ -8,6 +8,8 @@
 }
 
 .filter_button {
+  position: relative; /* ✅ anchor for ::after */
+  display: inline-block; /* ✅ underline fits text width */
   background-color: transparent;
   border: none;
   font-family: var(--font-family);
@@ -15,8 +17,31 @@
   font-size: 16px;
   line-height: 150%;
   color: var(--color-neutral-darkest);
-  margin-bottom: 32px;
   text-align: left;
+  text-decoration: none; /* ✅ remove default underline */
+}
+
+.filter_button:hover {
+  color: black;
+}
+
+.filter_button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 0;
+  height: 2px;
+  background: black;
+  transition:
+    width 0.3s ease,
+    left 0.3s ease;
+}
+
+.filter_button:hover::after,
+.filter_button:focus-visible::after {
+  width: 100%;
+  left: 0;
 }
 
 .wrapper {

@@ -61,6 +61,7 @@
 
   .image {
     width: auto;
+    height: 374px;
     display: block;
     max-width: 100%;
   }

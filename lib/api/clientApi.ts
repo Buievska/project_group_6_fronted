@@ -30,23 +30,6 @@ interface Tools {
   };
 }
 
-export const logoutRequest = async () => {
-  // Відправляємо запит на сервер, щоб він очистив Cookie
-  return $api.post("auth/logout");
-};
-
-export const getCurrentUser = async () => {
-  const response = await $api.get("users/current");
-  return response.data;
-};
-
-export const getTools = async () => {
-  const res = await axios.get<Tools>(
-    "https://project-group-6-backend.onrender.com/api/tools"
-  );
-  return res.data;
-};
-
 type ToolsApiResponse = {
   data: {
     tools: Tool[];
@@ -64,22 +47,52 @@ export interface Category {
   keywords: string;
 }
 
-interface CategoriesResponse {
+type CategoriesResponsee = {
   status: string;
   data: Category[];
-}
-
-export const fetchCategories = async (): Promise<Category[]> => {
-  const res = await axios.get<CategoriesResponse>(
-    "https://project-group-6-backend.onrender.com/api/categories"
-  );
-  return res.data.data;
 };
 
-export async function fetchToolsPageClient(page: number, limit = 8) {
+export const logoutRequest = async () => {
+  // Відправляємо запит на сервер, щоб він очистив Cookie
+  return $api.post("auth/logout");
+};
+
+export const getCurrentUser = async () => {
+  const response = await $api.get("users/current");
+  return response.data;
+};
+
+export const getTools = async () => {
+  const res = await axios.get<Tools>(
+    "https://project-group-6-backend.onrender.com/api/tools"
+  );
+  return res.data;
+};
+
+export async function fetchCategories(): Promise<Category[]> {
+  const res = await axios.get<CategoriesResponsee>(
+    "https://project-group-6-backend.onrender.com/api/categories"
+  );
+
+  return res.data.data;
+}
+
+export async function fetchToolsPage(
+  page: number,
+  limit = 8,
+  category = "all",
+  search = ""
+) {
   const res = await axios.get<ToolsApiResponse>(
     "https://project-group-6-backend.onrender.com/api/tools",
-    { params: { page, limit } }
+    {
+      params: {
+        page,
+        limit,
+        ...(category !== "all" && { category }),
+        ...(search && { search }),
+      },
+    }
   );
 
   return res.data.data;
