@@ -117,7 +117,7 @@ export default function AddEditToolForm({ mode, initialValues }: Props) {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ setFieldValue, isSubmitting, values }) => (
+      {({ setFieldValue, isSubmitting }) => (
         <Form className={styles.formWrapper}>
           <div className={styles.leftSide}>
             <label className={styles.imageField}>
@@ -161,7 +161,6 @@ export default function AddEditToolForm({ mode, initialValues }: Props) {
                 name="pricePerDay"
                 type="number"
                 className={styles.formInput}
-                value={values.pricePerDay}
               />
               <ErrorMessage
                 name="pricePerDay"
