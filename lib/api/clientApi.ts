@@ -1,4 +1,3 @@
-
 import { $api } from "./api";
 import axios from "axios";
 import { Tool } from "@/types/tool";
@@ -78,6 +77,18 @@ export async function fetchCategories(): Promise<Category[]> {
   return res.data.data;
 }
 
+export const getCategories = async () => {
+  const { data } = await axios.get("/api/categories");
+  return data;
+};
+
+export const createTool = async (formData: FormData) => {
+  const { data } = await axios.post("/api/tools", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return data;
+};
+
 export async function fetchToolsPage(
   page: number,
   limit = 8,
@@ -108,4 +119,3 @@ export const getUserById = async (userId: string) => {
   const { data } = await $api.get<UserProfile>(`/users/${userId}`);
   return data;
 };
-
