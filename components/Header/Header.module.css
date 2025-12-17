@@ -1,24 +1,30 @@
+/* ================= HEADER ================= */
 .header {
   width: 100%;
   position: sticky;
   top: 0;
   z-index: 50;
   background: #fff;
+  border-bottom: 1px solid #f2f2f2;
 }
 
 .containerHeader {
   width: 100%;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 16px 20px;
+  padding: 0 20px;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
 }
 
-/* LOGO */
+/* ================= LOGO ================= */
+
 .logoLink {
   display: block;
+  flex-shrink: 0;
 }
 
 .logo {
@@ -26,7 +32,7 @@
   height: 20px;
 }
 
-/* DESKTOP NAV */
+/* ================= DESKTOP NAV ================= */
 .headerRight {
   display: none;
 }
@@ -35,7 +41,7 @@
   display: none;
 }
 
-/* NAV LINKS */
+/* ================= NAV LINKS ================= */
 .navLinks a,
 .navMobile a {
   position: relative;
@@ -69,7 +75,7 @@
   left: 0;
 }
 
-/* BUTTONS */
+/* ================= BUTTONS ================= */
 .register,
 .registerMobile {
   height: 40px;
@@ -89,9 +95,7 @@
 }
 
 .register:hover,
-.register:focus,
-.registerMobile:hover,
-.registerMobile:focus {
+.registerMobile:hover {
   background: transparent;
   color: #000;
 }
@@ -99,29 +103,29 @@
 .register:active,
 .registerMobile:active {
   background: #e7cdf4;
-  color: #000;
 }
 
-/* BURGER */
+.registerBtn {
+  display: none;
+}
+
+/* ================= BURGER ================= */
+
 .burger {
   background: none;
   border: none;
-  padding: 8px;
+  padding: 0;
   cursor: pointer;
-  position: relative;
   z-index: 200;
-  transition: transform 0.25s ease;
 }
 
-.burger:hover {
-  transform: scale(1.1);
+.authMobile {
+  margin: 0 auto;
+  margin-top: 16px;
 }
 
-.burger:active {
-  transform: scale(0.95);
-}
+/* ================= OVERLAY ================= */
 
-/* OVERLAY */
 .overlay {
   position: fixed;
   inset: 0;
@@ -137,7 +141,8 @@
   pointer-events: auto;
 }
 
-/* MOBILE MENU */
+/* ================= MOBILE MENU ================= */
+
 .menu {
   width: 100vw;
   height: 100vh;
@@ -146,38 +151,48 @@
   flex-direction: column;
   transform: translateX(100%);
   transition: transform 0.3s ease;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .overlay.open .menu {
   transform: translateX(0);
 }
 
-/* MENU HEADER */
 .menuHeader {
   padding: 32px 16px;
 }
 
-.menu .logoLink img {
-  width: 124px;
-  height: 20px;
+/* ================= MOBILE NAV ================= */
+.navMobile {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
 }
 
-/* MOBILE USER BLOCK */
-.mobileUser {
+/* ================= MOBILE USER ================= */
+.mobileUserCentered {
+  margin-top: 16px;
+  padding: 0 16px;
+
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 24px 16px;
+  justify-content: center;
+  gap: 16px;
 }
 
-.mobileAvatar {
+.mobileAvatar,
+.userAvatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.mobileInitial {
+.mobileInitial,
+.userInitial {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -190,13 +205,15 @@
   justify-content: center;
 }
 
-.mobileUserName {
+.mobileUserName,
+.userName {
   font-size: 14px;
   font-weight: 500;
-  flex-grow: 1;
+  white-space: nowrap;
 }
 
-.mobileLogout {
+.mobileLogout,
+.logout {
   background: none;
   border: none;
   padding: 4px;
@@ -205,61 +222,174 @@
   align-items: center;
 }
 
-.mobileLogout:hover svg path {
-  stroke: #8808cc;
+.userDivider,
+.mobileDivider {
+  opacity: 0.6;
 }
 
-/* MOBILE NAV */
-.navMobile {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: center;
-  margin-bottom: 16px;
+.userActions {
+  display: none;
 }
 
-/* MOBILE AUTH */
-.authMobile {
-  display: flex;
-  justify-content: center;
-}
+/* ================= BREAKPOINTS ================= */
 
-/* BREAKPOINTS */
 @media (min-width: 375px) {
   .registerMobile {
     width: 335px;
   }
 }
 
-@media (min-width: 678px) {
+@media (min-width: 768px) {
   .containerHeader {
-    padding: 16px 32px;
+    padding: 0 32px;
+  }
+
+  .menuHeader {
+    padding: 32px 32px;
   }
 
   .registerMobile {
-    width: 158px;
+    width: auto;
+    min-width: 160px;
   }
 }
 
 @media (min-width: 1440px) {
-  .containerHeader {
-    padding: 16px 64px;
-  }
-
   .burger {
     display: none;
   }
 
-  .headerRight {
+  .containerHeader {
+    padding: 0 64px;
+  }
+
+  .desktopContainer {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 24px;
     margin-left: auto;
   }
 
+  /* --- НАВІГАЦІЯ --- */
   .navLinks {
     display: flex;
     align-items: center;
     gap: 32px;
+    margin-right: 32px;
+  }
+
+  .navLinks a {
+    font-size: 16px;
+    font-weight: 500;
+    color: #000;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .navLinks a:hover {
+    color: #8808cc;
+  }
+
+  /* --- БЛОК ДІЙ (СПРАВА) --- */
+  .userActions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  /* Кнопка "Зареєструватися" (Гість) */
+  .registerBtn {
+    display: block;
+    padding: 10px 24px;
+    background-color: #8808cc;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s;
+  }
+
+  .registerBtn:hover {
+    background-color: #6a069e;
+  }
+
+  /* Кнопка "Опублікувати оголошення" (Юзер) */
+  .publishBtn {
+    padding: 10px 24px;
+    background-color: #8808cc;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+  }
+
+  .publishBtn:hover {
+    background-color: #6a069e;
+  }
+
+  /* Інфо користувача */
+  .userInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .userAvatar {
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .userInitial {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #8808cc;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .userName {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+  }
+
+  /* Вертикальний розділювач */
+  .divider {
+    width: 1px;
+    height: 32px; /* Висота палички */
+    background-color: #000; /* Чорна, як на макеті */
+  }
+
+  /* Кнопка "Вийти" */
+  .logoutBtn {
+    background: transparent;
+    border: none; /* Можна додати border: 1px solid #8808cc якщо треба рамку */
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+  }
+
+  .logoutBtn:hover {
+    color: #8808cc;
+  }
+
+  .userBlock {
+    display: flex;
+    align-items: center;
+    gap: 16px;
   }
 }
