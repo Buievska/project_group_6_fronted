@@ -27,6 +27,7 @@ export default function FilterSelectClient({
     else params.set("category", value);
 
     params.delete("page");
+    params.delete("search");
 
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
