@@ -2,6 +2,7 @@ import { Tool } from "@/types/tool";
 import Image from "next/image";
 import css from "./ToolCard.module.css";
 import Link from "next/link";
+import StarRating from "@/components/FeedbacksBlock/StarRating";
 
 type Props = {
   tool: Tool;
@@ -19,7 +20,7 @@ export default function ToolCard({ tool }: Props) {
       />
 
       <div className={css.info}>
-        <p>{tool.rating}</p>
+        <StarRating rating={tool.rating} />
         <p className={css.name}>{tool.name}</p>
         <p className={css.price}>{tool.pricePerDay} грн/день</p>
       </div>

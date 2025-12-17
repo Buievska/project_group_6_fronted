@@ -5,6 +5,8 @@
 import { Tool } from "@/types/tool";
 import Image from "next/image";
 import css from "./FeaturedToolsBlockItem.module.css";
+import StarRating from "@/components/FeedbacksBlock/StarRating";
+import Link from "next/link";
 
 interface Tools {
   tools: Tool[];
@@ -23,15 +25,18 @@ export default function FeaturedToolsBlockItem({ tools }: Tools) {
             className={css.featuredToolsBlockImage}
           />
           <div className={css.featuredToolsBlockInfo}>
-            <p>{tool.rating}</p>
+            <StarRating rating={tool.rating} />
             <p className={css.featuredToolsBlockName}>{tool.name}</p>
             <p className={css.featuredToolsBlockPrice}>
               {tool.pricePerDay} грн/день
             </p>
           </div>
-          <a className={css.featuredToolsBlockButton} href="#">
+          <Link
+            className={css.featuredToolsBlockButton}
+            href={`/tools/${tool._id}`}
+          >
             Детальніше
-          </a>
+          </Link>
         </li>
       ))}
     </>

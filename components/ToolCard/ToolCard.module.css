@@ -10,6 +10,7 @@
   width: 335px;
   height: 54px;
   margin-bottom: 8px;
+  margin-top: 8px;
 }
 
 .image {
@@ -39,6 +40,11 @@
   padding: 8px 20px;
   width: 335px;
   height: 40px;
+}
+
+.button:hover {
+  background-color: rgba(243, 230, 249, 1);
+  transition: background-color 0.3s ease;
 }
 
 @media (min-width: 1440px) {

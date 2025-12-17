@@ -8,16 +8,18 @@ export default async function FeaturedToolsBlock() {
 
   return (
     <>
-      <section className={css.featuredToolsBlock}>
-        <h2 className={css.featuredToolsBlockName}>Популярні інструменти</h2>
+      <section className={css.container}>
+        <div className={css.featuredToolsBlock}>
+          <h2 className={css.featuredToolsBlockName}>Популярні інструменти</h2>
 
-        <ul className={css.featuredToolsBlockList}>
-          <FeaturedToolsBlockItem tools={data.data.tools} />
-        </ul>
+          <ul className={css.featuredToolsBlockList}>
+            <FeaturedToolsBlockItem tools={data.data.tools} />
+          </ul>
 
-        <Link className={css.featuredToolsBlockButton} href="/tools">
-          До всіх інструментів
-        </Link>
+          <Link className={css.featuredToolsBlockButton} href="/tools">
+            До всіх інструментів
+          </Link>
+        </div>
       </section>
     </>
   );

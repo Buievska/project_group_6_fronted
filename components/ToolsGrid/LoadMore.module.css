@@ -2,13 +2,9 @@
   border: 1px solid var(--color-electric-violet);
   border-radius: 6px;
   padding: 10px 24px;
-  width: 335px;
+  width: 182px;
   height: 44px;
   background: var(--color-electric-violet);
-  font-family: var(--font-family);
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 150%;
   color: var(--color-white);
 }
 
@@ -16,4 +12,9 @@
   display: flex;
   justify-content: center;
   margin: 32px 0;
+}
+
+.btn:hover {
+  color: black;
+  background-color: white;
 }
