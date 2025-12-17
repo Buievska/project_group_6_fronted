@@ -45,14 +45,18 @@ export function Header() {
     <>
       <header className={styles.header}>
         <div className={styles.containerHeader}>
-          {/* LOGO */}
           <Link href="/" className={styles.logoLink}>
             <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
           </Link>
 
-          {/* === DESKTOP PART (ПК) === */}
-          <div className={styles.desktopContainer}>
-            {/* ВАРІАНТ 1: ГІСТЬ (НЕ ЗАЛОГОВАНИЙ) */}
+
+          <div className={styles.headerRight}>
+            <nav className={styles.navLinks}>
+              <Link href="/">Головна</Link>
+              <Link href="/tools">Інструменти</Link>
+              {!user && <Link href="/auth/login">Увійти</Link>}
+              {user && <Link href="/profile">Мій профіль</Link>}
+            </nav>
             {!user ? (
               <>
                 <nav className={styles.navLinks}>
@@ -98,32 +102,33 @@ export function Header() {
                       {user.name || "Користувач"}
                     </span>
                   </div>
+                )}
 
-                  {/* Розділювач */}
-                  <div className={styles.divider}></div>
+                <span className={styles.userName}>{user.name}</span>
 
-                  {/* Кнопка Вийти */}
-                  <button
-                    className={styles.logoutBtn}
-                    onClick={() => setIsLogoutOpen(true)}
-                  >
-                    <Image
-                      src="/button-exit.svg"
-                      alt="Вихід"
-                      width={24}
-                      height={24}
-                    />
-                  </button>
-                </div>
-              </>
+                <Image
+                  src="/icon-exit.svg"
+                  alt=""
+                  width={1}
+                  height={39}
+                  className={styles.userDivider}
+                />
+
+                <button
+                  className={styles.logout}
+                  onClick={() => setIsLogoutOpen(true)}
+                  aria-label="Вийти"
+                >
+                  <Image src="/button-exit.svg" alt="" width={24} height={24} />
+                </button>
+              </div>
             )}
           </div>
 
-          {/* BURGER BUTTON (Тільки мобілка) */}
           <button
             className={styles.burger}
             onClick={() => setIsMenuOpen((prev) => !prev)}
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-label="Menu"
           >
             <Image
               src={isMenuOpen ? "/burger-close.svg" : "/burger-open.svg"}
@@ -134,7 +139,6 @@ export function Header() {
           </button>
         </div>
 
-        {/* Мобільне меню */}
         <BurgerMenu
           isOpen={isMenuOpen}
           onClose={() => setIsMenuOpen(false)}
@@ -143,7 +147,6 @@ export function Header() {
         />
       </header>
 
-      {/* Модалка виходу */}
       {isLogoutOpen && (
         <ConfirmationModal
           title="Ви впевнені, що хочете вийти?"
