@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "ToolNext",
-    description: "Платформа для створення та публікації інструментів",
+    description: "Платформа для швидкої та зручної оренди інструментів",
     images: ["/og-toolnext.jpg"],
   },
 };
