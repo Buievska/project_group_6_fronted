@@ -15,7 +15,7 @@ import {
 } from "@/lib/api/serverApi";
 
 import { UserProfile } from "@/components/UserProfile/UserProfile";
-import { ToolsGrid } from "@/components/ToolsGrid/ToolsGrid";
+import ToolsGrid from "@/components/ToolsGrid/ToolsGrid";
 import { ProfilePlaceholder } from "@/components/ProfilePlaceholder/ProfilePlaceholder";
 
 import css from "./Profile.module.css";

@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { UserProfile } from "@/types/user";
 import { Tool } from "@/types/tool";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
 
 const getAuthHeaders = async () => {
   const cookieStore = await cookies();
