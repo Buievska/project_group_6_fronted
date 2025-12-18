@@ -1,15 +1,6 @@
-// components/BookingToolForm/BookingToolForm.tsx
 "use client";
 
-import {
-  ErrorMessage,
-  Field,
-  Form,
-  Formik,
-  FormikHelpers,
-  useFormikContext,
-  FormikErrors,
-} from "formik";
+import { ErrorMessage, Field, Form, Formik, FormikHelpers, useFormikContext, FormikErrors } from "formik";
 import * as Yup from "yup";
 import { useId } from "react";
 import BookingCalendar from "../BookingCalendar/BookingCalendar";
@@ -39,19 +30,13 @@ const initialValues: BookingToolFormValues = {
 };
 
 const validationSchema = Yup.object({
-  firstName: Yup.string()
-    .trim()
-    .min(2, "Мінімум 2 символи")
-    .required("Імʼя обовʼязкове"),
+  firstName: Yup.string().trim().min(2, "Мінімум 2 символи").required("Імʼя обовʼязкове"),
 
-  lastName: Yup.string()
-    .trim()
-    .min(2, "Мінімум 2 символи")
-    .required("Прізвище обовʼязкове"),
+  lastName: Yup.string().trim().min(2, "Мінімум 2 символи").required("Прізвище обовʼязкове"),
 
   phone: Yup.string()
     .required("Номер телефону обовʼязковий")
-    .test("is-ua-phone", "Невірний формат телефону", (value) => {
+    .test("is-ua-phone", "Невірний формат телефону", value => {
       if (!value) return false;
       const cleaned = value.replace(/\D/g, "");
       return /^380\d{9}$/.test(cleaned) || /^0\d{9}$/.test(cleaned);
@@ -60,11 +45,7 @@ const validationSchema = Yup.object({
   dateRange: Yup.object({
     from: Yup.date().nullable().required("Оберіть дату початку"),
     to: Yup.date().nullable().required("Оберіть дату завершення"),
-  }).test(
-    "dates-required",
-    "Оберіть період бронювання",
-    (value) => value?.from !== null && value?.to !== null
-  ),
+  }).test("dates-required", "Оберіть період бронювання", value => value?.from !== null && value?.to !== null),
 
   city: Yup.string().trim().required("Місто обовʼязкове"),
 
@@ -73,13 +54,9 @@ const validationSchema = Yup.object({
 
 // Компонент-обгортка для календаря з Formik
 function CalendarField() {
-  const { values, setFieldValue, errors, touched } =
-    useFormikContext<BookingToolFormValues>();
+  const { values, setFieldValue, errors, touched } = useFormikContext<BookingToolFormValues>();
 
-  const bookedDates = [
-    new Date(2025, 7, 12),
-    new Date(2025, 7, 15),
-  ];
+  const bookedDates = [new Date(2025, 7, 12), new Date(2025, 7, 15)];
 
   const handleChange = (range: DateRange) => {
     setFieldValue("dateRange", range, true);
@@ -111,13 +88,39 @@ function CalendarField() {
   );
 }
 
+// Задаємо ціну за день
+const PRICE_PER_DAY = 700;
+
+// Хук для розрахунку кількості днів
+function calculateDays(from: Date | null, to: Date | null): number {
+  if (!from || !to) return 0;
+
+  const start = new Date(from);
+  const end = new Date(to);
+
+  const diffTime = end.getTime() - start.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  return diffDays > 0 ? diffDays : 0;
+}
+
+// Компонент для відображення ціни (через Formik)
+function PriceBlock() {
+  const { values } = useFormikContext<BookingToolFormValues>();
+
+  const days = calculateDays(values.dateRange.from, values.dateRange.to);
+
+  const totalPrice = days * PRICE_PER_DAY;
+
+  return (
+    <p className={styles.textPrice}>{days > 0 ? `Ціна: ${totalPrice} грн` : "Оберіть період для розрахунку ціни"}</p>
+  );
+}
+
 export default function BookingToolForm() {
   const fieldId = useId();
 
-  const handleSubmit = (
-    values: BookingToolFormValues,
-    actions: FormikHelpers<BookingToolFormValues>
-  ) => {
+  const handleSubmit = (values: BookingToolFormValues, actions: FormikHelpers<BookingToolFormValues>) => {
     const submitData = {
       ...values,
       startDate: values.dateRange.from?.toISOString(),
@@ -139,7 +142,7 @@ export default function BookingToolForm() {
       >
         <Form className={styles.form}>
           {/* ... решта полів залишається без змін ... */}
-          
+
           <fieldset className={`${styles.fieldGroup} ${styles.fieldsetReset}`}>
             <div className={styles.inputWrapper}>
               <label className={styles.label} htmlFor={`${fieldId}-firstName`}>
@@ -152,11 +155,7 @@ export default function BookingToolForm() {
                 type="text"
                 placeholder="Ваше ім'я"
               />
-              <ErrorMessage
-                name="firstName"
-                component="span"
-                className={styles.error}
-              />
+              <ErrorMessage name="firstName" component="span" className={styles.error} />
             </div>
 
             <div className={styles.inputWrapper}>
@@ -170,11 +169,7 @@ export default function BookingToolForm() {
                 type="text"
                 placeholder="Ваше прізвище"
               />
-              <ErrorMessage
-                name="lastName"
-                component="span"
-                className={styles.error}
-              />
+              <ErrorMessage name="lastName" component="span" className={styles.error} />
             </div>
           </fieldset>
 
@@ -189,11 +184,7 @@ export default function BookingToolForm() {
               type="text"
               placeholder="+38 (XXX) XXX XX XX"
             />
-            <ErrorMessage
-              name="phone"
-              component="span"
-              className={styles.error}
-            />
+            <ErrorMessage name="phone" component="span" className={styles.error} />
           </div>
 
           {/* Календар */}
@@ -204,18 +195,8 @@ export default function BookingToolForm() {
               <label className={styles.label} htmlFor={`${fieldId}-city`}>
                 Місто доставки
               </label>
-              <Field
-                className={styles.input}
-                id={`${fieldId}-city`}
-                name="city"
-                type="text"
-                placeholder="Ваше місто"
-              />
-              <ErrorMessage
-                name="city"
-                component="span"
-                className={styles.error}
-              />
+              <Field className={styles.input} id={`${fieldId}-city`} name="city" type="text" placeholder="Ваше місто" />
+              <ErrorMessage name="city" component="span" className={styles.error} />
             </div>
 
             <div className={styles.inputWrapper}>
@@ -229,16 +210,12 @@ export default function BookingToolForm() {
                 type="text"
                 placeholder="24"
               />
-              <ErrorMessage
-                name="postOffice"
-                component="span"
-                className={styles.error}
-              />
+              <ErrorMessage name="postOffice" component="span" className={styles.error} />
             </div>
           </fieldset>
 
           <div className={styles.formActions}>
-            <p className={styles.textPrice}>Ціна: 2100 грн</p>
+            <PriceBlock />
             <button className={styles.button} type="submit">
               Забронювати
             </button>
