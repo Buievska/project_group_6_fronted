@@ -139,7 +139,7 @@ export default function RegisterPage() {
       </div>
       <div className={styles.imageSide}>
           <Image
-            src="@/app/images/register-placeholder.jpg" 
+            src="@/public/img/register-placeholder.jpg" 
             alt="Registration illustration"
             width={704}
             height={900}
