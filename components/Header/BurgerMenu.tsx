@@ -41,7 +41,7 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
           </Link>
 
           {!user && (
-            <Link href="/auth/login" onClick={onClose}>
+            <Link href="/login" onClick={onClose}>
               Увійти
             </Link>
           )}
@@ -91,13 +91,10 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
               }}
               aria-label="Вийти"
             >
-
               <Image src="/button-exit.svg" alt="" width={24} height={24} />
-
             </button>
           </div>
         )}
-
 
         {/* REGISTER (тільки для гостя) */}
 

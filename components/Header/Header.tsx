@@ -68,7 +68,7 @@ export function Header() {
                 </nav>
 
                 <div className={styles.userActions}>
-                  <Link href="/create" className={styles.publishBtn}>
+                  <Link href="/tools/new" className={styles.publishBtn}>
                     Опублікувати оголошення
                   </Link>
 
