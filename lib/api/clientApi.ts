@@ -111,11 +111,15 @@ export async function fetchToolsPage(
 }
 
 export const getToolById = async (id: string) => {
-  const { data } = await $api.get<Tool>(`/tools/${id}`);
+  const { data } = await axios.get<Tool>(
+    `https://project-group-6-backend.onrender.com/api/tools/${id}`
+  );
   return data;
 };
 
 export const getUserById = async (userId: string) => {
-  const { data } = await $api.get<UserProfile>(`/users/${userId}`);
+  const { data } = await axios.get<UserProfile>(
+    `https://project-group-6-backend.onrender.com/api/users/${userId}`
+  );
   return data;
 };
