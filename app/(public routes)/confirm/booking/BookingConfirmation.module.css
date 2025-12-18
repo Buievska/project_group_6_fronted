@@ -25,14 +25,15 @@
   margin-bottom: 16px;
 }
 
-.button {
-  width: 100%;
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 40px;
-  opacity: 1;
-  border-radius: 6px;
   border: 1px solid #8808CC;
   background-color: #8808CC;
-  cursor: pointer;
+  border-radius: 6px;
+  opacity: 1;
 
   font-family: Inter;
   font-weight: 500;
@@ -41,10 +42,11 @@
   color: #FFFFFF;
 }
 
-.button:hover {
-  background-color: #E7CDF4;
+.link:hover,
+.link:focus {
+  background-color: #FFFFFF;
   color: #000000;
-  border: 2px solid #000000;
+  border: 2px solid #8808CC;
 }
 
 @media screen and (min-width: 768px) {
@@ -62,9 +64,8 @@
     letter-spacing: -0.04em;
   }
 
-  .button {
+  .link {
     width: 129px;
-    display: block;
     margin: 0 auto;
   }
 }
