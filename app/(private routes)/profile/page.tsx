@@ -2,6 +2,7 @@
 import { getCurrentAuthUser } from "@/lib/api/serverApi";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -11,13 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function MyProfilePage() {
-  let user = null;
-
-  try {
-    user = await getCurrentAuthUser();
-  } catch (error) {
-    console.error("Failed to fetch current user for redirect:", error);
-  }
+  const user = await getCurrentAuthUser();
 
   if (user && user.id) {
     redirect(`/profile/${user.id}`);
@@ -27,11 +22,9 @@ export default async function MyProfilePage() {
     <main>
       <h1>Помилка авторизації</h1>
       <p>
-        Не вдалося отримати дані користувача для перенаправлення. Спробуйте
-        увійти знову.
+        Не вдалося знайти ваш профіль. Можливо, термін дії сесії закінчився.
       </p>
-
-      <a href="/login">Перейти до входу</a>
+      <Link href="/login">Перейти до входу</Link>
     </main>
   );
 }
