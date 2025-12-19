@@ -1,22 +1,27 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { UserProfile } from "@/types/user";
-interface AuthState {
+
+// 1. Описуємо, що буде в нашому стейті
+export interface AuthState {
   user: UserProfile | null;
-  token: string | null;
   isAuth: boolean;
-  login: (user: UserProfile, token: string) => void;
+  login: (user: UserProfile) => void;
   logout: () => void;
+  setUser: (userData: UserProfile) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
-  persist(
+  persist<AuthState>(
     (set) => ({
       user: null,
-      token: null,
       isAuth: false,
-      login: (user, token) => set({ user, token, isAuth: true }),
-      logout: () => set({ user: null, token: null, isAuth: false }),
+
+      login: (user: UserProfile) => set({ user, isAuth: true }),
+
+      logout: () => set({ user: null, isAuth: false }),
+
+      setUser: (userData: UserProfile) => set({ user: userData, isAuth: true }),
     }),
     {
       name: "auth-storage",

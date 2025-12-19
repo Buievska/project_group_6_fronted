@@ -33,14 +33,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #000;
+  transition: color 0.2s ease;
 }
+
 .closeButton svg {
   width: 14px;
   height: 14px;
   fill: currentColor;
 }
+
 .closeButton:hover {
-  color: #4f46e5;
+  color: var(--confirm-color);
 }
 
 .title {
@@ -52,7 +56,6 @@
   text-align: center;
   color: #000;
   margin-bottom: 48px;
-
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -60,13 +63,11 @@
   box-sizing: border-box;
 }
 
-/* Всі слова, крім останнього, не переносяться */
 .title span:not(:last-child) {
   white-space: nowrap;
   margin-right: 4px;
 }
 
-/* Останнє слово може переноситись */
 .title span:last-child {
   display: inline-block;
   max-width: 100%;
@@ -83,8 +84,8 @@
 .confirmButton {
   border-radius: 6px;
   padding: 10px 24px;
-  max-width: 100%;
   height: 44px;
+  width: 100%;
   font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 16px;
@@ -93,18 +94,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .cancelButton {
+  background-color: transparent;
   border: 2px solid #000;
-  background-color: inherit;
-  color: inherit;
+  color: #000;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--confirm-color) 20%, transparent);
 }
 
 .confirmButton {
-  border: 1px solid;
-  background-color: initial;
+  background-color: var(--confirm-color);
+  border: 1px solid var(--confirm-color);
   color: #fff;
+}
+
+.confirmButton:hover:not(:disabled) {
+  background-color: transparent;
+  color: #000;
+  border: 2px solid var(--confirm-color);
 }
 
 .cancelButton:disabled,
@@ -118,17 +133,21 @@
     max-width: 704px;
     padding: 64px 32px;
   }
+
   .title span:not(:last-child) {
     margin-right: 10px;
   }
+
   .actions {
     flex-direction: row;
   }
+
   .cancelButton,
   .confirmButton {
     width: 308px;
   }
 }
+
 @media (min-width: 1440px) {
   .modal {
     width: 768px;

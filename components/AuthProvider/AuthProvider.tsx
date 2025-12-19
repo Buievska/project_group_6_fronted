@@ -1,43 +1,49 @@
 "use client";
 
-import { useLayoutEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useAuthStore } from "@/lib/store/authStore";
-import { $api } from "@/lib/api/api";
+import { getCurrentUser } from "@/lib/api/clientApi";
+import { UserProfile } from "@/types/user";
 
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const { user, login } = useAuthStore((state) => state);
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const { token, logout } = useAuthStore();
-  const router = useRouter();
+  useEffect(() => {
+    const initAuth = async () => {
+      const shouldCheckAuth = localStorage.getItem("isLoggedIn");
 
-  useLayoutEffect(() => {
-    const authInterceptor = $api.interceptors.request.use((config) => {
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      return config;
-    });
+      if (!user && shouldCheckAuth) {
+        try {
+          const response = await getCurrentUser();
 
-    //  (401)
-    const errorInterceptor = $api.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (error.response?.status === 401) {
-          logout();
-          router.push("/auth/login");
+          const userData = response.data || response.user || response;
+
+          const adaptedUser = {
+            _id: userData._id || userData.id,
+
+            email: userData.email,
+            name: userData.name,
+
+            avatarUrl: userData.avatarUrl || userData.avatar || null,
+            avatar: userData.avatarUrl || userData.avatar || null,
+
+            role: userData.role || "user",
+            phone: userData.phone,
+            rating: userData.rating,
+          };
+
+          login(adaptedUser);
+        } catch (error) {
+          console.log("Сесія неактивна або помилка:", error);
+          localStorage.removeItem("isLoggedIn");
         }
-        return Promise.reject(error);
       }
-    );
-
-    return () => {
-      $api.interceptors.request.eject(authInterceptor);
-      $api.interceptors.response.eject(errorInterceptor);
     };
-  }, [token, logout, router]);
+
+    initAuth();
+  }, [user, login]);
 
   return <>{children}</>;
 };
+
+export default AuthProvider;

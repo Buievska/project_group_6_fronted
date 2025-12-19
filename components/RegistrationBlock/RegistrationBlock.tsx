@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from 'next/image';
-import css from "./RegistrationBlock.module.css"
-
+import Image from "next/image";
+import css from "./RegistrationBlock.module.css";
 
 export const RegistrationBlock = () => {
   const [isAuth, setIsAuth] = useState(false);
@@ -27,14 +26,14 @@ export const RegistrationBlock = () => {
             Зареєструватися
           </Link>
         )}
-      </div>
-      <Image
-        className={css.registrationBlockImage}
-        src="/img/imgRegBlock.png"
-        alt="Tools"
-        width={335}
-        height={223}
-      />
+        </div>
+        <Image
+          className={css.registrationBlockImage}
+          src="/img/imgRegBlock.png"
+          alt="Tools"
+          width={335}
+          height={223}
+        />
     </section>
   );
 };
