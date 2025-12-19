@@ -224,8 +224,9 @@
 
 .headerBlock {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; /* заголовок зліва, кнопка справа */
+  align-items: flex-start; /* вирівнюємо по верхньому краю */
+  gap: 16px;
 }
 
 @media (min-width: 768px) {

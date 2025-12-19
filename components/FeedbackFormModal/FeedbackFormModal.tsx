@@ -20,6 +20,16 @@ export default function FeedbackFormModal({
   const [hoverRate, setHoverRate] = useState(0);
   const [loading, setLoading] = useState(false);
 
+  // Блокуємо скрол при відкритті модалки
+  useEffect(() => {
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = originalStyle; // повертаємо після закриття
+    };
+  }, []);
+
+  // Закриття модалки по Esc
   useEffect(() => {
     const esc = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", esc);
