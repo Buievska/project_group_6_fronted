@@ -23,20 +23,20 @@ export default function BenefitsBlock() {
 
   return (
     <section className={css.sectionBenefits}>
-      <div className={css.container}>
-        <div className={css.content}>
-          <h2 className={css.title}>
-            ToolNext — платформа для швидкої та зручної оренди інструментів
-          </h2>
-          <p className={css.description}>
-            ToolNext допомагає знайти потрібний інструмент у декілька кліків.
-            Користувачі можуть легко орендувати обладнання для ремонту чи хобі,
-            а власники — зручно керувати своїми оголошеннями. Ми створили
-            сервіс, щоб зробити процес оренди простим, доступним і вигідним для
-            всіх.
-          </p>
-        </div>
-
+      <div className={css.content}>
+      <h2 className={css.title}>
+        ToolNext — платформа для швидкої та зручної оренди інструментів
+      </h2>
+        <p className={css.description}>
+          ToolNext допомагає знайти потрібний інструмент у декілька кліків.
+     <br />
+          Користувачі можуть легко орендувати обладнання для ремонту чи хобі, а
+          власники — зручно керувати своїми оголошеннями. 
+     <br />
+          Ми створили сервіс,
+          щоб зробити процес оренди простим, доступним і вигідним для всіх.
+       </p>
+      </div>
         <ul className={css.sectionFeatures}>
           {features.map(({ icon, title, text }) => (
             <li key={title} className={css.item}>
@@ -50,7 +50,6 @@ export default function BenefitsBlock() {
             </li>
           ))}
         </ul>
-      </div>
     </section>
   );
 }

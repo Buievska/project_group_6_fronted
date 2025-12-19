@@ -8,14 +8,13 @@ import Link from "next/link";
 import css from "./EditPageProfil.module.css";
 import { CldUploadButton } from "next-cloudinary";
 
+
 export default function EditProfilePage() {
   const router = useRouter();
   const { user, login } = useAuthStore();
 
   const [name, setName] = useState("");
-
   const [avatarUrl, setAvatarUrl] = useState<string>("");
-
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 

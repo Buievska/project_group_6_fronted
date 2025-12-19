@@ -31,6 +31,7 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
           </Link>
         </div>
 
+
         <nav className={styles.navMobile}>
           <Link href="/" onClick={onClose}>
             Головна
@@ -52,9 +53,11 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
           )}
         </nav>
 
+
         {user && (
           <div className={styles.mobileUserCentered}>
             {user.avatarUrl ? (
+
               <Image
                 src={user.avatarUrl}
                 alt={user.name || "User"}
@@ -71,6 +74,7 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
             <span className={styles.mobileUserName}>
               {user.name || "Користувач"}
             </span>
+
 
             <Image
               src="/icon-exit.svg"

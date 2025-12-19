@@ -11,6 +11,7 @@ export interface ToolFormValues {
   specifications?: string;
 
   images: File | null;
+
 }
 
 export interface Tool {
@@ -28,8 +29,17 @@ export interface Tool {
     name: string;
   };
   ownerId: string;
-  feedbacks: {
+  feedbacks?: {
     rate: number;
   };
   rentalTerms?: string;
+}
+export interface ToolFormInitialValues {
+  name: string;
+  pricePerDay: number;
+  categoryId: string | number; // може бути будь-яким з API
+  terms: string;
+  description: string;
+  specifications: string;
+  imageUrl?: string; // для показу поточного зображення
 }

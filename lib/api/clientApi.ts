@@ -123,6 +123,20 @@ export const getUserById = async (userId: string) => {
   return data;
 };
 
+
+export const updateTool = async (id: string, formData: FormData) => {
+  const { data } = await axios.patch<Tool>(
+    `https://project-group-6-backend.onrender.com/api/tools/${id}`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  );
+  return data;
+};
+
 export const updateUserProfile = async (userId: string, dataToSend: any) => {
   const { data } = await $api.patch<UserProfile>(
     `/users/${userId}`,
@@ -130,3 +144,4 @@ export const updateUserProfile = async (userId: string, dataToSend: any) => {
   );
   return data;
 };
+

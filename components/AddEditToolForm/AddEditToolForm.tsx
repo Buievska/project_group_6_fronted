@@ -8,7 +8,9 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 
 import styles from "./AddEditToolForm.module.css";
-import { createTool, getCategories } from "@/lib/api/clientApi";
+
+import { createTool, getCategories, updateTool } from "@/lib/api/clientApi";
+
 
 interface Category {
   id: string;
@@ -19,7 +21,7 @@ interface ToolFormValues {
   name: string;
   pricePerDay: number;
   categoryId: string;
-  rentalConditions: string;
+  terms: string;
   description: string;
   specifications: string;
   images?: File;
@@ -27,12 +29,13 @@ interface ToolFormValues {
 
 type Props = {
   mode: "create" | "edit";
+  toolId?: string; 
   initialValues?: {
     id?: string;
     name: string;
     pricePerDay: number;
-    categoryId: string;
-    rentalConditions: string;
+    categoryId: string | number;
+    terms: string;
     description: string;
     specifications: string;
     imageUrl?: string;
@@ -43,13 +46,14 @@ const validationSchema: Yup.Schema<ToolFormValues> = Yup.object({
   name: Yup.string().min(3).required("Вкажіть назву"),
   pricePerDay: Yup.number().positive().required("Вкажіть ціну"),
   categoryId: Yup.string().required("Оберіть категорію"),
-  rentalConditions: Yup.string().required("Вкажіть умови оренди"),
+  terms: Yup.string().required("Вкажіть умови оренди"),
   description: Yup.string().required("Вкажіть опис"),
   specifications: Yup.string().required("Вкажіть характеристики"),
   images: Yup.mixed<File>().optional(),
 });
 
-export default function AddEditToolForm({ mode, initialValues }: Props) {
+// Форма для додавання та редагування(toolId) інструментів
+export default function AddEditToolForm({ mode, initialValues, toolId }: Props) {
   const router = useRouter();
   const [preview, setPreview] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -70,8 +74,8 @@ export default function AddEditToolForm({ mode, initialValues }: Props) {
     () => ({
       name: initialValues?.name ?? "",
       pricePerDay: initialValues?.pricePerDay ?? 0,
-      categoryId: initialValues?.categoryId ?? "",
-      rentalConditions: initialValues?.rentalConditions ?? "",
+      categoryId: initialValues?.categoryId ? String(initialValues.categoryId) : "",
+      terms: initialValues?.terms ?? "",
       description: initialValues?.description ?? "",
       specifications: initialValues?.specifications ?? "",
       images: undefined,
@@ -81,6 +85,7 @@ export default function AddEditToolForm({ mode, initialValues }: Props) {
 
   const handleSubmit = async (
     values: ToolFormValues,
+
     { setSubmitting }: FormikHelpers<ToolFormValues>
   ) => {
     try {
@@ -89,7 +94,7 @@ export default function AddEditToolForm({ mode, initialValues }: Props) {
       formData.append("name", values.name);
       formData.append("pricePerDay", String(values.pricePerDay));
       formData.append("categoryId", values.categoryId);
-      formData.append("rentalConditions", values.rentalConditions);
+      formData.append("terms", values.terms);
       formData.append("description", values.description);
       formData.append("specifications", values.specifications);
 
@@ -97,7 +102,8 @@ export default function AddEditToolForm({ mode, initialValues }: Props) {
         formData.append("images", values.images);
       }
 
-      const tool = await createTool(formData);
+
+      const tool = await (toolId ? updateTool(toolId, formData) : createTool(formData)); 
       router.push(`/tools/${tool.id}`);
     } catch (error: unknown) {
       if (error instanceof Error) {
