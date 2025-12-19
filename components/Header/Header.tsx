@@ -74,9 +74,14 @@ export function Header() {
                   </Link>
 
                   <div className={styles.userInfo}>
-                    {user.avatar ? (
+                    {user.avatarUrl ? (
                       <Image
-                        src={user.avatar}
+                        key={user.avatarUrl}
+                        src={
+                          user.avatarUrl.includes("?")
+                            ? `${user.avatarUrl}&v=${Date.now()}`
+                            : `${user.avatarUrl}?v=${Date.now()}`
+                        }
                         alt={user.name || "User"}
                         width={32}
                         height={32}
