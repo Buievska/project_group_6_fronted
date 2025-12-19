@@ -19,7 +19,7 @@ export interface Tool {
   pricePerDay: number;
   description: string;
   terms: string;
-  specifications?: string;
+  specifications?: string | Record<string, string | number>;
   images: string;
   rating: number;
   category: {
