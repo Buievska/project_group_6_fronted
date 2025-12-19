@@ -10,6 +10,7 @@ import Image from "next/image";
 import styles from "./AddEditToolForm.module.css";
 import { createTool, getCategories, updateTool } from "@/lib/api/clientApi";
 
+
 interface Category {
   id: string;
   name: string;
@@ -20,6 +21,7 @@ interface ToolFormValues {
   pricePerDay: number;
   categoryId: string;
   terms: string;
+
   description: string;
   specifications: string;
   images?: File;
@@ -28,12 +30,14 @@ interface ToolFormValues {
 type Props = {
   mode: "create" | "edit";
   toolId?: string; // Додано toolId для режиму редагування
+
   initialValues?: {
     id?: string;
     name: string;
     pricePerDay: number;
     categoryId: string | number;
     terms: string;
+
     description: string;
     specifications: string;
     imageUrl?: string;
@@ -45,12 +49,15 @@ const validationSchema: Yup.Schema<ToolFormValues> = Yup.object({
   pricePerDay: Yup.number().positive().required("Вкажіть ціну"),
   categoryId: Yup.string().required("Оберіть категорію"),
   terms: Yup.string().required("Вкажіть умови оренди"),
+
   description: Yup.string().required("Вкажіть опис"),
   specifications: Yup.string().required("Вкажіть характеристики"),
   images: Yup.mixed<File>().optional(),
 });
+
 // Форма для додавання та редагування(toolId) інструментів
 export default function AddEditToolForm({ mode, initialValues, toolId }: Props) {
+
   const router = useRouter();
   const [preview, setPreview] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -83,7 +90,6 @@ export default function AddEditToolForm({ mode, initialValues, toolId }: Props) 
 
   const handleSubmit = async (
     values: ToolFormValues,
-
     { setSubmitting }: FormikHelpers<ToolFormValues>
   ) => {
     try {
@@ -92,7 +98,9 @@ export default function AddEditToolForm({ mode, initialValues, toolId }: Props) 
       formData.append("name", values.name);
       formData.append("pricePerDay", String(values.pricePerDay));
       formData.append("categoryId", values.categoryId);
+
       formData.append("terms", values.terms);
+
       formData.append("description", values.description);
       formData.append("specifications", values.specifications);
 
@@ -101,7 +109,7 @@ export default function AddEditToolForm({ mode, initialValues, toolId }: Props) 
       }
 
       const tool = await (toolId ? updateTool(toolId, formData) : createTool(formData)); // Використання toolId для оновлення
-    
+
       router.push(`/tools/${tool.id}`);
     } catch (error: unknown) {
       if (error instanceof Error) {
