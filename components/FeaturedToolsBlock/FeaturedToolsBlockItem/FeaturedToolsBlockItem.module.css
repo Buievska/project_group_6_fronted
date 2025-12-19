@@ -1,5 +1,6 @@
 .featuredToolsBlockItem {
   max-width: 335px;
+
   list-style-type: none;
   display: flex;
   flex-direction: column;
@@ -9,6 +10,8 @@
 
 .featuredToolsBlockImage {
   border-radius: 16px;
+  width: 100%;
+  max-height: 412px;
 }
 
 .featuredToolsBlockInfo {
@@ -64,7 +67,25 @@ featuredToolsBlockButton:focus {
     font-size: 18px;
   }
 
+  .featuredToolsBlockItem {
+    max-width: 336px;
+  }
+
+  .featuredToolsBlockImage {
+    max-height: 414px;
+  }
+
   .featuredToolsBlockPrice {
     font-size: 14px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .featuredToolsBlockItem {
+    max-width: 304px;
+  }
+
+  .featuredToolsBlockImage {
+    max-height: 374px;
   }
 }

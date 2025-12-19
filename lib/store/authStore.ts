@@ -1,11 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { UserProfile } from "@/types/user";
-interface AuthState {
+
+// 1. Описуємо, що буде в нашому стейті
+export interface AuthState {
   user: UserProfile | null;
   isAuth: boolean;
   login: (user: UserProfile) => void;
   logout: () => void;
+  setUser: (userData: UserProfile) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -13,9 +16,15 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       isAuth: false,
-      login: (user) => set({ user, isAuth: true }),
+
+      login: (user: UserProfile) => set({ user, isAuth: true }),
+
       logout: () => set({ user: null, isAuth: false }),
+
+      setUser: (userData: UserProfile) => set({ user: userData, isAuth: true }),
     }),
-    { name: 'auth-storage' }
+    {
+      name: "auth-storage",
+    }
   )
 );

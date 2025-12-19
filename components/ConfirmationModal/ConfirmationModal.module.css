@@ -1,0 +1,156 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.modal {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  padding: 64px 20px;
+  width: 100%;
+  max-width: 336px;
+  box-sizing: border-box;
+}
+
+.closeButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  transition: color 0.2s ease;
+}
+
+.closeButton svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.closeButton:hover {
+  color: var(--confirm-color);
+}
+
+.title {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-align: center;
+  color: #000;
+  margin-bottom: 48px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.title span:not(:last-child) {
+  white-space: nowrap;
+  margin-right: 4px;
+}
+
+.title span:last-child {
+  display: inline-block;
+  max-width: 100%;
+  word-break: break-word;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cancelButton,
+.confirmButton {
+  border-radius: 6px;
+  padding: 10px 24px;
+  height: 44px;
+  width: 100%;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.cancelButton {
+  background-color: transparent;
+  border: 2px solid #000;
+  color: #000;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--confirm-color) 20%, transparent);
+}
+
+.confirmButton {
+  background-color: var(--confirm-color);
+  border: 1px solid var(--confirm-color);
+  color: #fff;
+}
+
+.confirmButton:hover:not(:disabled) {
+  background-color: transparent;
+  color: #000;
+  border: 2px solid var(--confirm-color);
+}
+
+.cancelButton:disabled,
+.confirmButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (min-width: 768px) {
+  .modal {
+    max-width: 704px;
+    padding: 64px 32px;
+  }
+
+  .title span:not(:last-child) {
+    margin-right: 10px;
+  }
+
+  .actions {
+    flex-direction: row;
+  }
+
+  .cancelButton,
+  .confirmButton {
+    width: 308px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .modal {
+    width: 768px;
+    padding: 64px;
+  }
+}

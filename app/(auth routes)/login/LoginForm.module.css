@@ -1,0 +1,199 @@
+.container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+/* --- ЛІВА СТОРОНА (ФОРМА) --- */
+.leftContent {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  background-color: #fff;
+  position: relative; /* База для абсолютних елементів */
+
+  /* Мобільна: розтягуємо елементи (Верх - Центр - Низ) */
+  justify-content: space-between;
+}
+
+/* Логотип */
+.logoLogin {
+  width: fit-content;
+  display: block;
+}
+
+/* Контейнер форми */
+.containerLogin {
+  width: 100%;
+  max-width: 400px;
+  align-self: center; /* Центруємо блок форми */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.loginTitle {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-align: center;
+  color: #000;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* --- ІНПУТИ --- */
+.loginLabel {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  margin-top: 16px;
+  display: block;
+}
+
+.loginField {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #000;
+  border-radius: 6px;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+  margin-top: 8px;
+}
+
+.loginField:focus {
+  border-color: #8808cc;
+}
+
+.inputError {
+  border-color: #c40202;
+}
+
+.errorMessage {
+  color: #c40202;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* --- КНОПКА --- */
+.btnLogin {
+  width: 100%;
+  padding: 12px;
+  margin-top: 32px;
+  margin-bottom: 16px;
+  background-color: #8808cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  justify-content: center;
+}
+
+.btnLogin:hover {
+  background-color: #6a069e;
+}
+
+.btnLogin:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* --- НИЖНІЙ ТЕКСТ --- */
+.registerQuestion {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.registerLink {
+  color: #8808cc;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.registerLink:hover {
+  text-decoration: underline;
+}
+
+/* Копірайт */
+.privateConfirm {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  /* На мобільному він просто внизу потоку */
+}
+
+/* --- ПРАВА СТОРОНА (КАРТИНКА) --- */
+.imageSide {
+  display: none; /* Ховаємо на мобільному */
+}
+
+/* ========================================= */
+/* 💻 DESKTOP (Великі екрани)                */
+/* ========================================= */
+@media (min-width: 1024px) {
+  .leftContent {
+    width: 50%;
+    /* Центруємо форму, а лого і футер фіксуємо */
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+
+  /* 1. Логотип в кут */
+  .logoLogin {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+  }
+
+  /* 2. Копірайт в кут */
+  .privateConfirm {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    text-align: left;
+  }
+
+  /* 3. Форма */
+  .containerLogin {
+    max-width: 480px;
+    width: 100%;
+    padding: 0 40px;
+  }
+
+  .loginTitle {
+    font-size: 40px;
+    margin-bottom: 32px;
+  }
+
+  .imageSide {
+    display: block;
+    width: 50%;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow: hidden;
+  }
+
+  .loginFoto {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
