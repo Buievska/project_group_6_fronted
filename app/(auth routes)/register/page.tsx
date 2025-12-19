@@ -228,12 +228,15 @@ export default function RegisterPage() {
 
       {/* ПРАВА ЧАСТИНА (Картинка) */}
       <div className={styles.imageSide}>
-        <Image
-          src={registerImage}
-          alt="Registration illustration"
-          className={styles.registerImage}
-          priority
-        />
+
+          <Image
+            src="@/public/img/register-placeholder.jpg" 
+            alt="Registration illustration"
+            width={704}
+            height={900}
+            className={styles.image}
+          />
+
       </div>
     </div>
   );
