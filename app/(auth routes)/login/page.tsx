@@ -7,7 +7,7 @@ import css from "./LoginForm.module.css";
 import Link from "next/link";
 import loginImg from "../../../public/img/loginImage.png";
 import Image from "next/image";
-import axios from "axios";
+import axios from "axios"; // Використовуємо для типізації помилки
 import { useRouter } from "next/navigation";
 
 const currentYear = new Date().getFullYear();
@@ -23,25 +23,29 @@ const SignIn = () => {
     setServerError("");
 
     try {
-      await login(values);
+      // 1. Зберігаємо результат у змінну response
+      const response = await login(values);
+
+      // 2. Зберігаємо статус входу
       localStorage.setItem("isLoggedIn", "true");
 
-      router.push("/");
-    } catch (error) {
-      console.error("Помилка входу:", error);
-      let errorMsg = "Щось пішло не так...";
-
-      // Обробка помилки як у реєстрації
-      if (axios.isAxiosError(error)) {
-        errorMsg =
-          error.response?.data?.error ||
-          error.response?.data?.message ||
-          errorMsg;
-      } else if (error instanceof Error) {
-        errorMsg = error.message;
+      // 3. Перевіряємо response і робимо редірект
+      if (response) {
+        // Якщо потрібно просто на головну:
+        router.push("/");
+      } else {
+        setServerError("Неправильна електронна адреса або пароль");
       }
-
-      setServerError(errorMsg);
+    } catch (error) {
+      // 4. Правильна обробка помилок TypeScript з axios
+      if (axios.isAxiosError(error)) {
+        const message = error.response?.data?.message || "Помилка сервера";
+        setServerError(message);
+      } else if (error instanceof Error) {
+        setServerError(error.message);
+      } else {
+        setServerError("Ой... тут якась невідома помилка");
+      }
     } finally {
       setSubmitting(false);
     }

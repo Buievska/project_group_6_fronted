@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./ToolInfoBlock.module.css";
 import { Tool } from "@/types/tool";
+import { UserProfile } from "@/types/user";
 import { useAuthStore } from "@/lib/store/authStore";
 import AuthRequiredModal from "@/components/AuthRequiredModal/AuthRequiredModal";
 import { getUserById } from "@/lib/api/clientApi";
@@ -18,13 +19,7 @@ export default function ToolInfoBlock({ tool }: Props) {
   const { user } = useAuthStore();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  const [owner, setOwner] = useState({
-    name: "Власник",
-    avatar: "",
-    id: tool.ownerId,
-  });
-
-  // Функція для рендеру характеристик
+  const [owner, setOwner] = useState<UserProfile | null>(null);
 
   const renderSpecifications = (
     specs: string | Record<string, string | number>
@@ -52,21 +47,17 @@ export default function ToolInfoBlock({ tool }: Props) {
 
   useEffect(() => {
     const fetchOwner = async () => {
+      if (!tool.owner) return;
+
       try {
-        const ownerData = await getUserById(tool.ownerId);
-        if (ownerData) {
-          setOwner({
-            name: ownerData.name || "Власник",
-            avatar: ownerData.avatar || "",
-            id: ownerData._id || tool.ownerId,
-          });
-        }
+        const ownerData = await getUserById(tool.owner);
+        setOwner(ownerData);
       } catch (e) {
-        console.error(e);
+        console.error("Не вдалося завантажити дані власника:", e);
       }
     };
-    if (tool.ownerId) fetchOwner();
-  }, [tool.ownerId]);
+    fetchOwner();
+  }, [tool.owner]);
 
   const handleBookingClick = () => {
     if (user) {
@@ -76,36 +67,38 @@ export default function ToolInfoBlock({ tool }: Props) {
     }
   };
 
+  const ownerAvatar = owner?.avatarUrl;
+  const ownerName = owner?.name || "Завантаження...";
+  const ownerInitial = (ownerName[0] || "U").toUpperCase();
+  const ownerId = owner?._id || tool.owner;
+
   return (
     <div className={styles.infoContainer}>
-      {/* 1. Назва */}
       <h1 className={styles.title}>{tool.name}</h1>
-
-      {/* 2. Ціна */}
       <p className={styles.price}>{tool.pricePerDay} грн/день</p>
-
-      {/* 3. Блок власника */}
       <div className={styles.ownerBlock}>
         <div className={styles.avatarWrapper}>
-          {owner.avatar ? (
+          {ownerAvatar ? (
             <Image
-              src={owner.avatar}
-              alt={owner.name}
-              width={64} // Трохи більше фото, як на макеті
+              src={ownerAvatar}
+              alt={ownerName}
+              width={64}
               height={64}
               className={styles.avatar}
             />
           ) : (
-            <div className={styles.initialAvatar}>
-              {(owner.name?.[0] || "U").toUpperCase()}
-            </div>
+            <div className={styles.initialAvatar}>{ownerInitial}</div>
           )}
         </div>
+
         <div className={styles.ownerData}>
-          <p className={styles.ownerName}>{owner.name}</p>
-          <Link href={`/profile/${owner.id}`} className={styles.profileLink}>
-            Переглянути профіль
-          </Link>
+          <p className={styles.ownerName}>{ownerName}</p>
+
+          {ownerId && (
+            <Link href={`/profile/${ownerId}`} className={styles.profileLink}>
+              Переглянути профіль
+            </Link>
+          )}
         </div>
       </div>
 
@@ -119,10 +112,10 @@ export default function ToolInfoBlock({ tool }: Props) {
         </div>
       )}
 
-      {tool.terms && (
+      {tool.rentalTerms && (
         <div className={styles.section}>
           <h3 className={styles.label}>Умови оренди:</h3>
-          <p className={styles.text}>{tool.terms}</p>
+          <p className={styles.text}>{tool.rentalTerms}</p>
         </div>
       )}
 

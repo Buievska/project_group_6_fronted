@@ -15,6 +15,7 @@ export interface ToolFormValues {
 
 export interface Tool {
   _id: string;
+  owner: string;
   name: string;
   pricePerDay: number;
   description: string;
@@ -30,4 +31,5 @@ export interface Tool {
   feedbacks: {
     rate: number;
   };
+  rentalTerms?: string;
 }
