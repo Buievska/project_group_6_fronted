@@ -24,16 +24,17 @@ export function Header() {
     try {
       await logoutRequest();
     } catch (error) {
-      console.error("Помилка при виході:", error);
+      console.warn("Серверна сесія вже неактивна, виконуємо локальний вихід.");
+    } finally {
+      localStorage.removeItem("isLoggedIn");
+      logout();
+
+      setIsLogoutOpen(false);
+      setIsMenuOpen(false);
+
+      router.push("/");
+      router.refresh();
     }
-
-    localStorage.removeItem("isLoggedIn");
-    logout();
-
-    setIsLogoutOpen(false);
-    setIsMenuOpen(false);
-
-    router.push("/");
   };
 
   return (

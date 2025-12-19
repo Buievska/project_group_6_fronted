@@ -1,22 +1,39 @@
-// components/UserProfile/UserProfile.tsx
+"use client"; // 👈 1. Робимо клієнтським
 
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import css from "./UserProfile.module.css";
+import { useAuthStore } from "@/lib/store/authStore"; // 👈 2. Підключаємо стейт
 
 interface UserProfileProps {
   userName: string;
   avatarUrl?: string | null;
-  isOwner: boolean;
+  profileId: string; // 👈 3. Замість isOwner ми передаємо ID цього профілю
 }
 
 export const UserProfile: React.FC<UserProfileProps> = ({
   userName,
   avatarUrl,
-  isOwner,
+  profileId,
 }) => {
   const avatarLetter = userName ? userName.charAt(0).toUpperCase() : "?";
+
+  // 4. Дістаємо нашого залогіненого юзера зі стейту
+  const { user: currentUser } = useAuthStore();
+  const [isOwner, setIsOwner] = useState(false);
+
+  // 5. Перевіряємо, чи ми власники, вже на клієнті (де працює авторизація)
+  useEffect(() => {
+    if (
+      currentUser &&
+      (currentUser._id === profileId || currentUser.id === profileId)
+    ) {
+      setIsOwner(true);
+    } else {
+      setIsOwner(false);
+    }
+  }, [currentUser, profileId]);
 
   return (
     <div className={css.profileCard}>
@@ -36,6 +53,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
           )}
         </div>
 
+        {/* Кнопка з'явиться, бо isOwner тепер true */}
         {isOwner && (
           <Link href="/profile/edit" className={css.editButton}>
             Редагувати профіль

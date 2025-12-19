@@ -20,8 +20,8 @@ export type LoginRequset = {
 };
 
 export const login = async (data: LoginRequset) => {
-  const response = await $api.post("auth/login", data);
-  return response;
+  const { data: responseData } = await $api.post("/auth/login", data);
+  return responseData;
 };
 
 interface Tools {
@@ -121,5 +121,12 @@ export const getUserById = async (userId: string) => {
   const { data } = await axios.get<UserProfile>(
     `https://project-group-6-backend.onrender.com/api/users/${userId}`
   );
+  return data;
+};
+
+export const updateUserProfile = async (formData: FormData) => {
+  const { data } = await $api.patch<UserProfile>("/users/current", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
   return data;
 };
