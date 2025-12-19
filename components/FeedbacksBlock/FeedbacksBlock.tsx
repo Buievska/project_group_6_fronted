@@ -1,16 +1,16 @@
+"use client";
 
-'use client';
+import React, { useEffect, useState, useCallback } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import FeedbackCard from "./FeedbackCard";
+import Icon from "./Icon";
+import FeedbackFormModal from "../FeedbackFormModal/FeedbackFormModal";
+import styles from "./FeedbacksBlock.module.css";
 
-import React, { useEffect, useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
-import FeedbackCard from './FeedbackCard';
-import Icon from './Icon';
-import styles from './FeedbacksBlock.module.css';
-
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 interface Feedback {
   _id: string;
@@ -31,43 +31,71 @@ interface FeedbacksResponse {
   };
 }
 
-const FeedbacksBlock: React.FC = () => {
+interface FeedbacksBlockProps {
+  toolId?: string; // Якщо потрібно для конкретного інструменту
+  showAddButton?: boolean; // Показувати кнопку
+  title?: string; // Заголовок блоку
+}
+
+const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
+  toolId,
+  showAddButton = false,
+  title = "Останні відгуки",
+}) => {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fetchFeedbacks = useCallback(async () => {
+    try {
+      setLoading(true);
+      const url = toolId
+        ? `https://project-group-6-backend.onrender.com/api/feedbacks?toolId=${toolId}&page=1&perPage=10`
+        : `https://project-group-6-backend.onrender.com/api/feedbacks?page=1&perPage=10`;
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error("Не вдалося завантажити відгуки");
+      }
+
+      const result: FeedbacksResponse = await response.json();
+      setFeedbacks(result.data.feedbacks);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Невідома помилка");
+      console.error("Помилка завантаження відгуків:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [toolId]);
 
   useEffect(() => {
-    const fetchFeedbacks = async () => {
-      try {
-        setLoading(true);
-        // Запитуємо перші 10 відгуків (або можна додати сортування на бекенді)
-        const response = await fetch('https://project-group-6-backend.onrender.com/api/feedbacks?page=1&perPage=10');
-        
-        if (!response.ok) {
-          throw new Error('Не вдалося завантажити відгуки');
-        }
-        
-        const result: FeedbacksResponse = await response.json();
-        
-        // Беремо масив відгуків з правильної структури
-        setFeedbacks(result.data.feedbacks);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Невідома помилка');
-        console.error('Помилка завантаження відгуків:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchFeedbacks();
-  }, []);
+  }, [fetchFeedbacks]);
+
+  const handleAddFeedback = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsModalOpen(true);
+    } else {
+      alert("Будь ласка, увійдіть або зареєструйтесь, щоб залишити відгук.");
+    }
+  };
+
+  const handleSuccess = () => {
+    setIsModalOpen(false);
+    fetchFeedbacks(); // оновлюємо список після додавання
+  };
+
+  const token = localStorage.getItem("token"); // перевірка, чи користувач зареєстрований
 
   // Loading стан
   if (loading) {
     return (
       <section className={styles.feedbacksSection}>
         <div className={styles.container}>
-          <h2 className={styles.title}>Останні відгуки</h2>
+          <h2 className={styles.title}>{title}</h2>
           <div className={styles.loadingState}>
             <p>Завантаження відгуків...</p>
           </div>
@@ -81,7 +109,7 @@ const FeedbacksBlock: React.FC = () => {
     return (
       <section className={styles.feedbacksSection}>
         <div className={styles.container}>
-          <h2 className={styles.title}>Останні відгуки</h2>
+          <h2 className={styles.title}>{title}</h2>
           <div className={styles.errorState}>
             <p>Помилка: {error}</p>
           </div>
@@ -95,49 +123,79 @@ const FeedbacksBlock: React.FC = () => {
     return (
       <section className={styles.feedbacksSection}>
         <div className={styles.container}>
-          <h2 className={styles.title}>Останні відгуки</h2>
+          <div className={styles.headerBlock}>
+            <h2 className={styles.title}>{title}</h2>
+            {showAddButton && (
+              <button
+                onClick={handleAddFeedback}
+                className={styles.addFeedbackButton}
+              >
+                Залишити відгук
+              </button>
+            )}
+          </div>
           <div className={styles.emptyState}>
-            <p>Поки що немає відгуків</p>
+            {token ? (
+              <p>
+                У вас немає жодного відгуку. Ми впевнені, скоро їх буде значно
+                більше!
+              </p>
+            ) : (
+              <p>
+                У цього інструменту немає жодного відгуку. Ми впевнені, скоро їх
+                буде значно більше!
+              </p>
+            )}
           </div>
         </div>
+
+        {isModalOpen && toolId && token && (
+          <FeedbackFormModal
+            toolId={toolId}
+            onClose={() => setIsModalOpen(false)}
+            onSuccess={handleSuccess}
+          />
+        )}
       </section>
     );
   }
 
+  // Відгуки
   return (
     <section className={styles.feedbacksSection}>
       <div className={styles.container}>
-        <h2 className={styles.title}>Останні відгуки</h2>
-        
+        <div className={styles.headerBlock}>
+          <h2 className={styles.title}>{title}</h2>
+          {showAddButton && (
+            <button
+              onClick={handleAddFeedback}
+              className={styles.addFeedbackButton}
+            >
+              Залишити відгук
+            </button>
+          )}
+        </div>
+
         <div className={styles.swiperWrapper}>
           <Swiper
             modules={[Navigation, Pagination]}
             spaceBetween={32}
             slidesPerView={1}
             navigation={{
-              nextEl: '.swiper-button-next-custom',
-              prevEl: '.swiper-button-prev-custom',
+              nextEl: ".swiper-button-next-custom",
+              prevEl: ".swiper-button-prev-custom",
             }}
             pagination={{
-              el: '.swiper-pagination-custom',
+              el: ".swiper-pagination-custom",
               clickable: true,
               dynamicBullets: true,
               dynamicMainBullets: 3,
-              type: 'bullets',
+              type: "bullets",
             }}
             breakpoints={{
-              375: {
-                slidesPerView: 1,
-                spaceBetween: 20,
-              },
-              768: {
-                slidesPerView: 2,
-                spaceBetween: 24,
-              },
-              1440: {
-                slidesPerView: 3,
-                spaceBetween: 24,
-              },
+              375: { slidesPerView: 1, spaceBetween: 20 },
+              768: { slidesPerView: 2, spaceBetween: 24 },
+              1440: { slidesPerView: 3, spaceBetween: 24 },
             }}
             className={styles.swiper}
           >
@@ -149,19 +207,34 @@ const FeedbacksBlock: React.FC = () => {
           </Swiper>
 
           <div className={styles.navigationBlock}>
-            <div className={`swiper-pagination-custom ${styles.customPagination}`}></div>
-            
+            <div
+              className={`swiper-pagination-custom ${styles.customPagination}`}
+            ></div>
             <div className={styles.navigationButtons}>
-              <button className="swiper-button-prev-custom" aria-label="Попередній слайд">
+              <button
+                className="swiper-button-prev-custom"
+                aria-label="Попередній слайд"
+              >
                 <Icon name="left-arrow" width={24} height={24} />
               </button>
-              <button className="swiper-button-next-custom" aria-label="Наступний слайд">
+              <button
+                className="swiper-button-next-custom"
+                aria-label="Наступний слайд"
+              >
                 <Icon name="right-arrow" width={24} height={24} />
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      {isModalOpen && toolId && token && (
+        <FeedbackFormModal
+          toolId={toolId}
+          onClose={() => setIsModalOpen(false)}
+          onSuccess={handleSuccess}
+        />
+      )}
     </section>
   );
 };

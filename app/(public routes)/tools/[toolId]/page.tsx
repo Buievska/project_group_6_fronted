@@ -8,6 +8,7 @@ import ToolGallery from "@/components/ToolGallery/ToolGallery";
 import ToolInfoBlock from "@/components/ToolInfoBlock/ToolInfoBlock";
 import styles from "./ToolDetails.module.css";
 import { toast } from "react-toastify";
+import FeedbacksBlock from "@/components/FeedbacksBlock/FeedbacksBlock";
 
 export default function ToolDetailsPage() {
   const { toolId } = useParams();
@@ -46,6 +47,9 @@ export default function ToolDetailsPage() {
         <div className={styles.rightColumn}>
           <ToolInfoBlock tool={tool} />
         </div>
+      </div>
+      <div className={styles.feedbacksSection}>
+        <FeedbacksBlock toolId={tool._id} title="Відгуки" showAddButton />
       </div>
     </div>
   );

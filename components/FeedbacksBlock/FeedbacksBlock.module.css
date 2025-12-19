@@ -190,6 +190,44 @@
   justify-content: center;
 }
 
+.addFeedbackButton {
+  height: 40px;
+  padding: 10px 24px;
+  background: #8808cc;
+  color: #fff;
+  border: 1px solid #8808cc;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.addFeedbackButton:hover,
+.addFeedbackButton:focus {
+  background: transparent;
+  color: #000;
+}
+
+.addFeedbackButton:active {
+  background: #e7cdf4;
+}
+
+.addFeedbackButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.headerBlock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 @media (min-width: 768px) {
   .feedbacksSection {
     padding: 60px 0;
