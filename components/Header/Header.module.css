@@ -111,8 +111,12 @@
 }
 
 .registerBtn {
+
   display: none; /* для мобільних ховаємо */
 }
+
+
+
 
 .publishBtn {
   display: none; /* для мобільних ховаємо */
@@ -126,6 +130,7 @@
   cursor: pointer;
   z-index: 200;
 }
+
 
 /* ================= MOBILE USER ================= */
 .mobileUserCentered {
@@ -181,6 +186,7 @@
   opacity: 0.6;
 }
 
+
 .authMobile {
   margin: 0 auto;
   margin-top: 16px;
@@ -221,7 +227,7 @@
 
 .menuHeader {
   padding: 32px 16px;
-}
+
 
 /* ================= MEDIA QUERIES ================= */
 
@@ -293,6 +299,7 @@
   .registerBtn {
     border: 1px solid rgb(136, 8, 204);
     background-color: rgb(136, 8, 204);
+
     display: block;
     padding: 10px 24px;
     background-color: #8808cc;

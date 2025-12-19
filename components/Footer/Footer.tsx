@@ -60,6 +60,7 @@ export const Footer = () => {
             )}
           </nav>
 
+
           <div className={styles.socials}>
             {socials.map(({ name, icon, url }) => (
               <a

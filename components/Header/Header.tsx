@@ -24,6 +24,7 @@ export function Header() {
     try {
       await logoutRequest();
     } catch (error) {
+
       console.error("Помилка при виході:", error);
     }
 
@@ -34,17 +35,20 @@ export function Header() {
     setIsMenuOpen(false);
 
     router.push("/");
-  };
+
 
   return (
     <>
       <header className={styles.header}>
         <div className={styles.containerHeader}>
+          {/* LOGO */}
           <Link href="/" className={styles.logoLink}>
             <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
           </Link>
 
+
           <div className={styles.headerRight}>
+
             {!user ? (
               <>
                 <nav className={styles.navLinks}>
@@ -65,14 +69,21 @@ export function Header() {
                 </nav>
 
                 <div className={styles.userActions}>
-                  <Link href="/create" className={styles.publishBtn}>
+
+                  <Link href="/tools/new" className={styles.publishBtn}>
+
                     Опублікувати оголошення
                   </Link>
 
                   <div className={styles.userInfo}>
-                    {user.avatar ? (
+                    {user.avatarUrl ? (
                       <Image
-                        src={user.avatar}
+                        key={user.avatarUrl}
+                        src={
+                          user.avatarUrl.includes("?")
+                            ? `${user.avatarUrl}&v=${Date.now()}`
+                            : `${user.avatarUrl}?v=${Date.now()}`
+                        }
                         alt={user.name || "User"}
                         width={32}
                         height={32}
@@ -88,6 +99,7 @@ export function Header() {
                     </span>
                   </div>
 
+
                   <Image
                     src="/icon-exit.svg"
                     alt=""
@@ -98,12 +110,15 @@ export function Header() {
 
                   <button
                     className={styles.logout}
+
                     onClick={() => setIsLogoutOpen(true)}
                     aria-label="Вийти"
                   >
                     <Image
                       src="/button-exit.svg"
-                      alt=""
+
+                      alt="Вихід"
+
                       width={24}
                       height={24}
                     />

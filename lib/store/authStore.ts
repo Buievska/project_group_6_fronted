@@ -12,7 +12,7 @@ export interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()(
-  persist(
+  persist<AuthState>(
     (set) => ({
       user: null,
       isAuth: false,
