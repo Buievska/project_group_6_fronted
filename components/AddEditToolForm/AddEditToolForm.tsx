@@ -8,7 +8,9 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 
 import styles from "./AddEditToolForm.module.css";
+
 import { createTool, getCategories, updateTool } from "@/lib/api/clientApi";
+
 
 interface Category {
   id: string;
@@ -27,7 +29,7 @@ interface ToolFormValues {
 
 type Props = {
   mode: "create" | "edit";
-  toolId?: string; // Додано toolId для режиму редагування
+  toolId?: string; 
   initialValues?: {
     id?: string;
     name: string;
@@ -49,12 +51,12 @@ const validationSchema: Yup.Schema<ToolFormValues> = Yup.object({
   specifications: Yup.string().required("Вкажіть характеристики"),
   images: Yup.mixed<File>().optional(),
 });
+
 // Форма для додавання та редагування(toolId) інструментів
 export default function AddEditToolForm({ mode, initialValues, toolId }: Props) {
   const router = useRouter();
   const [preview, setPreview] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
-
 
   useEffect(() => {
     getCategories()
@@ -100,8 +102,8 @@ export default function AddEditToolForm({ mode, initialValues, toolId }: Props) 
         formData.append("images", values.images);
       }
 
-      const tool = await (toolId ? updateTool(toolId, formData) : createTool(formData)); // Використання toolId для оновлення
-    
+
+      const tool = await (toolId ? updateTool(toolId, formData) : createTool(formData)); 
       router.push(`/tools/${tool.id}`);
     } catch (error: unknown) {
       if (error instanceof Error) {

@@ -29,7 +29,6 @@ display: flex;
 align-items: flex-start;
 justify-content: flex-start;
 margin-bottom: 24px;
-
 font-weight: 700;
 font-size: 32px;
 line-height: 1.2;
@@ -41,6 +40,7 @@ align-items: flex-start;
 justify-content: flex-start;
 margin-bottom: 24px;
 
+
 }
 
 .description {
@@ -49,12 +49,12 @@ font-size: 16px;
 line-height: 1.5;
 color: #000;
 max-width: 616px;
-
 font-weight: 400;
 font-size: 16px;
 line-height: 1.5;
 color: #000;
 max-width: 616px;
+
 
 }
 
@@ -64,13 +64,11 @@ padding: 0;
 margin: 0;
 display: flex;
 flex-wrap: wrap;
-
 list-style: none;
 padding: 0;
 margin: 0;
 display: flex;
 flex-wrap: wrap;
-
 }
 
 .sectionFeaturesTitle {
@@ -79,7 +77,6 @@ flex-wrap: wrap;
   line-height: 1.4;
   letter-spacing: -0.01em;
   color: #000;
-
   margin-bottom: 24px;
 }
 
@@ -89,15 +86,11 @@ font-size: 16px;
 line-height: 1.5;
 color: #000;
 max-width: 335px;
-
-
 font-weight: 400;
 font-size: 16px;
 line-height: 1.5;
 color: #000;
 max-width: 335px;
-
-
 }
 
 .icon {
@@ -122,21 +115,24 @@ max-width: 704px;
 font-size: 28px;
 max-width: 704px;
 }
+
 .title {
 font-size: 28px;
 max-width: 704px;
 }
 
+
 .description {
 
 max-width: 704px;
 
 }
-.description {
 
+.description {
 max-width: 704px;
 
 }
+
 
   .sectionFeatures {
     display: flex;
@@ -152,6 +148,7 @@ max-width: 704px;
 margin-bottom: 32px;
 }
 
+
 .text {
 max-width: 704px;
 margin-bottom: 32px;
@@ -163,9 +160,11 @@ margin-bottom: 32px;
   .container {
     padding: 0 64px;
   }
+
   .container {
     padding: 0 64px;
   }
+
   .sectionBenefits {
     max-width: 1440px;
     padding: 112px 0px;
@@ -173,7 +172,6 @@ margin-bottom: 32px;
   .content {
     display: flex;
     flex-direction: row;
-    gap: 80px;
     gap: 80px;
     margin-bottom: 80px;
     flex-wrap: nowrap;
@@ -198,6 +196,7 @@ max-width: 616px;
 
 }
 
+
 .description {
 font-weight: 400;
 font-size: 18px;
@@ -205,6 +204,13 @@ max-width: 616px;
 
 }
 
+.sectionFeatures {
+display: flex;
+align-items: flex-start;
+justify-content: center;
+flex-direction: row;
+gap: 32px;
+}
   .sectionFeatures {
     display: flex;
     align-items: flex-start;
@@ -226,10 +232,12 @@ max-width: 616px;
   }
 }
 
+
 .container {
   width: 100%;
   max-width: var(--container-width);
   margin: 0 auto;
   padding: 0 20px;
 }
+
 

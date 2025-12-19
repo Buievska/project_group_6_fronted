@@ -53,7 +53,6 @@ type CategoriesResponsee = {
 };
 
 export const logoutRequest = async () => {
-  // Відправляємо запит на сервер, щоб він очистив Cookie
   return $api.post("auth/logout");
 };
 
@@ -124,12 +123,6 @@ export const getUserById = async (userId: string) => {
   return data;
 };
 
-export const updateUserProfile = async (formData: FormData) => {
-  const { data } = await $api.patch<UserProfile>("/users/current", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
-  return data;
-};
 
 export const updateTool = async (id: string, formData: FormData) => {
   const { data } = await axios.patch<Tool>(
@@ -143,3 +136,12 @@ export const updateTool = async (id: string, formData: FormData) => {
   );
   return data;
 };
+
+export const updateUserProfile = async (userId: string, dataToSend: any) => {
+  const { data } = await $api.patch<UserProfile>(
+    `/users/${userId}`,
+    dataToSend
+  );
+  return data;
+};
+

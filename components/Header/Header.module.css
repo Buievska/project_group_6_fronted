@@ -1,4 +1,4 @@
-/* ================= HEADER ================= */
+/* ================= MOBILE FIRST ================= */
 .header {
   width: 100%;
   position: sticky;
@@ -21,7 +21,6 @@
 }
 
 /* ================= LOGO ================= */
-
 .logoLink {
   display: block;
   flex-shrink: 0;
@@ -32,16 +31,22 @@
   height: 20px;
 }
 
-/* ================= DESKTOP NAV ================= */
+/* ================= NAVIGATION ================= */
 .headerRight {
-  display: none;
+  display: none; /* ховаємо для мобільних */
 }
 
 .navLinks {
   display: none;
 }
 
-/* ================= NAV LINKS ================= */
+.navMobile {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
 .navLinks a,
 .navMobile a {
   position: relative;
@@ -106,11 +111,18 @@
 }
 
 .registerBtn {
-  display: none;
+
+  display: none; /* для мобільних ховаємо */
+}
+
+
+
+
+.publishBtn {
+  display: none; /* для мобільних ховаємо */
 }
 
 /* ================= BURGER ================= */
-
 .burger {
   background: none;
   border: none;
@@ -119,64 +131,11 @@
   z-index: 200;
 }
 
-.authMobile {
-  margin: 0 auto;
-  margin-top: 16px;
-}
-
-/* ================= OVERLAY ================= */
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 100;
-}
-
-.overlay.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* ================= MOBILE MENU ================= */
-
-.menu {
-  width: 100vw;
-  height: 100vh;
-  background: #f2f2f2;
-  display: flex;
-  flex-direction: column;
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
-.overlay.open .menu {
-  transform: translateX(0);
-}
-
-.menuHeader {
-  padding: 32px 16px;
-}
-
-/* ================= MOBILE NAV ================= */
-.navMobile {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: center;
-}
 
 /* ================= MOBILE USER ================= */
 .mobileUserCentered {
   margin-top: 16px;
   padding: 0 16px;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -227,18 +186,52 @@
   opacity: 0.6;
 }
 
-.userActions {
-  display: none;
+
+.authMobile {
+  margin: 0 auto;
+  margin-top: 16px;
 }
 
-/* ================= BREAKPOINTS ================= */
-
-@media (min-width: 375px) {
-  .registerMobile {
-    width: 335px;
-  }
+/* ================= OVERLAY ================= */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 100;
 }
 
+.overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menu {
+  width: 100vw;
+  height: 100vh;
+  background: #f2f2f2;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.overlay.open .menu {
+  transform: translateX(0);
+}
+
+.menuHeader {
+  padding: 32px 16px;
+
+
+/* ================= MEDIA QUERIES ================= */
+
+/* -------- TABLET (768px+) -------- */
 @media (min-width: 768px) {
   .containerHeader {
     padding: 0 32px;
@@ -254,6 +247,7 @@
   }
 }
 
+/* -------- DESKTOP (1440px+) -------- */
 @media (min-width: 1440px) {
   .burger {
     display: none;
@@ -263,6 +257,12 @@
     padding: 0 64px;
   }
 
+  .headerRight {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
   .desktopContainer {
     display: flex;
     align-items: center;
@@ -270,12 +270,11 @@
     margin-left: auto;
   }
 
-  /* --- НАВІГАЦІЯ --- */
+  /* Навігація */
   .navLinks {
     display: flex;
     align-items: center;
     gap: 32px;
-    margin-right: 32px;
   }
 
   .navLinks a {
@@ -290,15 +289,17 @@
     color: #8808cc;
   }
 
-  /* --- БЛОК ДІЙ (СПРАВА) --- */
+  /* Блок дій (справа) */
   .userActions {
     display: flex;
     align-items: center;
     gap: 24px;
   }
 
-  /* Кнопка "Зареєструватися" (Гість) */
   .registerBtn {
+    border: 1px solid rgb(136, 8, 204);
+    background-color: rgb(136, 8, 204);
+
     display: block;
     padding: 10px 24px;
     background-color: #8808cc;
@@ -307,15 +308,22 @@
     font-size: 14px;
     font-weight: 600;
     text-decoration: none;
-    transition: background-color 0.2s;
+    transition: background-color 0.3s ease;
   }
 
-  .registerBtn:hover {
-    background-color: #6a069e;
+  .registerBtn:hover,
+  .registerBtn:focus {
+    color: black;
+    background-color: white;
   }
 
-  /* Кнопка "Опублікувати оголошення" (Юзер) */
+  .registerBtn:active {
+    color: white;
+    background-color: #e7cdf4;
+  }
+
   .publishBtn {
+    display: block;
     padding: 10px 24px;
     background-color: #8808cc;
     color: #fff;
@@ -362,17 +370,15 @@
     color: #000;
   }
 
-  /* Вертикальний розділювач */
   .divider {
     width: 1px;
-    height: 32px; /* Висота палички */
-    background-color: #000; /* Чорна, як на макеті */
+    height: 32px;
+    background-color: #000;
   }
 
-  /* Кнопка "Вийти" */
   .logoutBtn {
     background: transparent;
-    border: none; /* Можна додати border: 1px solid #8808cc якщо треба рамку */
+    border: none;
     color: #000;
     font-size: 14px;
     font-weight: 600;
