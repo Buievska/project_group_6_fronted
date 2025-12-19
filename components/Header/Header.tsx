@@ -24,7 +24,6 @@ export function Header() {
     try {
       await logoutRequest();
     } catch (error) {
-
       console.error("Помилка при виході:", error);
     }
 
@@ -35,8 +34,7 @@ export function Header() {
     setIsMenuOpen(false);
 
     router.push("/");
-
-
+  };
   return (
     <>
       <header className={styles.header}>
@@ -46,9 +44,7 @@ export function Header() {
             <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
           </Link>
 
-
           <div className={styles.headerRight}>
-
             {!user ? (
               <>
                 <nav className={styles.navLinks}>
@@ -69,9 +65,7 @@ export function Header() {
                 </nav>
 
                 <div className={styles.userActions}>
-
                   <Link href="/tools/new" className={styles.publishBtn}>
-
                     Опублікувати оголошення
                   </Link>
 
@@ -99,7 +93,6 @@ export function Header() {
                     </span>
                   </div>
 
-
                   <Image
                     src="/icon-exit.svg"
                     alt=""
@@ -110,15 +103,12 @@ export function Header() {
 
                   <button
                     className={styles.logout}
-
                     onClick={() => setIsLogoutOpen(true)}
                     aria-label="Вийти"
                   >
                     <Image
                       src="/button-exit.svg"
-
                       alt="Вихід"
-
                       width={24}
                       height={24}
                     />
