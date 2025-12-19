@@ -5,6 +5,16 @@ import * as Yup from "yup";
 import { useId } from "react";
 import BookingCalendar from "../BookingCalendar/BookingCalendar";
 import styles from "./BookingToolForm.module.css";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createBooking } from "@/lib/api/clientApi";
+import { useRouter } from "next/navigation";
+import { CreateBookingRequest, CreateBookingResponse } from "@/types/booking";
+import toast from "react-hot-toast";
+
+// props для форми
+interface BookingToolFormProps {
+  toolId: string; // передаємо _id інструменту
+}
 
 interface DateRange {
   from: Date | null;
@@ -16,8 +26,8 @@ interface BookingToolFormValues {
   lastName: string;
   phone: string;
   dateRange: DateRange;
-  city: string;
-  postOffice: string;
+  deliveryCity: string;
+  deliveryBranch: string;
 }
 
 const initialValues: BookingToolFormValues = {
@@ -25,31 +35,32 @@ const initialValues: BookingToolFormValues = {
   lastName: "",
   phone: "",
   dateRange: { from: null, to: null },
-  city: "",
-  postOffice: "",
+  deliveryCity: "",
+  deliveryBranch: "",
 };
 
 const validationSchema = Yup.object({
   firstName: Yup.string().trim().min(2, "Мінімум 2 символи").required("Імʼя обовʼязкове"),
-
   lastName: Yup.string().trim().min(2, "Мінімум 2 символи").required("Прізвище обовʼязкове"),
 
   phone: Yup.string()
     .required("Номер телефону обовʼязковий")
-    .test("is-ua-phone", "Невірний формат телефону", value => {
-      if (!value) return false;
-      const cleaned = value.replace(/\D/g, "");
-      return /^380\d{9}$/.test(cleaned) || /^0\d{9}$/.test(cleaned);
-    }),
+    .transform(value => {
+      if (!value) return value;
+      const digits = value.replace(/\D/g, "");
+      if (digits.startsWith("380")) return `+${digits}`;
+      if (digits.startsWith("0")) return `+38${digits}`;
+      return value;
+    })
+    .matches(/^\+380\d{9}$/, "Невірний формат телефону"),
 
   dateRange: Yup.object({
     from: Yup.date().nullable().required("Оберіть дату початку"),
     to: Yup.date().nullable().required("Оберіть дату завершення"),
   }).test("dates-required", "Оберіть період бронювання", value => value?.from !== null && value?.to !== null),
 
-  city: Yup.string().trim().required("Місто обовʼязкове"),
-
-  postOffice: Yup.string().trim().required("Відділення обовʼязкове"),
+  deliveryCity: Yup.string().trim().required("Місто обовʼязкове"),
+  deliveryBranch: Yup.string().trim().required("Відділення обовʼязкове"),
 });
 
 // Компонент-обгортка для календаря з Formik
@@ -88,7 +99,7 @@ function CalendarField() {
   );
 }
 
-// Задаємо ціну за день
+// Задаємо ціну за день (пізніше буде із БД)
 const PRICE_PER_DAY = 700;
 
 // Хук для розрахунку кількості днів
@@ -117,18 +128,39 @@ function PriceBlock() {
   );
 }
 
-export default function BookingToolForm() {
+export default function BookingToolForm({ toolId }: BookingToolFormProps) {
   const fieldId = useId();
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const { mutate, isPending } = useMutation<CreateBookingResponse, Error, CreateBookingRequest>({
+    mutationFn: createBooking,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["booking"] });
+      router.push("/confirm/booking");
+    },
+    onError: error => {
+      toast.error(error.message || "Помилка створення бронювання");
+    },
+  });
 
   const handleSubmit = (values: BookingToolFormValues, actions: FormikHelpers<BookingToolFormValues>) => {
-    const submitData = {
-      ...values,
-      startDate: values.dateRange.from?.toISOString(),
-      endDate: values.dateRange.to?.toISOString(),
+    if (!values.dateRange.from || !values.dateRange.to) return;
+
+    const payload: CreateBookingRequest = {
+      toolId,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      phone: values.phone, // +380XXXXXXXXX
+      startDate: values.dateRange.from.toISOString().split("T")[0], // конвертація у YYYY-MM-DD
+      endDate: values.dateRange.to.toISOString().split("T")[0],
+      deliveryCity: values.deliveryCity,
+      deliveryBranch: values.deliveryBranch,
     };
 
-    console.log("Form submitted:", submitData);
-    actions.resetForm();
+    mutate(payload, {
+      onError: () => actions.setSubmitting(false),
+    });
   };
 
   return (
@@ -192,32 +224,38 @@ export default function BookingToolForm() {
 
           <fieldset className={`${styles.fieldGroup} ${styles.fieldsetReset}`}>
             <div className={styles.inputWrapper}>
-              <label className={styles.label} htmlFor={`${fieldId}-city`}>
+              <label className={styles.label} htmlFor={`${fieldId}-deliveryCity`}>
                 Місто доставки
               </label>
-              <Field className={styles.input} id={`${fieldId}-city`} name="city" type="text" placeholder="Ваше місто" />
-              <ErrorMessage name="city" component="span" className={styles.error} />
+              <Field
+                className={styles.input}
+                id={`${fieldId}-deliveryCity`}
+                name="deliveryCity"
+                type="text"
+                placeholder="Ваше місто"
+              />
+              <ErrorMessage name="deliveryCity" component="span" className={styles.error} />
             </div>
 
             <div className={styles.inputWrapper}>
-              <label className={styles.label} htmlFor={`${fieldId}-postOffice`}>
+              <label className={styles.label} htmlFor={`${fieldId}-deliveryBranch`}>
                 Відділення Нової Пошти
               </label>
               <Field
                 className={styles.input}
-                id={`${fieldId}-postOffice`}
-                name="postOffice"
+                id={`${fieldId}-deliveryBranch`}
+                name="deliveryBranch"
                 type="text"
                 placeholder="24"
               />
-              <ErrorMessage name="postOffice" component="span" className={styles.error} />
+              <ErrorMessage name="deliveryBranch" component="span" className={styles.error} />
             </div>
           </fieldset>
 
           <div className={styles.formActions}>
             <PriceBlock />
-            <button className={styles.button} type="submit">
-              Забронювати
+            <button className={styles.button} type="submit" disabled={isPending}>
+              {isPending ? "Завантаження..." : "Забронювати"}
             </button>
           </div>
         </Form>

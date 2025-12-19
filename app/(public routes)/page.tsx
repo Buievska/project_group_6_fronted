@@ -9,6 +9,7 @@ import HeroBlock from "@/components/HeroBlock/HeroBlock";
 export default function HomePage() {
   return (
     <main className={styles.main}>
+      {/* <BookingToolForm toolId="692db3ffab59e437964311d4" /> */}
       {/* 1. HeroBlock: Заголовок та пошук */}
       <HeroBlock />
       {/* 2. BenefitsBlock: Переваги */}
@@ -19,7 +20,6 @@ export default function HomePage() {
       <FeedbacksBlock />
       {/* 5. RegistrationBlock: Пропозиція реєстрації */}
       <RegistrationBlock />
-      {/* <BookingToolForm /> */}
     </main>
   );
 }
