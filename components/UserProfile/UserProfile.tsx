@@ -60,12 +60,12 @@ export const UserProfile: React.FC<UserProfileProps> = ({
 
       <div className={css.infoSection}>
         <h1 className={css.userName}>{userName}</h1>
-        <div className={css.statsRow}>
+        {/* <div className={css.statsRow}>
           <span className={css.statItem}>Активний користувач</span>
         </div>
         <div className={css.contactInfo}>
           <p className={css.subText}>Профіль учасника спільноти ToolNext</p>
-        </div>
+        </div> */}
       </div>
     </div>
   );
