@@ -1,55 +1,73 @@
+// lib/api/serverApi.ts
 import axios from "axios";
 import { cookies } from "next/headers";
 import { UserProfile } from "@/types/user";
 import { Tool } from "@/types/tool";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+export interface ToolsResponse {
+  tools: Tool[];
+  total: number;
+}
 
-const getAuthHeaders = async () => {
+const BASE_URL = "https://project-group-6-backend.onrender.com/api";
+
+const getCookieHeaders = async () => {
   const cookieStore = await cookies();
-  const token = cookieStore.get("auth_token")?.value;
-
   return {
     headers: {
-      Authorization: token ? `Bearer ${token}` : "",
+      Cookie: cookieStore.toString(),
     },
   };
 };
 
 export async function getCurrentAuthUser(): Promise<UserProfile | null> {
   try {
-    const config = await getAuthHeaders();
-    const response = await axios.get(`${API_URL}/users/me`, config);
-    return response.data;
-  } catch {
+    const config = await getCookieHeaders();
+
+    // 👇 Спроба отримати юзера
+    const response = await axios.get(`${BASE_URL}/users/current`, config);
+    const userData = response.data.data || response.data;
+
+    if (!userData) return null;
+
+    return {
+      id: userData._id || userData.id,
+      name: userData.name,
+      email: userData.email,
+      avatar: userData.avatarUrl || userData.avatar,
+      _id: userData._id,
+      avatarUrl: userData.avatarUrl,
+    } as UserProfile;
+  } catch (error) {
+    // ✅ МАГІЯ ТУТ: Ми "ковтаємо" помилку 401.
+    // Сайт більше не впаде, він просто подумає, що ти гість.
     return null;
   }
 }
 
+// ... (решта функцій getUserProfile, getUserTools залишаються без змін)
 export async function getUserProfile(userId: string): Promise<UserProfile> {
-  const response = await axios.get(`${API_URL}/users/${userId}`);
-  return response.data;
+  const response = await axios.get(`${BASE_URL}/users/${userId}`);
+  const data = response.data;
+  return {
+    id: data.id || data._id,
+    name: data.name,
+    avatar: data.avatarUrl || data.avatar,
+    email: "",
+    _id: data._id || data.id,
+    avatarUrl: data.avatarUrl,
+  } as UserProfile;
 }
 
-export async function getUserTools(
-  userId: string,
-  params: { limit: number; offset: number }
-): Promise<Tool[]> {
-  const response = await axios.get(`${API_URL}/tools`, {
-    params: {
-      ownerId: userId,
-      limit: params.limit,
-      offset: params.offset,
-    },
-  });
-  return response.data;
+export async function getUserTools(userId: string): Promise<ToolsResponse> {
+  const response = await axios.get(`${BASE_URL}/users/${userId}/tools`);
+  return {
+    tools: response.data.tools || [],
+    total: response.data.totalItems || 0,
+  };
 }
 
-export async function getTotalToolsCount(userId: string): Promise<number> {
-  const response = await axios.get(`${API_URL}/tools/count`, {
-    params: { ownerId: userId },
-  });
-  return response.data.count;
+export async function deleteTool(toolId: string): Promise<void> {
+  const config = await getCookieHeaders();
+  await axios.delete(`${BASE_URL}/tools/${toolId}`, config);
 }
-
-export type { UserProfile, Tool as ToolData };

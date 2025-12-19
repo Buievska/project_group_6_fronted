@@ -1,37 +1,58 @@
-// app/(private routes)/profile/page.tsx
-import { getCurrentAuthUser } from "@/lib/api/serverApi";
-import { redirect } from "next/navigation";
-import { Metadata } from "next";
+"use client";
 
-export const dynamic = "force-dynamic";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { getCurrentUser } from "@/lib/api/clientApi";
+import { useAuthStore } from "@/lib/store/authStore";
 
-export const metadata: Metadata = {
-  title: "Мій Профіль | Tool",
-  description: "Особиста сторінка профілю поточного користувача.",
-};
+export default function MyProfilePage() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
 
-export default async function MyProfilePage() {
-  let user = null;
+  const loginToStore = useAuthStore((state) => state.login);
 
-  try {
-    user = await getCurrentAuthUser();
-  } catch (error) {
-    console.error("Failed to fetch current user for redirect:", error);
-  }
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const userData = await getCurrentUser();
 
-  if (user && user.id) {
-    redirect(`/profile/${user.id}`);
+        if (userData) {
+          const user = userData.data || userData;
+          loginToStore(user);
+
+          const userId = user._id || user.id;
+          router.push(`/profile/${userId}`);
+        }
+      } catch (error) {
+        console.error("Не вдалося авторизуватись:", error);
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [router, loginToStore]);
+
+  if (isLoading) {
+    return (
+      <main style={{ padding: "50px", textAlign: "center" }}>
+        <h2>Завантаження профілю...</h2>
+      </main>
+    );
   }
 
   return (
-    <main>
+    <main style={{ padding: "50px", textAlign: "center" }}>
       <h1>Помилка авторизації</h1>
       <p>
-        Не вдалося отримати дані користувача для перенаправлення. Спробуйте
-        увійти знову.
+        Не вдалося знайти ваш профіль. Можливо, термін дії сесії закінчився.
       </p>
-
-      <a href="/login">Перейти до входу</a>
+      <Link
+        href="/login"
+        style={{ color: "blue", textDecoration: "underline" }}
+      >
+        Перейти до входу
+      </Link>
     </main>
   );
 }
