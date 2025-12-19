@@ -3,11 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { AxiosError } from "axios";
 
-import {
-  getUserProfile,
-  getUserTools,
-  getCurrentAuthUser,
-} from "@/lib/api/serverApi";
+import { getUserProfile, getUserTools } from "@/lib/api/serverApi";
 
 import { UserProfile } from "@/components/UserProfile/UserProfile";
 import ToolsGrid from "@/components/ToolsGrid/ToolsGrid";
@@ -44,18 +40,16 @@ export default async function ProfilePage({
   const { userId } = await params;
 
   try {
-    const [targetUser, toolsData, currentAuthUser] = await Promise.all([
+    const [targetUser, toolsData] = await Promise.all([
       getUserProfile(userId),
       getUserTools(userId),
-      getCurrentAuthUser(),
     ]);
 
     const initialTools = toolsData?.tools || [];
     const totalCount = toolsData?.total || 0;
-
-    const isOwner =
-      currentAuthUser && String(currentAuthUser.id) === String(targetUser.id);
     const hasTools = initialTools.length > 0;
+
+    const profileId = targetUser._id || targetUser.id || "";
 
     return (
       <main className={css.mainContent}>
@@ -63,7 +57,7 @@ export default async function ProfilePage({
           <UserProfile
             userName={targetUser.name}
             avatarUrl={targetUser.avatar}
-            isOwner={!!isOwner}
+            profileId={profileId}
           />
         </section>
 
@@ -77,7 +71,7 @@ export default async function ProfilePage({
             limit={TOOLS_PER_PAGE}
           />
         ) : (
-          <ProfilePlaceholder isOwner={!!isOwner} />
+          <ProfilePlaceholder isOwner={false} />
         )}
       </main>
     );

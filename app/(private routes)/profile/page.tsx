@@ -1,30 +1,58 @@
-// app/(private routes)/profile/page.tsx
-import { getCurrentAuthUser } from "@/lib/api/serverApi";
-import { redirect } from "next/navigation";
-import { Metadata } from "next";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { getCurrentUser } from "@/lib/api/clientApi";
+import { useAuthStore } from "@/lib/store/authStore";
 
-export const dynamic = "force-dynamic";
+export default function MyProfilePage() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
 
-export const metadata: Metadata = {
-  title: "Мій Профіль | Tool",
-  description: "Особиста сторінка профілю поточного користувача.",
-};
+  const loginToStore = useAuthStore((state) => state.login);
 
-export default async function MyProfilePage() {
-  const user = await getCurrentAuthUser();
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const userData = await getCurrentUser();
 
-  if (user && user.id) {
-    redirect(`/profile/${user.id}`);
+        if (userData) {
+          const user = userData.data || userData;
+          loginToStore(user);
+
+          const userId = user._id || user.id;
+          router.push(`/profile/${userId}`);
+        }
+      } catch (error) {
+        console.error("Не вдалося авторизуватись:", error);
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [router, loginToStore]);
+
+  if (isLoading) {
+    return (
+      <main style={{ padding: "50px", textAlign: "center" }}>
+        <h2>Завантаження профілю...</h2>
+      </main>
+    );
   }
 
   return (
-    <main>
+    <main style={{ padding: "50px", textAlign: "center" }}>
       <h1>Помилка авторизації</h1>
       <p>
         Не вдалося знайти ваш профіль. Можливо, термін дії сесії закінчився.
       </p>
-      <Link href="/login">Перейти до входу</Link>
+      <Link
+        href="/login"
+        style={{ color: "blue", textDecoration: "underline" }}
+      >
+        Перейти до входу
+      </Link>
     </main>
   );
 }

@@ -25,7 +25,7 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api-proxy/:path*",
+        source: "/api/:path*",
         destination: "https://project-group-6-backend.onrender.com/api/:path*",
       },
     ];
