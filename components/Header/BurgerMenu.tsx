@@ -93,6 +93,8 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
           </div>
         )}
 
+        {/* REGISTER (тільки для гостя) */}
+
         {!user && (
           <div className={styles.authMobile}>
             <Link
