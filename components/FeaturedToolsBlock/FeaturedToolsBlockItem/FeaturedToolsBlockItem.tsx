@@ -1,6 +1,6 @@
 "use client";
 
-
+import "@smastrom/react-rating/style.css";
 
 import { Tool } from "@/types/tool";
 import Image from "next/image";

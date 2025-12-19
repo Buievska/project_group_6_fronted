@@ -31,9 +31,31 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
           </Link>
         </div>
 
-        {/* USER BLOCK */}
+        {/* NAVIGATION */}
+        <nav className={styles.navMobile}>
+          <Link href="/" onClick={onClose}>
+            Головна
+          </Link>
+          <Link href="/tools" onClick={onClose}>
+            Інструменти
+          </Link>
+
+          {!user && (
+            <Link href="/login" onClick={onClose}>
+              Увійти
+            </Link>
+          )}
+
+          {user && (
+            <Link href="/profile" onClick={onClose}>
+              Мій профіль
+            </Link>
+          )}
+        </nav>
+
+        {/* USER BLOCK — ВНИЗУ */}
         {user && (
-          <div className={styles.mobileUser}>
+          <div className={styles.mobileUserCentered}>
             {user.avatar ? (
               <Image
                 src={user.avatar}
@@ -52,6 +74,15 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
               {user.name || "Користувач"}
             </span>
 
+            {/* РИСКА */}
+            <Image
+              src="/icon-exit.svg"
+              alt=""
+              width={1}
+              height={39}
+              className={styles.mobileDivider}
+            />
+
             <button
               className={styles.mobileLogout}
               onClick={() => {
@@ -60,42 +91,12 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
               }}
               aria-label="Вийти"
             >
-              <Image
-                src="/button-exit.svg"
-                alt="Вихід"
-                width={20}
-                height={20}
-              />
+              <Image src="/button-exit.svg" alt="" width={24} height={24} />
             </button>
           </div>
         )}
 
-        {/* NAVIGATION */}
-        <nav className={styles.navMobile}>
-          <Link href="/" onClick={onClose}>
-            Головна
-          </Link>
-          <Link href="/tools" onClick={onClose}>
-            Інструменти
-          </Link>
-
-          {!user && (
-            <Link href="/login" onClick={onClose}>
-              Увійти
-            </Link>
-          )}
-
-          {user && (
-            <>
-              <Link href="/profile" onClick={onClose}>
-                Мій профіль
-              </Link>
-              <Link href="/create" onClick={onClose}>
-                Опублікувати оголошення
-              </Link>
-            </>
-          )}
-        </nav>
+        {/* REGISTER (тільки для гостя) */}
 
         {!user && (
           <div className={styles.authMobile}>

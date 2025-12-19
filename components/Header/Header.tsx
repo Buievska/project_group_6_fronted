@@ -24,21 +24,17 @@ export function Header() {
     try {
       await logoutRequest();
     } catch (error) {
-      console.error("Помилка при виході:", error);
+      console.warn("Серверна сесія вже неактивна, виконуємо локальний вихід.");
+    } finally {
+      localStorage.removeItem("isLoggedIn");
+      logout();
+
+      setIsLogoutOpen(false);
+      setIsMenuOpen(false);
+
+      router.push("/");
+      router.refresh();
     }
-
-    // Очищення даних
-    localStorage.removeItem("isLoggedIn");
-    logout();
-
-    // Закриття меню та модалок
-    setIsLogoutOpen(false);
-    setIsMenuOpen(false);
-
-    // Видалено toast.success(...)
-
-    // Редірект на головну
-    router.push("/");
   };
 
   return (
@@ -51,21 +47,20 @@ export function Header() {
           </Link>
 
           {/* === DESKTOP PART (ПК) === */}
+
           <div className={styles.desktopContainer}>
-            {/* ВАРІАНТ 1: ГІСТЬ (НЕ ЗАЛОГОВАНИЙ) */}
             {!user ? (
               <>
                 <nav className={styles.navLinks}>
                   <Link href="/">Головна</Link>
                   <Link href="/tools">Інструменти</Link>
-                  <Link href="/login">Увійти</Link> {/* Увійти як посилання */}
+                  <Link href="/login">Увійти</Link>
                 </nav>
                 <Link href="/register" className={styles.registerBtn}>
                   Зареєструватися
                 </Link>
               </>
             ) : (
-              /* ВАРІАНТ 2: КОРИСТУВАЧ (ЗАЛОГОВАНИЙ) */
               <>
                 <nav className={styles.navLinks}>
                   <Link href="/">Головна</Link>
@@ -74,12 +69,10 @@ export function Header() {
                 </nav>
 
                 <div className={styles.userActions}>
-                  {/* Кнопка Опублікувати */}
-                  <Link href="/create" className={styles.publishBtn}>
+                  <Link href="/tools/new" className={styles.publishBtn}>
                     Опублікувати оголошення
                   </Link>
 
-                  {/* Аватар та Ім'я */}
                   <div className={styles.userInfo}>
                     {user.avatar ? (
                       <Image
@@ -99,13 +92,12 @@ export function Header() {
                     </span>
                   </div>
 
-                  {/* Розділювач */}
                   <div className={styles.divider}></div>
 
-                  {/* Кнопка Вийти */}
                   <button
                     className={styles.logoutBtn}
                     onClick={() => setIsLogoutOpen(true)}
+                    aria-label="Вийти"
                   >
                     <Image
                       src="/button-exit.svg"
@@ -119,11 +111,10 @@ export function Header() {
             )}
           </div>
 
-          {/* BURGER BUTTON (Тільки мобілка) */}
           <button
             className={styles.burger}
             onClick={() => setIsMenuOpen((prev) => !prev)}
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-label="Menu"
           >
             <Image
               src={isMenuOpen ? "/burger-close.svg" : "/burger-open.svg"}
@@ -134,7 +125,6 @@ export function Header() {
           </button>
         </div>
 
-        {/* Мобільне меню */}
         <BurgerMenu
           isOpen={isMenuOpen}
           onClose={() => setIsMenuOpen(false)}
@@ -143,7 +133,6 @@ export function Header() {
         />
       </header>
 
-      {/* Модалка виходу */}
       {isLogoutOpen && (
         <ConfirmationModal
           title="Ви впевнені, що хочете вийти?"
