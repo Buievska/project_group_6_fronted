@@ -1,40 +1,34 @@
-/* app/(private routes)/profile/[userId]/Profile.module.css */
-
 .mainContent {
-  padding: 32px 16px;
-  max-width: 1200px;
+  padding: 24px 16px 60px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
 .profileHeader {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 24px;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
   margin-bottom: 32px;
-  padding: 16px 0;
-}
-
-@media (min-width: 768px) {
-  .profileHeader {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0;
-  }
 }
 
 .sectionTitle {
-  font-size: 29px;
-  font-weight: 700;
-  color: #1f2937;
-  margin-top: 32px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 800;
+  color: #000;
+  margin-top: 40px;
   margin-bottom: 24px;
-  border-bottom: 2px solid #e5e7eb;
-  padding-bottom: 8px;
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .editProfileButton {
+  display: inline-flex;
   padding: 12px 24px;
   background-color: #f3f4f6;
   color: #374151;
@@ -43,10 +37,48 @@
   text-decoration: none;
   transition: background-color 0.2s;
   white-space: nowrap;
+  width: 100%;
+  justify-content: center;
 }
 
-.editProfileButton:hover {
-  background-color: #e5e7eb;
+@media (min-width: 768px) {
+  .mainContent {
+    padding: 40px 32px;
+    max-width: 768px;
+  }
+
+  .profileHeader {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    gap: 24px;
+  }
+
+  .sectionTitle {
+    font-size: 32px;
+    justify-content: left;
+  }
+
+  .editProfileButton {
+    width: auto;
+  }
+}
+
+@media (min-width: 1440px) {
+  .mainContent {
+    max-width: 1216px;
+    padding: 60px 0;
+  }
+
+  .sectionTitle {
+    font-size: 40px;
+    margin-top: 56px;
+  }
+
+  .profileHeader {
+    margin-bottom: 56px;
+  }
 }
 
 .errorText {
