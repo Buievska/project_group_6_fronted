@@ -1,5 +1,4 @@
 import { $api } from "./api";
-import axios from "axios";
 import { Tool } from "@/types/tool";
 import { User, UserProfile } from "@/types/user";
 import { CreateBookingRequest, CreateBookingResponse } from "@/types/booking";
@@ -54,39 +53,43 @@ type CategoriesResponsee = {
 };
 
 export const logoutRequest = async () => {
-  return $api.post("auth/logout");
+  return $api.post("/auth/logout");
 };
 
 export const getCurrentUser = async () => {
-  const response = await $api.get("users/current");
+  const response = await $api.get("/users/current");
   return response.data;
 };
 
 export const getTools = async () => {
-  const res = await axios.get<Tools>("https://project-group-6-backend.onrender.com/api/tools");
+  const res = await $api.get<Tools>("/tools");
   return res.data;
 };
 
 export async function fetchCategories(): Promise<Category[]> {
-  const res = await axios.get<CategoriesResponsee>("https://project-group-6-backend.onrender.com/api/categories");
-
+  const res = await $api.get<CategoriesResponsee>("/categories");
   return res.data.data;
 }
 
 export const getCategories = async () => {
-  const { data } = await axios.get("/api/categories");
+  const { data } = await $api.get("/categories");
   return data;
 };
 
 export const createTool = async (formData: FormData) => {
-  const { data } = await axios.post("/api/tools", formData, {
+  const { data } = await $api.post("/tools", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return data;
 };
 
-export async function fetchToolsPage(page: number, limit = 8, category = "all", search = "") {
-  const res = await axios.get<ToolsApiResponse>("https://project-group-6-backend.onrender.com/api/tools", {
+export async function fetchToolsPage(
+  page: number,
+  limit = 8,
+  category = "all",
+  search = ""
+) {
+  const res = await $api.get<ToolsApiResponse>("/tools", {
     params: {
       page,
       limit,
@@ -99,17 +102,17 @@ export async function fetchToolsPage(page: number, limit = 8, category = "all", 
 }
 
 export const getToolById = async (id: string) => {
-  const { data } = await axios.get<Tool>(`https://project-group-6-backend.onrender.com/api/tools/${id}`);
+  const { data } = await $api.get<Tool>(`/tools/${id}`);
   return data;
 };
 
 export const getUserById = async (userId: string) => {
-  const { data } = await axios.get<UserProfile>(`https://project-group-6-backend.onrender.com/api/users/${userId}`);
+  const { data } = await $api.get<UserProfile>(`/users/${userId}`);
   return data;
 };
 
 export const updateTool = async (id: string, formData: FormData) => {
-  const { data } = await axios.patch<Tool>(`https://project-group-6-backend.onrender.com/api/tools/${id}`, formData, {
+  const { data } = await $api.patch<Tool>(`/tools/${id}`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -117,12 +120,17 @@ export const updateTool = async (id: string, formData: FormData) => {
   return data;
 };
 
-export const createBooking = async (data: CreateBookingRequest): Promise<CreateBookingResponse> => {
+export const createBooking = async (
+  data: CreateBookingRequest
+): Promise<CreateBookingResponse> => {
   const response = await $api.post<CreateBookingResponse>("/bookings", data);
   return response.data;
 };
 
 export const updateUserProfile = async (userId: string, dataToSend: any) => {
-  const { data } = await $api.patch<UserProfile>(`/users/${userId}`, dataToSend);
+  const { data } = await $api.patch<UserProfile>(
+    `/users/${userId}`,
+    dataToSend
+  );
   return data;
 };
