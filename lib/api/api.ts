@@ -1,12 +1,11 @@
 import axios from "axios";
 
 export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
-// process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api"; // <- 3001
 
 export const $api = axios.create({
   baseURL: API_URL,
-  withCredentials: true,
+  withCredentials: true, // для кукі
   headers: {
     "Content-Type": "application/json",
   },

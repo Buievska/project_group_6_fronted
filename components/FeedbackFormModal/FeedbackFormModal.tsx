@@ -1,29 +1,33 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import { useAuthStore } from "@/lib/store/authStore";
 import styles from "./FeedbackFormModal.module.css";
 
 interface Props {
-  toolId: string;
-  toolName?: string;
+  productId: string;
+  productName?: string;
   onClose: () => void;
   onSuccess: () => void;
 }
 
 export default function FeedbackFormModal({
-  toolId,
-  toolName = "товар",
+  productId,
+  productName = "товар",
   onClose,
   onSuccess,
 }: Props) {
-  const [name, setName] = useState("");
+  const { user } = useAuthStore();
+
+  const [name, setName] = useState(user?.name || "");
   const [description, setDescription] = useState("");
   const [rate, setRate] = useState(0);
   const [hoverRate, setHoverRate] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  // Блокуємо скрол при відкритті модалки
+  // Блокування скролу
   useEffect(() => {
     const originalStyle = window.getComputedStyle(document.body).overflow;
     document.body.style.overflow = "hidden";
@@ -32,9 +36,11 @@ export default function FeedbackFormModal({
     };
   }, []);
 
-  // Закриття модалки по Esc
+  // Закриття по Escape
   useEffect(() => {
-    const esc = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    const esc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
     window.addEventListener("keydown", esc);
     return () => window.removeEventListener("keydown", esc);
   }, [onClose]);
@@ -42,41 +48,43 @@ export default function FeedbackFormModal({
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (rate === 0) {
-      toast.error("Будь ласка, виберіть оцінку");
-      return;
-    }
+    if (!name.trim()) return toast.error("Будь ласка, введіть імʼя");
+    if (!description.trim()) return toast.error("Будь ласка, введіть відгук");
+    if (rate === 0) return toast.error("Будь ласка, виберіть оцінку");
 
     setLoading(true);
 
     try {
-      const token = localStorage.getItem("token");
+      const payload = {
+        toolId: productId,
+        description,
+        rate,
+      };
 
-      const response = await fetch(
+      // ✅ Відправка через cookies, без Authorization заголовку
+      await axios.post(
         "https://project-group-6-backend.onrender.com/api/feedbacks",
+        payload,
         {
-          method: "POST",
+          withCredentials: true,
           headers: {
             "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
           },
-          body: JSON.stringify({
-            toolId,
-            name,
-            description,
-            rate,
-          }),
         }
       );
-
-      if (!response.ok) throw new Error("Помилка надсилання");
 
       toast.success("Відгук успішно додано!");
       onSuccess();
       onClose();
     } catch (err) {
-      console.error(err);
-      toast.error("Не вдалося надіслати відгук");
+      const error = err as AxiosError<{ message?: string }>;
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message || "Не вдалося надіслати відгук"
+        );
+      } else {
+        toast.error("Невідома помилка");
+      }
     } finally {
       setLoading(false);
     }
@@ -90,7 +98,7 @@ export default function FeedbackFormModal({
         </button>
 
         <h2 className={styles.title}>
-          Залишити відгук на <br /> {toolName}
+          Залишити відгук на <br /> {productName}
         </h2>
 
         <form className={styles.form} onSubmit={submit}>
@@ -101,7 +109,6 @@ export default function FeedbackFormModal({
               placeholder="Ваше імʼя"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              required
             />
           </label>
 
@@ -135,11 +142,7 @@ export default function FeedbackFormModal({
             </div>
           </div>
 
-          <button
-            type="submit"
-            className={styles.submit}
-            disabled={loading || rate === 0}
-          >
+          <button type="submit" className={styles.submit} disabled={loading}>
             {loading ? "Надсилаємо..." : "Надіслати"}
           </button>
         </form>

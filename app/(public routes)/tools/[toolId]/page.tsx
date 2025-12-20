@@ -10,17 +10,19 @@ import { Tool } from "@/types/tool";
 import ToolGallery from "@/components/ToolGallery/ToolGallery";
 import ToolInfoBlock from "@/components/ToolInfoBlock/ToolInfoBlock";
 import FeedbacksBlock from "@/components/FeedbacksBlock/FeedbacksBlock";
+import { useAuthStore } from "@/lib/store/authStore";
 
 import styles from "./ToolDetails.module.css";
 
 export default function ToolDetailsPage() {
   const params = useParams();
-
-  // ✅ РЕЗОЛВИМО toolId ОДИН РАЗ
   const toolId = typeof params.toolId === "string" ? params.toolId : null;
 
   const [tool, setTool] = useState<Tool | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const { user } = useAuthStore();
+  const isAuth = !!user;
 
   useEffect(() => {
     if (!toolId) {
@@ -43,13 +45,9 @@ export default function ToolDetailsPage() {
     fetchTool();
   }, [toolId]);
 
-  if (loading) {
-    return <div className={styles.loading}>Завантаження...</div>;
-  }
-
-  if (!tool || !toolId) {
+  if (loading) return <div className={styles.loading}>Завантаження...</div>;
+  if (!tool || !toolId)
     return <div className={styles.loading}>Інструмент не знайдено</div>;
-  }
 
   return (
     <div className={styles.container}>
@@ -57,19 +55,18 @@ export default function ToolDetailsPage() {
         <div className={styles.leftColumn}>
           <ToolGallery image={tool.images} name={tool.name} />
         </div>
-
         <div className={styles.rightColumn}>
           <ToolInfoBlock tool={tool} />
         </div>
       </div>
 
-      {/* ✅ ВІДГУКИ — ТИПИ КОРЕКТНІ */}
       <div className={styles.feedbacksSection}>
         <FeedbacksBlock
-          toolId={toolId}
+          productId={toolId}
           title="Відгуки"
-          showAddButton
-          variant="tool"
+          showLeaveButton
+          isAuth={isAuth}
+          isToolsPage
         />
       </div>
     </div>

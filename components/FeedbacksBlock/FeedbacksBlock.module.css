@@ -4,11 +4,6 @@
   font-family: "Work Sans", sans-serif;
 }
 
-.feedbacksSection--tool {
-  background-color: transparent; /* або #fff */
-  padding: 0;
-}
-
 .container {
   margin: 0 auto;
   padding: 0 20px;
@@ -195,7 +190,7 @@
   justify-content: center;
 }
 
-.addFeedbackButton {
+.leaveFeedbackBtn {
   height: 40px;
   padding: 10px 24px;
   background: #8808cc;
@@ -212,17 +207,17 @@
   text-decoration: none;
 }
 
-.addFeedbackButton:hover,
-.addFeedbackButton:focus {
+.leaveFeedbackBtn:hover,
+.leaveFeedbackBtn:focus {
   background: transparent;
   color: #000;
 }
 
-.addFeedbackButton:active {
+.leaveFeedbackBtn:active {
   background: #e7cdf4;
 }
 
-.addFeedbackButton:disabled {
+.leaveFeedbackBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -232,6 +227,38 @@
   justify-content: space-between; /* заголовок зліва, кнопка справа */
   align-items: flex-start; /* вирівнюємо по верхньому краю */
   gap: 16px;
+}
+
+/* Стилі тільки для сторінки інструментів */
+.toolsPage {
+  padding: 0;
+  background-color: transparent;
+}
+
+.toolsPage .container {
+  padding: 0;
+  margin: 0;
+}
+
+.emptyProductText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.emptyTitle {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 140%;
+  letter-spacing: -0.01em;
+  color: var(--color-scheme-1-text);
+}
+
+.emptySubtitle {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 150%;
+  color: var(--color-scheme-1-text);
 }
 
 @media (min-width: 768px) {
