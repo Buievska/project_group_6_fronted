@@ -44,7 +44,7 @@ export const Footer = () => {
                 <Link href="/profile" className={styles.navLink}>
                   Мій профіль
                 </Link>
-                <Link href="/create" className={styles.navLink}>
+                <Link href="/create" className={styles.publishBtn}>
                   Опублікувати оголошення
                 </Link>
               </>
@@ -53,7 +53,7 @@ export const Footer = () => {
                 <Link href="/login" className={styles.navLink}>
                   Увійти
                 </Link>
-                <Link href="/register" className={styles.navLink}>
+                <Link href="/register" className={styles.registerBtn}>
                   Зареєструватися
                 </Link>
               </>

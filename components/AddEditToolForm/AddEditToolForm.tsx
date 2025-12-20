@@ -21,7 +21,6 @@ interface ToolFormValues {
   pricePerDay: number;
   categoryId: string;
   terms: string;
-
   description: string;
   specifications: string;
   images?: File;
@@ -30,14 +29,12 @@ interface ToolFormValues {
 type Props = {
   mode: "create" | "edit";
   toolId?: string; // Додано toolId для режиму редагування
-
   initialValues?: {
     id?: string;
     name: string;
     pricePerDay: number;
     categoryId: string | number;
     terms: string;
-
     description: string;
     specifications: string;
     imageUrl?: string;
@@ -49,7 +46,6 @@ const validationSchema: Yup.Schema<ToolFormValues> = Yup.object({
   pricePerDay: Yup.number().positive().required("Вкажіть ціну"),
   categoryId: Yup.string().required("Оберіть категорію"),
   terms: Yup.string().required("Вкажіть умови оренди"),
-
   description: Yup.string().required("Вкажіть опис"),
   specifications: Yup.string().required("Вкажіть характеристики"),
   images: Yup.mixed<File>().optional(),
@@ -98,18 +94,14 @@ export default function AddEditToolForm({ mode, initialValues, toolId }: Props) 
       formData.append("name", values.name);
       formData.append("pricePerDay", String(values.pricePerDay));
       formData.append("categoryId", values.categoryId);
-
       formData.append("terms", values.terms);
-
       formData.append("description", values.description);
       formData.append("specifications", values.specifications);
 
       if (values.images) {
         formData.append("images", values.images);
       }
-
       const tool = await (toolId ? updateTool(toolId, formData) : createTool(formData)); // Використання toolId для оновлення
-
       router.push(`/tools/${tool.id}`);
     } catch (error: unknown) {
       if (error instanceof Error) {

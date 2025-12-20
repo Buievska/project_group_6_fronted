@@ -61,7 +61,7 @@ export default async function ProfilePage({
           />
         </section>
 
-        <h2 className={css.sectionTitle}>Інструменти користувача</h2>
+        <h2 className={css.sectionTitle}>Інструменти</h2>
 
         {hasTools ? (
           <ToolsGrid

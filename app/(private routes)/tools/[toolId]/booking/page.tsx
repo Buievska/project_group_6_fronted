@@ -1,9 +1,19 @@
 import BookingToolForm from "@/components/BookingToolForm/BookingToolForm";
+import { Toaster } from "react-hot-toast";
 
-export default function BookingToolPage() {
+interface BookingToolPageProps {
+  params: Promise<{
+    toolId: string;
+  }>;
+}
+
+export default async function BookingToolPage({ params }: BookingToolPageProps) {
+  const { toolId } = await params;
+
   return (
     <div>
-      <BookingToolForm />
+      <Toaster position="top-right" reverseOrder={false} />
+      <BookingToolForm toolId={toolId} />
     </div>
   );
 }

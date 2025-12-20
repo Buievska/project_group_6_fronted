@@ -38,6 +38,7 @@ font-size: 16px;
 line-height: 1.5;
 color: #000;
 max-width: 616px;
+
 }
 
 .sectionFeatures {
@@ -54,7 +55,6 @@ flex-wrap: wrap;
   line-height: 1.4;
   letter-spacing: -0.01em;
   color: #000;
-
   margin-bottom: 24px;
 }
 
@@ -99,6 +99,7 @@ display: flex;
 flex-wrap: wrap;
 }
 
+
   .sectionFeaturesTitle {
     width: 704px;
   }
@@ -108,8 +109,6 @@ max-width: 704px;
 margin-bottom: 32px;
 }
 }
-
-
 
 @media (min-width: 1440px) {
   .container {
@@ -135,10 +134,7 @@ line-height: 1.2;
 letter-spacing: -0.01em;
 color: #000;
 max-width: 616px;
-
 }
-
-
 .description {
 font-weight: 400;
 font-size: 18px;
@@ -173,5 +169,6 @@ gap: 32px;
     margin-bottom: 0px;
   }
 }
+
 
 
