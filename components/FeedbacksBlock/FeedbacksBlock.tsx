@@ -7,7 +7,6 @@ import { Navigation, Pagination } from 'swiper/modules';
 import FeedbackCard from './FeedbackCard';
 import Icon from './Icon';
 import styles from './FeedbacksBlock.module.css';
-
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
