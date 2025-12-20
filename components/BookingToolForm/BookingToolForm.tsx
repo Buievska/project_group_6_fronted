@@ -3,22 +3,30 @@
 import { ErrorMessage, Field, Form, Formik, FormikHelpers, useFormikContext, FormikErrors } from "formik";
 import * as Yup from "yup";
 import { useId } from "react";
-import BookingCalendar from "../BookingCalendar/BookingCalendar";
+import BookingCalendar, { BookedRange, DateRange } from "../BookingCalendar/BookingCalendar";
 import styles from "./BookingToolForm.module.css";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createBooking } from "@/lib/api/clientApi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createBooking, getToolById } from "@/lib/api/clientApi";
 import { useRouter } from "next/navigation";
 import { CreateBookingRequest, CreateBookingResponse } from "@/types/booking";
 import toast from "react-hot-toast";
+import { Tool } from "@/types/tool";
 
-// props для форми
 interface BookingToolFormProps {
-  toolId: string; // передаємо _id інструменту
+  toolId: string;
 }
 
-interface DateRange {
-  from: Date | null;
-  to: Date | null;
+interface PriceBlockProps {
+  pricePerDay: number;
+}
+
+interface FilledDateRange {
+  from: Date;
+  to: Date;
+}
+
+interface CalendarFieldProps {
+  bookedRanges: BookedRange[];
 }
 
 interface BookingToolFormValues {
@@ -42,7 +50,6 @@ const initialValues: BookingToolFormValues = {
 const validationSchema = Yup.object({
   firstName: Yup.string().trim().min(2, "Мінімум 2 символи").required("Імʼя обовʼязкове"),
   lastName: Yup.string().trim().min(2, "Мінімум 2 символи").required("Прізвище обовʼязкове"),
-
   phone: Yup.string()
     .required("Номер телефону обовʼязковий")
     .transform(value => {
@@ -53,44 +60,72 @@ const validationSchema = Yup.object({
       return value;
     })
     .matches(/^\+380\d{9}$/, "Невірний формат телефону"),
-
   dateRange: Yup.object({
     from: Yup.date().nullable().required("Оберіть дату початку"),
     to: Yup.date().nullable().required("Оберіть дату завершення"),
   }).test("dates-required", "Оберіть період бронювання", value => value?.from !== null && value?.to !== null),
-
   deliveryCity: Yup.string().trim().required("Місто обовʼязкове"),
   deliveryBranch: Yup.string().trim().required("Відділення обовʼязкове"),
 });
 
-// Компонент-обгортка для календаря з Formik
-function CalendarField() {
+function isOverlapping(selected: DateRange, booked: BookedRange[]): BookedRange | null {
+  return booked.find(b => selected.from! <= b.to && selected.to! >= b.from) || null;
+}
+
+function findNextAvailableRange(booked: BookedRange[], durationDays: number): FilledDateRange {
+  const sorted = [...booked].sort((a, b) => a.to.getTime() - b.to.getTime());
+
+  const lastBooked = sorted[sorted.length - 1];
+
+  const from = new Date(lastBooked.to);
+  from.setDate(from.getDate() + 1);
+
+  const to = new Date(from);
+  to.setDate(to.getDate() + durationDays);
+
+  return { from, to };
+}
+
+// Компонент-обгортка календаря
+function CalendarField({ bookedRanges }: CalendarFieldProps) {
   const { values, setFieldValue, errors, touched } = useFormikContext<BookingToolFormValues>();
 
-  const bookedDates = [new Date(2025, 7, 12), new Date(2025, 7, 15)];
-
   const handleChange = (range: DateRange) => {
+    if (!range.from || !range.to) {
+      setFieldValue("dateRange", range, true);
+      return;
+    }
+
+    const duration = Math.ceil((range.to.getTime() - range.from.getTime()) / (1000 * 60 * 60 * 24)) || 1;
+    const conflict = isOverlapping(range, bookedRanges);
+
+    if (conflict) {
+      const nextRange = findNextAvailableRange(bookedRanges, duration);
+
+      toast.error(
+        `Обраний період зайнятий.
+Найближчі вільні дати: ${nextRange.from.toLocaleDateString()} – ${nextRange.to.toLocaleDateString()}`,
+      );
+
+      setFieldValue("dateRange", nextRange, true);
+      return;
+    }
+
     setFieldValue("dateRange", range, true);
   };
 
   const getErrorMessage = (): string | undefined => {
-    if (!touched.dateRange || !errors.dateRange) {
-      return undefined;
-    }
-
-    if (typeof errors.dateRange === "string") {
-      return errors.dateRange;
-    }
-
-    const nestedErrors = errors.dateRange as FormikErrors<DateRange>;
-    return nestedErrors.from || nestedErrors.to || undefined;
+    if (!touched.dateRange || !errors.dateRange) return;
+    if (typeof errors.dateRange === "string") return errors.dateRange;
+    const nested = errors.dateRange as FormikErrors<DateRange>;
+    return nested.from || nested.to;
   };
 
   return (
     <div className={styles.calendarWrapper}>
       <label className={styles.label}>Виберіть період бронювання</label>
       <BookingCalendar
-        bookedDates={bookedDates}
+        bookedRanges={bookedRanges}
         value={values.dateRange}
         onChange={handleChange}
         error={getErrorMessage()}
@@ -99,39 +134,34 @@ function CalendarField() {
   );
 }
 
-// Задаємо ціну за день (пізніше буде із БД)
-const PRICE_PER_DAY = 700;
-
-// Хук для розрахунку кількості днів
 function calculateDays(from: Date | null, to: Date | null): number {
   if (!from || !to) return 0;
-
-  const start = new Date(from);
-  const end = new Date(to);
-
-  const diffTime = end.getTime() - start.getTime();
+  const diffTime = to.getTime() - from.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
   return diffDays > 0 ? diffDays : 0;
 }
 
-// Компонент для відображення ціни (через Formik)
-function PriceBlock() {
+function PriceBlock({ pricePerDay }: PriceBlockProps) {
   const { values } = useFormikContext<BookingToolFormValues>();
-
   const days = calculateDays(values.dateRange.from, values.dateRange.to);
-
-  const totalPrice = days * PRICE_PER_DAY;
-
-  return (
-    <p className={styles.textPrice}>{days > 0 ? `Ціна: ${totalPrice} грн` : "Оберіть період для розрахунку ціни"}</p>
-  );
+  const totalPrice = days * pricePerDay;
+  return <p className={styles.textPrice}>{days > 0 ? `Ціна: ${totalPrice} грн` : `Ціна: ${pricePerDay} грн`}</p>;
 }
 
 export default function BookingToolForm({ toolId }: BookingToolFormProps) {
   const fieldId = useId();
   const queryClient = useQueryClient();
   const router = useRouter();
+
+  const {
+    data: tool,
+    isLoading,
+    error,
+  } = useQuery<Tool>({
+    queryKey: ["tool", toolId],
+    queryFn: () => getToolById(toolId),
+    enabled: Boolean(toolId),
+  });
 
   const { mutate, isPending } = useMutation<CreateBookingResponse, Error, CreateBookingRequest>({
     mutationFn: createBooking,
@@ -151,8 +181,8 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
       toolId,
       firstName: values.firstName,
       lastName: values.lastName,
-      phone: values.phone, // +380XXXXXXXXX
-      startDate: values.dateRange.from.toISOString().split("T")[0], // конвертація у YYYY-MM-DD
+      phone: values.phone,
+      startDate: values.dateRange.from.toISOString().split("T")[0],
       endDate: values.dateRange.to.toISOString().split("T")[0],
       deliveryCity: values.deliveryCity,
       deliveryBranch: values.deliveryBranch,
@@ -162,6 +192,14 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
       onError: () => actions.setSubmitting(false),
     });
   };
+
+  if (isLoading) {
+    return <p>Завантаження інструмента...</p>;
+  }
+
+  if (error || !tool) {
+    return <p>Інструмент не знайдено</p>;
+  }
 
   return (
     <section className={styles.container}>
@@ -173,8 +211,6 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
         onSubmit={handleSubmit}
       >
         <Form className={styles.form}>
-          {/* ... решта полів залишається без змін ... */}
-
           <fieldset className={`${styles.fieldGroup} ${styles.fieldsetReset}`}>
             <div className={styles.inputWrapper}>
               <label className={styles.label} htmlFor={`${fieldId}-firstName`}>
@@ -189,7 +225,6 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
               />
               <ErrorMessage name="firstName" component="span" className={styles.error} />
             </div>
-
             <div className={styles.inputWrapper}>
               <label className={styles.label} htmlFor={`${fieldId}-lastName`}>
                 Прізвище
@@ -219,8 +254,12 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
             <ErrorMessage name="phone" component="span" className={styles.error} />
           </div>
 
-          {/* Календар */}
-          <CalendarField />
+          <CalendarField
+            bookedRanges={tool.bookedDates.map((d: { from: string; to: string }) => ({
+              from: new Date(d.from),
+              to: new Date(d.to),
+            }))}
+          />
 
           <fieldset className={`${styles.fieldGroup} ${styles.fieldsetReset}`}>
             <div className={styles.inputWrapper}>
@@ -236,7 +275,6 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
               />
               <ErrorMessage name="deliveryCity" component="span" className={styles.error} />
             </div>
-
             <div className={styles.inputWrapper}>
               <label className={styles.label} htmlFor={`${fieldId}-deliveryBranch`}>
                 Відділення Нової Пошти
@@ -253,7 +291,7 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
           </fieldset>
 
           <div className={styles.formActions}>
-            <PriceBlock />
+            <PriceBlock pricePerDay={tool.pricePerDay} />
             <button className={styles.button} type="submit" disabled={isPending}>
               {isPending ? "Завантаження..." : "Забронювати"}
             </button>

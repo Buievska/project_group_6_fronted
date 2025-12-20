@@ -32,4 +32,5 @@ export interface Tool {
     rate: number;
   };
   rentalTerms?: string;
+  bookedDates: { from: string; to: string }[];
 }

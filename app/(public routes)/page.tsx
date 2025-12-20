@@ -4,12 +4,10 @@ import FeaturedToolsBlock from "@/components/FeaturedToolsBlock/FeaturedToolsBlo
 import FeedbacksBlock from "@/components/FeedbacksBlock/FeedbacksBlock";
 import { RegistrationBlock } from "@/components/RegistrationBlock/RegistrationBlock";
 import HeroBlock from "@/components/HeroBlock/HeroBlock";
-// import BookingToolForm from "@/components/BookingToolForm/BookingToolForm";
 
 export default function HomePage() {
   return (
     <main className={styles.main}>
-      {/* <BookingToolForm toolId="692db3ffab59e437964311d4" /> */}
       {/* 1. HeroBlock: Заголовок та пошук */}
       <HeroBlock />
       {/* 2. BenefitsBlock: Переваги */}
