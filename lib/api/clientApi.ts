@@ -126,7 +126,3 @@ export const updateUserProfile = async (userId: string, dataToSend: any) => {
   const { data } = await $api.patch<UserProfile>(`/users/${userId}`, dataToSend);
   return data;
 };
-<<<<<<< HEAD
-
-=======
->>>>>>> b81dc782ec7f412ecbeca462218bf70f8b7ecf39
