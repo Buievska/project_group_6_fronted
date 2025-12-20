@@ -13,7 +13,7 @@ export interface AuthState {
 
 export const useAuthStore = create<AuthState>()(
   persist<AuthState>(
-    (set) => ({
+    set => ({
       user: null,
       isAuth: false,
 
@@ -25,6 +25,6 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth-storage",
-    }
-  )
+    },
+  ),
 );
