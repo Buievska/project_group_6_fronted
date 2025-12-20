@@ -58,7 +58,8 @@
   }
 
   .placeholderButton {
-    width: auto;
+    max-width: 166px;
+    font-size: 14px;
   }
 }
 
