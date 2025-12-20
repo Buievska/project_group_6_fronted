@@ -1,16 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import styles from "./FeedbackFormModal.module.css";
 
 interface Props {
   toolId: string;
+  toolName?: string;
   onClose: () => void;
   onSuccess: () => void;
 }
 
 export default function FeedbackFormModal({
   toolId,
+  toolName = "товар",
   onClose,
   onSuccess,
 }: Props) {
@@ -25,7 +28,7 @@ export default function FeedbackFormModal({
     const originalStyle = window.getComputedStyle(document.body).overflow;
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = originalStyle; // повертаємо після закриття
+      document.body.style.overflow = originalStyle;
     };
   }, []);
 
@@ -38,6 +41,12 @@ export default function FeedbackFormModal({
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (rate === 0) {
+      toast.error("Будь ласка, виберіть оцінку");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -62,10 +71,12 @@ export default function FeedbackFormModal({
 
       if (!response.ok) throw new Error("Помилка надсилання");
 
+      toast.success("Відгук успішно додано!");
       onSuccess();
       onClose();
-    } catch {
-      alert("Не вдалося надіслати відгук");
+    } catch (err) {
+      console.error(err);
+      toast.error("Не вдалося надіслати відгук");
     } finally {
       setLoading(false);
     }
@@ -79,7 +90,7 @@ export default function FeedbackFormModal({
         </button>
 
         <h2 className={styles.title}>
-          Залишити відгук на <br /> товар
+          Залишити відгук на <br /> {toolName}
         </h2>
 
         <form className={styles.form} onSubmit={submit}>
@@ -107,7 +118,6 @@ export default function FeedbackFormModal({
 
           <div className={styles.rating}>
             <span className={styles.ratingLabel}>Оцінка</span>
-
             <div className={styles.stars}>
               {[1, 2, 3, 4, 5].map((i) => (
                 <span

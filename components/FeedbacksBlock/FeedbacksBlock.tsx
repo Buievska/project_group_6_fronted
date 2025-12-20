@@ -29,12 +29,14 @@ interface FeedbacksBlockProps {
   toolId: string;
   title?: string;
   showAddButton?: boolean;
+  variant?: "home" | "tool";
 }
 
 const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
   toolId,
   title = "ВІДГУКИ",
   showAddButton = false,
+  variant = "home",
 }) => {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [loading, setLoading] = useState(true);

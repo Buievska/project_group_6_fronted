@@ -4,6 +4,11 @@
   font-family: "Work Sans", sans-serif;
 }
 
+.feedbacksSection--tool {
+  background-color: transparent; /* або #fff */
+  padding: 0;
+}
+
 .container {
   margin: 0 auto;
   padding: 0 20px;
