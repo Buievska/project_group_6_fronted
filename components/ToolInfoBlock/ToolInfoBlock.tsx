@@ -20,10 +20,12 @@ export default function ToolInfoBlock({ tool }: Props) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [owner, setOwner] = useState<UserProfile | null>(null);
 
+  // Виправляємо Error: Unexpected any
+  // Визначаємо safeOwnerId, перевіряючи чи є owner об'єктом (populated) чи рядком (ID)
   const safeOwnerId =
     typeof tool.owner === "object" && tool.owner !== null
-      ? (tool.owner as any)._id
-      : tool.owner;
+      ? (tool.owner as { _id: string })._id
+      : (tool.owner as string);
 
   const isOwner = user?._id === safeOwnerId;
 

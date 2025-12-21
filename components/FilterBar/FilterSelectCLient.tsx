@@ -8,7 +8,6 @@ type Category = { _id: string; title: string };
 export default function FilterSelectClient({
   categories,
   selected,
-  search,
 }: {
   categories: Category[];
   selected: string;

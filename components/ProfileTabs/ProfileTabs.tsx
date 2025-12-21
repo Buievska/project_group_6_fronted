@@ -10,12 +10,34 @@ import { getUserBookings, deleteBooking } from "@/lib/api/clientApi";
 import { useAuthStore } from "@/lib/store/authStore";
 import css from "./ProfileTabs.module.css";
 import gridCss from "@/components/ToolsGrid/ToolsGrid.module.css";
+import { Tool } from "@/types/tool";
 
 import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
 
+interface ProfileUser {
+  _id?: string;
+  id?: string;
+  name: string;
+  avatar?: string | null;
+}
+
+// Інтерфейс для бронювання (має збігатися з очікуваннями BookingCard)
+interface Booking {
+  _id: string;
+  toolId: {
+    _id: string;
+    name: string;
+    pricePerDay: string | number;
+    images?: string | string[];
+  };
+  startDate: string;
+  endDate: string;
+  totalPrice: number;
+}
+
 interface ProfileTabsProps {
-  user: any;
-  initialTools: any[];
+  user: ProfileUser;
+  initialTools: Tool[];
   totalToolsCount: number;
   userId: string;
 }
@@ -35,14 +57,18 @@ export default function ProfileTabs({
 
   const isOwner = currentUser?._id === userId || currentUser?.id === userId;
 
-  const { data: bookings = [], isLoading: isLoadingBookings } = useQuery({
+  const { data: bookings = [], isLoading: isLoadingBookings } = useQuery<
+    Booking[]
+  >({
     queryKey: ["my-bookings"],
     queryFn: async () => {
       const data = await getUserBookings();
-      console.log("Отримані бронювання:", data);
+      // data зазвичай приходить як масив або об'єкт з масивом,
+      // переконайтеся, що getUserBookings повертає масив
+      const results = Array.isArray(data) ? data : data.data || [];
 
-      return data.filter(
-        (b: any) => b.toolId !== null && b.toolId !== undefined
+      return results.filter(
+        (b: Booking) => b.toolId !== null && b.toolId !== undefined
       );
     },
     enabled: activeTab === "bookings" && isOwner,
@@ -77,7 +103,7 @@ export default function ProfileTabs({
       <UserProfile
         userName={user.name}
         avatarUrl={user.avatar}
-        profileId={user._id || user.id}
+        profileId={user._id || user.id || ""}
       />
 
       {isOwner && (
@@ -114,7 +140,7 @@ export default function ProfileTabs({
         ) : (
           <ul className={gridCss.toolsList}>
             {!isLoadingBookings &&
-              bookings.map((booking: any) => (
+              bookings.map((booking: Booking) => (
                 <li key={booking._id} className={gridCss.toolsItem}>
                   <BookingCard booking={booking} onCancel={openDeleteModal} />
                 </li>

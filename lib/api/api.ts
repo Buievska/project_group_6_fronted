@@ -29,7 +29,7 @@ $api.interceptors.response.use(
         await $api.post("/auth/refresh");
 
         return $api.request(originalRequest);
-      } catch (e) {
+      } catch {
         console.log("Not authorized");
       }
     }

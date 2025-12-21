@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { useAuthStore } from "@/lib/store/authStore";
 import { getCurrentUser } from "@/lib/api/clientApi";
-import { UserProfile } from "@/types/user";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { user, login } = useAuthStore((state) => state);
