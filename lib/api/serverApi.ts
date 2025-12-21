@@ -24,7 +24,6 @@ export async function getCurrentAuthUser(): Promise<UserProfile | null> {
   try {
     const config = await getCookieHeaders();
 
-    // 👇 Спроба отримати юзера
     const response = await axios.get(`${BASE_URL}/users/current`, config);
     const userData = response.data.data || response.data;
 
@@ -38,14 +37,11 @@ export async function getCurrentAuthUser(): Promise<UserProfile | null> {
       _id: userData._id,
       avatarUrl: userData.avatarUrl,
     } as UserProfile;
-  } catch (error) {
-    // ✅ МАГІЯ ТУТ: Ми "ковтаємо" помилку 401.
-    // Сайт більше не впаде, він просто подумає, що ти гість.
+  } catch {
     return null;
   }
 }
 
-// ... (решта функцій getUserProfile, getUserTools залишаються без змін)
 export async function getUserProfile(userId: string): Promise<UserProfile> {
   const response = await axios.get(`${BASE_URL}/users/${userId}`);
   const data = response.data;

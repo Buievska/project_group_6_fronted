@@ -1,14 +1,26 @@
+/* FeedbacksBlock.module.css */
+
 .feedbacksSection {
   padding: 60px 0;
   background-color: #f5f5f5;
   font-family: "Work Sans", sans-serif;
 }
 
-.container {
+.containerFeedbacksBlock {
   margin: 0 auto;
   padding: 0 20px;
   width: 100%;
+  max-width: 375px;
   box-sizing: border-box;
+}
+
+.toolsPageContainerFeedbacksBlock {
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  max-width: 335px;
+  box-sizing: border-box;
+  margin-bottom: 32px;
 }
 
 .swiperWrapper {
@@ -126,9 +138,6 @@
 .navigationButtons svg {
   width: 20px;
   height: 20px;
-}
-
-.navigationButtons svg {
   fill: #000;
 }
 
@@ -190,13 +199,85 @@
   justify-content: center;
 }
 
+.leaveFeedbackBtn {
+  height: 40px;
+  padding: 10px 24px;
+  background: #8808cc;
+  color: #fff;
+  border: 1px solid #8808cc;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.leaveFeedbackBtn:hover,
+.leaveFeedbackBtn:focus {
+  background: transparent;
+  color: #000;
+}
+
+.leaveFeedbackBtn:active {
+  background: #e7cdf4;
+}
+
+.leaveFeedbackBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.headerBlock {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* Стилі тільки для сторінки інструментів */
+.toolsPage {
+  padding: 0;
+  background-color: transparent;
+}
+
+.emptyProductText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.emptyTitle {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 140%;
+  letter-spacing: -0.01em;
+  color: var(--color-scheme-1-text);
+}
+
+.emptySubtitle {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 150%;
+  color: var(--color-scheme-1-text);
+}
+
+/* ===== TABLET 768px ===== */
 @media (min-width: 768px) {
   .feedbacksSection {
     padding: 60px 0;
   }
 
-  .container {
+  .containerFeedbacksBlock {
     padding: 0 32px;
+    max-width: 768px;
+  }
+
+  .toolsPageContainerFeedbacksBlock {
+    max-width: 704px;
   }
 
   .title {
@@ -242,13 +323,19 @@
   }
 }
 
+/* ===== DESKTOP 1440px ===== */
 @media (min-width: 1440px) {
   .feedbacksSection {
     padding: 80px 0;
   }
 
-  .container {
+  .containerFeedbacksBlock {
     padding: 0 64px;
+    max-width: 1440px;
+  }
+
+  .toolsPageContainerFeedbacksBlock {
+    max-width: 1312px;
   }
 
   .title {

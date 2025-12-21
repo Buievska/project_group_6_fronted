@@ -19,16 +19,7 @@ import {
 import { uk } from "date-fns/locale";
 import toast from "react-hot-toast";
 import styles from "./BookingCalendar.module.css";
-
-export interface BookedRange {
-  from: Date;
-  to: Date;
-}
-
-export interface DateRange {
-  from: Date | null;
-  to: Date | null;
-}
+import { BookedRange, DateRange } from "@/types/booking";
 
 interface BookingCalendarProps {
   bookedRanges?: BookedRange[];

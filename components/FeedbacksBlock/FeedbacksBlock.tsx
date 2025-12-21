@@ -1,21 +1,28 @@
+"use client";
 
-'use client';
+import React, { useEffect, useState, useCallback } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import axios from "axios"; // Додано для перевірки типів помилок
+import FeedbackCard from "./FeedbackCard";
+import Icon from "./Icon";
+import AuthRequiredModal from "../AuthRequiredModal/AuthRequiredModal";
+import FeedbackFormModal from "../FeedbackFormModal/FeedbackFormModal";
+import { useAuthStore } from "@/lib/store/authStore";
+import { $api } from "@/lib/api/api";
+import { getFeedbacksByToolId } from "@/lib/api/clientApi";
 
-import React, { useEffect, useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
-import FeedbackCard from './FeedbackCard';
-import Icon from './Icon';
-import styles from './FeedbacksBlock.module.css';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import styles from "./FeedbacksBlock.module.css";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 interface Feedback {
   _id: string;
   name: string;
   description: string;
   rate: number;
+  tool?: string | { _id: string };
 }
 
 interface FeedbacksResponse {
@@ -25,141 +32,222 @@ interface FeedbacksResponse {
   perPage: number;
   totalFeedbacks: number;
   totalPages: number;
-  data: {
-    feedbacks: Feedback[];
-  };
+  data: { feedbacks: Feedback[] };
 }
 
-const FeedbacksBlock: React.FC = () => {
+interface FeedbacksBlockProps {
+  productId?: string;
+  title?: string;
+  showLeaveButton?: boolean;
+  isToolsPage?: boolean;
+}
+
+const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
+  productId,
+  title = "Останні відгуки",
+  showLeaveButton = false,
+  isToolsPage = false,
+}) => {
+  const { user } = useAuthStore();
+  const isAuth = !!user;
+
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchFeedbacks = async () => {
-      try {
-        setLoading(true);
-        // Запитуємо перші 10 відгуків (або можна додати сортування на бекенді)
-        const response = await fetch('https://project-group-6-backend.onrender.com/api/feedbacks?page=1&perPage=10');
-        
-        if (!response.ok) {
-          throw new Error('Не вдалося завантажити відгуки');
-        }
-        
-        const result: FeedbacksResponse = await response.json();
-        
-        // Беремо масив відгуків з правильної структури
-        setFeedbacks(result.data.feedbacks);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Невідома помилка');
-        console.error('Помилка завантаження відгуків:', err);
-      } finally {
-        setLoading(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+
+  const fetchFeedbacks = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      let fetchedData: Feedback[] = [];
+
+      if (productId) {
+        const response = await getFeedbacksByToolId(productId);
+        fetchedData = response.data.feedbacks;
+      } else {
+        const response = await $api.get<FeedbacksResponse>("/feedbacks", {
+          params: { perPage: 10 },
+        });
+        fetchedData = response.data.data.feedbacks;
       }
-    };
 
+      setFeedbacks(fetchedData);
+    } catch (err: unknown) {
+      let errorMessage = "Не вдалося завантажити відгуки";
+
+      if (axios.isAxiosError(err)) {
+        errorMessage = err.response?.data?.message || errorMessage;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }, [productId]);
+
+  useEffect(() => {
     fetchFeedbacks();
-  }, []);
+  }, [fetchFeedbacks]);
 
-  // Loading стан
-  if (loading) {
+  const handleLeaveFeedbackClick = () => {
+    if (isAuth) setShowFeedbackModal(true);
+    else setShowAuthModal(true);
+  };
+
+  if (loading)
     return (
-      <section className={styles.feedbacksSection}>
-        <div className={styles.container}>
-          <h2 className={styles.title}>Останні відгуки</h2>
-          <div className={styles.loadingState}>
-            <p>Завантаження відгуків...</p>
-          </div>
+      <section
+        className={`${styles.feedbacksSection} ${
+          isToolsPage ? styles.toolsPage : ""
+        }`}
+      >
+        <div
+          className={
+            isToolsPage
+              ? styles.toolsPageContainerFeedbacksBlock
+              : styles.containerFeedbacksBlock
+          }
+        >
+          <h2 className={styles.title}>{title}</h2>
+          <p>Завантаження відгуків...</p>
         </div>
       </section>
     );
-  }
 
-  // Error стан
-  if (error) {
+  if (error)
     return (
-      <section className={styles.feedbacksSection}>
-        <div className={styles.container}>
-          <h2 className={styles.title}>Останні відгуки</h2>
-          <div className={styles.errorState}>
-            <p>Помилка: {error}</p>
-          </div>
+      <section
+        className={`${styles.feedbacksSection} ${
+          isToolsPage ? styles.toolsPage : ""
+        }`}
+      >
+        <div
+          className={
+            isToolsPage
+              ? styles.toolsPageContainerFeedbacksBlock
+              : styles.containerFeedbacksBlock
+          }
+        >
+          <h2 className={styles.title}>{title}</h2>
+          <p>Помилка: {error}</p>
         </div>
       </section>
     );
-  }
-
-  // Якщо немає відгуків
-  if (feedbacks.length === 0) {
-    return (
-      <section className={styles.feedbacksSection}>
-        <div className={styles.container}>
-          <h2 className={styles.title}>Останні відгуки</h2>
-          <div className={styles.emptyState}>
-            <p>Поки що немає відгуків</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
-    <section className={styles.feedbacksSection}>
-      <div className={styles.container}>
-        <h2 className={styles.title}>Останні відгуки</h2>
-        
-        <div className={styles.swiperWrapper}>
-          <Swiper
-            modules={[Navigation, Pagination]}
-            spaceBetween={32}
-            slidesPerView={1}
-            navigation={{
-              nextEl: '.swiper-button-next-custom',
-              prevEl: '.swiper-button-prev-custom',
-            }}
-            pagination={{
-              el: '.swiper-pagination-custom',
-              clickable: true,
-              dynamicBullets: true,
-              dynamicMainBullets: 3,
-              type: 'bullets',
-            }}
-            breakpoints={{
-              375: {
-                slidesPerView: 1,
-                spaceBetween: 20,
-              },
-              768: {
-                slidesPerView: 2,
-                spaceBetween: 24,
-              },
-              1440: {
-                slidesPerView: 3,
-                spaceBetween: 24,
-              },
-            }}
-            className={styles.swiper}
-          >
-            {feedbacks.map((feedback) => (
-              <SwiperSlide key={feedback._id}>
-                <FeedbackCard feedback={feedback} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-
-          <div className={styles.navigationBlock}>
-            <div className={`swiper-pagination-custom ${styles.customPagination}`}></div>
-            
-            <div className={styles.navigationButtons}>
-              <button className="swiper-button-prev-custom" aria-label="Попередній слайд">
-                <Icon name="left-arrow" width={24} height={24} />
-              </button>
-              <button className="swiper-button-next-custom" aria-label="Наступний слайд">
-                <Icon name="right-arrow" width={24} height={24} />
-              </button>
-            </div>
-          </div>
+    <section
+      className={`${styles.feedbacksSection} ${
+        isToolsPage ? styles.toolsPage : ""
+      }`}
+    >
+      <div
+        className={
+          isToolsPage
+            ? styles.toolsPageContainerFeedbacksBlock
+            : styles.containerFeedbacksBlock
+        }
+      >
+        <div className={styles.headerBlock}>
+          <h2 className={styles.title}>{title}</h2>
+          {showLeaveButton && (
+            <button
+              className={styles.leaveFeedbackBtn}
+              onClick={handleLeaveFeedbackClick}
+            >
+              Залишити відгук
+            </button>
+          )}
         </div>
+
+        {feedbacks.length === 0 && (
+          <p className={styles.emptyProductText}>
+            <span className={styles.emptyTitle}>
+              У цього інструменту немає жодного відгуку
+            </span>
+            <span className={styles.emptySubtitle}>
+              Ми впевнені, скоро їх буде значно більше!
+            </span>
+          </p>
+        )}
+
+        {feedbacks.length > 0 && (
+          <div className={styles.swiperWrapper}>
+            {feedbacks.length > 1 ? (
+              <Swiper
+                key={(productId ?? "main") + feedbacks.length}
+                modules={[Navigation, Pagination]}
+                spaceBetween={32}
+                slidesPerView={1}
+                navigation={{
+                  nextEl: ".swiper-button-next-custom",
+                  prevEl: ".swiper-button-prev-custom",
+                }}
+                pagination={{
+                  el: ".swiper-pagination-custom",
+                  clickable: true,
+                  dynamicBullets: true,
+                  dynamicMainBullets: 3,
+                  type: "bullets",
+                }}
+                breakpoints={{
+                  375: { slidesPerView: 1, spaceBetween: 20 },
+                  768: { slidesPerView: 2, spaceBetween: 24 },
+                  1440: { slidesPerView: 3, spaceBetween: 24 },
+                }}
+                className={styles.swiper}
+              >
+                {feedbacks.map((feedback) => (
+                  <SwiperSlide key={feedback._id}>
+                    <FeedbackCard feedback={feedback} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            ) : (
+              feedbacks.map((feedback) => (
+                <FeedbackCard key={feedback._id} feedback={feedback} />
+              ))
+            )}
+
+            {feedbacks.length > 1 && (
+              <div className={styles.navigationBlock}>
+                <div
+                  className={`swiper-pagination-custom ${styles.customPagination}`}
+                ></div>
+                <div className={styles.navigationButtons}>
+                  <button
+                    className="swiper-button-prev-custom"
+                    aria-label="Попередній слайд"
+                  >
+                    <Icon name="left-arrow" width={24} height={24} />
+                  </button>
+                  <button
+                    className="swiper-button-next-custom"
+                    aria-label="Наступний слайд"
+                  >
+                    <Icon name="right-arrow" width={24} height={24} />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {showAuthModal && (
+          <AuthRequiredModal onClose={() => setShowAuthModal(false)} />
+        )}
+        {showFeedbackModal && productId && (
+          <FeedbackFormModal
+            productId={productId}
+            onClose={() => setShowFeedbackModal(false)}
+            onSuccess={fetchFeedbacks}
+          />
+        )}
       </div>
     </section>
   );

@@ -27,10 +27,9 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
       <div className={styles.menu} onClick={(e) => e.stopPropagation()}>
         <div className={styles.menuHeader}>
           <Link href="/" className={styles.logoLink} onClick={onClose}>
-            <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
+            <Image src="/logo.svg" alt="RentTools" width={124} height={20} />
           </Link>
         </div>
-
 
         <nav className={styles.navMobile}>
           <Link href="/" onClick={onClose}>
@@ -53,11 +52,9 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
           )}
         </nav>
 
-
         {user && (
           <div className={styles.mobileUserCentered}>
             {user.avatarUrl ? (
-
               <Image
                 src={user.avatarUrl}
                 alt={user.name || "User"}
@@ -74,7 +71,6 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
             <span className={styles.mobileUserName}>
               {user.name || "Користувач"}
             </span>
-
 
             <Image
               src="/icon-exit.svg"

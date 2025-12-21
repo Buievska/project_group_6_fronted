@@ -10,7 +10,6 @@ import { register } from "@/lib/api/clientApi";
 import { useAuthStore } from "@/lib/store/authStore";
 import { User } from "@/types/user";
 import Image from "next/image";
-import registerImage from "../../../public/img/registerImage.jpg";
 
 /* ================= TYPES ================= */
 
@@ -33,9 +32,13 @@ const initialValues: RegisterFormValues = {
 };
 
 const validationSchema = Yup.object({
-  username: Yup.string().min(2, "Мінімум 2 символи").required("Обовʼязкове поле"),
+  username: Yup.string()
+    .min(2, "Мінімум 2 символи")
+    .required("Обовʼязкове поле"),
   email: Yup.string().email("Некоректна пошта").required("Обовʼязкове поле"),
-  password: Yup.string().min(6, "Мінімум 6 символів").required("Обовʼязкове поле"),
+  password: Yup.string()
+    .min(6, "Мінімум 6 символів")
+    .required("Обовʼязкове поле"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password")], "Паролі не співпадають")
     .required("Обовʼязкове поле"),
@@ -46,13 +49,16 @@ const validationSchema = Yup.object({
 export default function RegisterPage() {
   const fieldId = useId();
   const searchParams = useSearchParams();
-  const login = useAuthStore(state => state.login);
+  const login = useAuthStore((state) => state.login);
   const router = useRouter();
 
   // Стейт для відображення помилки сервера текстом
   const [serverError, setServerError] = useState("");
 
-  const handleSubmit = async (values: RegisterFormValues, { setSubmitting }: FormikHelpers<RegisterFormValues>) => {
+  const handleSubmit = async (
+    values: RegisterFormValues,
+    { setSubmitting }: FormikHelpers<RegisterFormValues>
+  ) => {
     setServerError(""); // Очищуємо помилки перед новим запитом
 
     try {
@@ -72,7 +78,8 @@ export default function RegisterPage() {
       let errorMsg = "Помилка реєстрації. Спробуйте ще раз.";
 
       if (axios.isAxiosError(err)) {
-        errorMsg = err.response?.data?.message || err.response?.data?.error || errorMsg;
+        errorMsg =
+          err.response?.data?.message || err.response?.data?.error || errorMsg;
       } else if (err instanceof Error) {
         errorMsg = err.message;
       }
@@ -96,9 +103,17 @@ export default function RegisterPage() {
         <div className={styles.formContent}>
           <h2 className={styles.registerTitle}>Реєстрація</h2>
 
-          <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
             {({ isSubmitting, errors, touched }) => (
-              <Form className={styles.registrationForm} noValidate autoComplete="off">
+              <Form
+                className={styles.registrationForm}
+                noValidate
+                autoComplete="off"
+              >
                 {/* Ім'я */}
                 <label className={styles.label} htmlFor={`${fieldId}-username`}>
                   Імʼя*
@@ -110,7 +125,11 @@ export default function RegisterPage() {
                   placeholder="Ваше ім'я"
                   autoComplete="off"
                 />
-                <ErrorMessage name="username" component="p" className={styles.error} />
+                <ErrorMessage
+                  name="username"
+                  component="p"
+                  className={styles.error}
+                />
 
                 {/* Пошта */}
                 <label className={styles.label} htmlFor={`${fieldId}-email`}>
@@ -124,7 +143,11 @@ export default function RegisterPage() {
                   placeholder="Ваша пошта"
                   autoComplete="off"
                 />
-                <ErrorMessage name="email" component="p" className={styles.error} />
+                <ErrorMessage
+                  name="email"
+                  component="p"
+                  className={styles.error}
+                />
 
                 {/* Пароль */}
                 <label className={styles.label} htmlFor={`${fieldId}-password`}>
@@ -138,15 +161,24 @@ export default function RegisterPage() {
                   placeholder="*******"
                   autoComplete="new-password"
                 />
-                <ErrorMessage name="password" component="p" className={styles.error} />
+                <ErrorMessage
+                  name="password"
+                  component="p"
+                  className={styles.error}
+                />
 
                 {/* Підтвердження паролю */}
-                <label className={styles.label} htmlFor={`${fieldId}-confirmPassword`}>
+                <label
+                  className={styles.label}
+                  htmlFor={`${fieldId}-confirmPassword`}
+                >
                   Підтвердіть пароль*
                 </label>
                 <Field
                   className={`${styles.inputField} ${
-                    errors.confirmPassword && touched.confirmPassword ? styles.inputError : ""
+                    errors.confirmPassword && touched.confirmPassword
+                      ? styles.inputError
+                      : ""
                   }`}
                   name="confirmPassword"
                   type="password"
@@ -154,12 +186,22 @@ export default function RegisterPage() {
                   placeholder="*******"
                   autoComplete="new-password"
                 />
-                <ErrorMessage name="confirmPassword" component="p" className={styles.error} />
+                <ErrorMessage
+                  name="confirmPassword"
+                  component="p"
+                  className={styles.error}
+                />
 
                 {/* Виведення помилки сервера (замість тоста) */}
-                {serverError && <div className={styles.serverError}>{serverError}</div>}
+                {serverError && (
+                  <div className={styles.serverError}>{serverError}</div>
+                )}
 
-                <button className={styles.registrationBtn} type="submit" disabled={isSubmitting}>
+                <button
+                  className={styles.registrationBtn}
+                  type="submit"
+                  disabled={isSubmitting}
+                >
                   {isSubmitting ? "Реєстрація..." : "Зареєструватись"}
                 </button>
 
