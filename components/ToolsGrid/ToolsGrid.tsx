@@ -13,6 +13,7 @@ interface ToolsGridProps {
   initialTools?: Tool[];
   totalToolsCount?: number;
   limit?: number;
+  page?: number;
 }
 
 type ToolsPageResponse = Tool[] | { tools: Tool[] };
@@ -24,21 +25,21 @@ const ToolsGrid = ({
   initialTools = [],
   totalToolsCount = 0,
   limit = 8,
+  page: propPage = 1,
 }: ToolsGridProps) => {
   const [tools, setTools] = useState<Tool[]>(initialTools);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(propPage);
   const [isLoading, setIsLoading] = useState(initialTools.length === 0);
   const [hasMore, setHasMore] = useState(initialTools.length < totalToolsCount);
 
-  // Оновлення hasMore при зміні initialTools або totalToolsCount
   useEffect(() => {
+    setTools(initialTools);
+    setPage(propPage);
     setHasMore(initialTools.length < totalToolsCount);
-  }, [initialTools.length, totalToolsCount]);
+  }, [initialTools, totalToolsCount, propPage]);
 
-  // Завантаження інструментів при зміні page, category, search або userId
   useEffect(() => {
-    if (userId && page === 1 && initialTools.length > 0 && tools.length > 0)
-      return;
+    if (page === 1 && initialTools.length > 0) return;
 
     const loadTools = async () => {
       setIsLoading(true);
@@ -49,11 +50,13 @@ const ToolsGrid = ({
           category,
           search
         );
+
         const toolsData: Tool[] = Array.isArray(newTools)
           ? newTools
           : newTools.tools;
 
         setTools((prev) => (page === 1 ? toolsData : [...prev, ...toolsData]));
+
         setHasMore(toolsData.length === limit);
       } catch (err) {
         console.error("Помилка завантаження інструментів:", err);
@@ -62,26 +65,8 @@ const ToolsGrid = ({
       }
     };
 
-    // Виклик завантаження
-    if (!initialTools.length || page > 1 || (!userId && page === 1)) {
-      loadTools();
-    }
-  }, [
-    page,
-    category,
-    search,
-    userId,
-    initialTools.length,
-    tools.length,
-    limit,
-  ]);
-
-  useEffect(() => {
-    if (!userId) {
-      setPage(1);
-      setTools([]);
-    }
-  }, [category, search, userId]);
+    loadTools();
+  }, [page, category, search, limit, initialTools.length]);
 
   return (
     <div>
