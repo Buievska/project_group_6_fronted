@@ -10,16 +10,15 @@ import { getUserBookings, deleteBooking } from "@/lib/api/clientApi";
 import { useAuthStore } from "@/lib/store/authStore";
 import css from "./ProfileTabs.module.css";
 import gridCss from "@/components/ToolsGrid/ToolsGrid.module.css";
-import { Tool } from "@/types/tool"; // Передбачаємо, що у вас є цей тип
+import { Tool } from "@/types/tool";
 
 import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
 
-// Інтерфейс для користувача профілю
 interface ProfileUser {
   _id?: string;
   id?: string;
   name: string;
-  avatar?: string;
+  avatar?: string | null;
 }
 
 // Інтерфейс для бронювання (має збігатися з очікуваннями BookingCard)
