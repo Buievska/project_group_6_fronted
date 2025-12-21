@@ -1,0 +1,94 @@
+.card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 413px;
+  margin-bottom: 16px;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: #f3f4f6;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 48px;
+}
+
+.deleteBtn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.dates {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.price {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000;
+  border-radius: 6px;
+  padding: 8px 20px;
+  width: 100%;
+  height: 40px;
+  text-decoration: none;
+  color: inherit;
+  margin-top: auto;
+  font-weight: 600;
+}
+
+.button:hover {
+  background-color: rgba(243, 230, 249, 1);
+}
+
+@media (min-width: 1440px) {
+  .imageWrapper {
+    height: 375px;
+  }
+}
