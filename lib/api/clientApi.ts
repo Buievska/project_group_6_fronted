@@ -127,7 +127,10 @@ export const createBooking = async (
   return response.data;
 };
 
-export const updateUserProfile = async (userId: string, dataToSend: any) => {
+export const updateUserProfile = async (
+  userId: string,
+  dataToSend: Partial<UserProfile>
+) => {
   const { data } = await $api.patch<UserProfile>(
     `/users/${userId}`,
     dataToSend
