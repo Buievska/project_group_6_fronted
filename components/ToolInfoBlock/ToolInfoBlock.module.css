@@ -113,6 +113,8 @@
   margin: 0;
   white-space: pre-line;
   margin-top: 24px;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 .specsList {

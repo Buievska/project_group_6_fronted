@@ -18,8 +18,14 @@ export default function ToolInfoBlock({ tool }: Props) {
   const router = useRouter();
   const { user } = useAuthStore();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-
   const [owner, setOwner] = useState<UserProfile | null>(null);
+
+  const safeOwnerId =
+    typeof tool.owner === "object" && tool.owner !== null
+      ? (tool.owner as any)._id
+      : tool.owner;
+
+  const isOwner = user?._id === safeOwnerId;
 
   const renderSpecifications = (
     specs: string | Record<string, string | number>
@@ -47,17 +53,17 @@ export default function ToolInfoBlock({ tool }: Props) {
 
   useEffect(() => {
     const fetchOwner = async () => {
-      if (!tool.owner) return;
+      if (!safeOwnerId) return;
 
       try {
-        const ownerData = await getUserById(tool.owner);
+        const ownerData = await getUserById(safeOwnerId);
         setOwner(ownerData);
       } catch (e) {
         console.error("Не вдалося завантажити дані власника:", e);
       }
     };
     fetchOwner();
-  }, [tool.owner]);
+  }, [safeOwnerId]);
 
   const handleBookingClick = () => {
     if (user) {
@@ -67,15 +73,20 @@ export default function ToolInfoBlock({ tool }: Props) {
     }
   };
 
+  const handleEditClick = () => {
+    router.push(`/tools/${tool._id}/edit`);
+  };
+
   const ownerAvatar = owner?.avatarUrl;
   const ownerName = owner?.name || "Завантаження...";
   const ownerInitial = (ownerName[0] || "U").toUpperCase();
-  const ownerId = owner?._id || tool.owner;
+  const finalProfileId = owner?._id || safeOwnerId;
 
   return (
     <div className={styles.infoContainer}>
       <h1 className={styles.title}>{tool.name}</h1>
       <p className={styles.price}>{tool.pricePerDay} грн/день</p>
+
       <div className={styles.ownerBlock}>
         <div className={styles.avatarWrapper}>
           {ownerAvatar ? (
@@ -93,9 +104,11 @@ export default function ToolInfoBlock({ tool }: Props) {
 
         <div className={styles.ownerData}>
           <p className={styles.ownerName}>{ownerName}</p>
-
-          {ownerId && (
-            <Link href={`/profile/${ownerId}`} className={styles.profileLink}>
+          {finalProfileId && (
+            <Link
+              href={`/profile/${finalProfileId}`}
+              className={styles.profileLink}
+            >
               Переглянути профіль
             </Link>
           )}
@@ -119,9 +132,15 @@ export default function ToolInfoBlock({ tool }: Props) {
         </div>
       )}
 
-      <button onClick={handleBookingClick} className={styles.bookBtn}>
-        Забронювати
-      </button>
+      {isOwner ? (
+        <button onClick={handleEditClick} className={styles.bookBtn}>
+          Редагувати оголошення
+        </button>
+      ) : (
+        <button onClick={handleBookingClick} className={styles.bookBtn}>
+          Забронювати
+        </button>
+      )}
 
       {isAuthModalOpen && (
         <AuthRequiredModal onClose={() => setIsAuthModalOpen(false)} />

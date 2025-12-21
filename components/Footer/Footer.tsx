@@ -44,7 +44,7 @@ export const Footer = () => {
                 <Link href="/profile" className={styles.navLink}>
                   Мій профіль
                 </Link>
-                <Link href="/create" className={styles.publishBtn}>
+                <Link href="/tools/new" className={styles.publishBtn}>
                   Опублікувати оголошення
                 </Link>
               </>
@@ -59,7 +59,6 @@ export const Footer = () => {
               </>
             )}
           </nav>
-
 
           <div className={styles.socials}>
             {socials.map(({ name, icon, url }) => (
