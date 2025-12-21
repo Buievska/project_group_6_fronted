@@ -5,6 +5,7 @@ import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/lib/store/authStore";
 import styles from "./FeedbackFormModal.module.css";
+import { $api } from "@/lib/api/api";
 
 interface Props {
   productId: string;
@@ -48,43 +49,36 @@ export default function FeedbackFormModal({
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!name.trim()) return toast.error("Будь ласка, введіть імʼя");
-    if (!description.trim()) return toast.error("Будь ласка, введіть відгук");
-    if (rate === 0) return toast.error("Будь ласка, виберіть оцінку");
+    // Перевірка на заповнення
+    if (!name.trim() || !description.trim() || rate === 0) {
+      return toast.error("Заповніть усі поля та поставте оцінку");
+    }
 
     setLoading(true);
 
     try {
       const payload = {
         toolId: productId,
-        description,
-        rate,
+        description: description.trim(),
+        rate: Number(rate), // переконуємося, що це число
       };
 
-      // ✅ Відправка через cookies, без Authorization заголовку
-      await axios.post(
-        "https://project-group-6-backend.onrender.com/api/feedbacks",
-        payload,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      console.log("Відправляємо на сервер:", payload);
+
+      await $api.post("/feedbacks", payload);
 
       toast.success("Відгук успішно додано!");
       onSuccess();
       onClose();
     } catch (err) {
-      const error = err as AxiosError<{ message?: string }>;
-      if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.message || "Не вдалося надіслати відгук"
-        );
-      } else {
-        toast.error("Невідома помилка");
-      }
+      const error = err as AxiosError<{ message?: string; details?: any }>;
+
+      // Виводимо детальну помилку в консоль, щоб побачити, яке саме поле не подобається серверу
+      console.error("Помилка 400. Деталі від сервера:", error.response?.data);
+
+      toast.error(
+        error.response?.data?.message || "Помилка валідації. Перевірте дані"
+      );
     } finally {
       setLoading(false);
     }

@@ -149,3 +149,8 @@ export const deleteBooking = async (bookingId: string) => {
   const { data } = await $api.delete(`/bookings/${bookingId}`);
   return data;
 };
+
+export const getFeedbacksByToolId = async (toolId: string) => {
+  const { data } = await $api.get(`/feedbacks/tool/${toolId}`);
+  return data;
+};
