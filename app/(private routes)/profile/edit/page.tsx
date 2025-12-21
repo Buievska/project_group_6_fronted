@@ -5,9 +5,12 @@ import { useRouter } from "next/navigation";
 import { getCurrentUser, updateUserProfile } from "@/lib/api/clientApi";
 import { useAuthStore } from "@/lib/store/authStore";
 import Link from "next/link";
+import Image from "next/image";
 import css from "./EditPageProfil.module.css";
-import { CldUploadButton } from "next-cloudinary";
-
+import {
+  CldUploadButton,
+  CloudinaryUploadWidgetResults,
+} from "next-cloudinary";
 
 export default function EditProfilePage() {
   const router = useRouter();
@@ -31,7 +34,6 @@ export default function EditProfilePage() {
         if (currentUser) {
           login(currentUser);
           setName(currentUser.name || "");
-
           setAvatarUrl(currentUser.avatarUrl || "");
         } else {
           router.push("/login");
@@ -46,10 +48,10 @@ export default function EditProfilePage() {
     init();
   }, [user, login, router]);
 
-  const handleUploadSuccess = (result: any) => {
-    const url = result?.info?.secure_url;
-    if (url) {
-      setAvatarUrl(url);
+  const handleUploadSuccess = (result: CloudinaryUploadWidgetResults) => {
+    const info = result.info;
+    if (typeof info !== "string" && info?.secure_url) {
+      setAvatarUrl(info.secure_url);
     }
   };
 
@@ -71,10 +73,16 @@ export default function EditProfilePage() {
       login(updatedUser);
       router.push(`/profile/${updatedUser._id || updatedUser.id}`);
       router.refresh();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
-      const msg = error.response?.data?.message || "Помилка при збереженні";
-      alert(msg);
+      let message = "Помилка при збереженні";
+
+      if (error instanceof Error) {
+        const axiosError = error as any;
+        message = axiosError.response?.data?.message || error.message;
+      }
+
+      alert(message);
     } finally {
       setIsSaving(false);
     }
@@ -93,12 +101,16 @@ export default function EditProfilePage() {
 
       <form onSubmit={handleSubmit} className={css.form}>
         <div className={css.avatarSection}>
-          <div className={css.avatarWrapper} style={{ overflow: "hidden" }}>
+          <div
+            className={css.avatarWrapper}
+            style={{ position: "relative", overflow: "hidden" }}
+          >
             {avatarUrl || user?.avatarUrl ? (
-              <img
+              <Image
                 src={avatarUrl || user?.avatarUrl || ""}
                 alt="Avatar"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                fill
+                style={{ objectFit: "cover" }}
               />
             ) : (
               <span>{user?.name?.charAt(0).toUpperCase()}</span>
@@ -115,7 +127,7 @@ export default function EditProfilePage() {
         </div>
 
         <div className={css.inputGroup}>
-          <label className={css.label}>Ім'я користувача</label>
+          <label className={css.label}>Ім{"'"}я користувача</label>
           <input
             className={css.input}
             type="text"

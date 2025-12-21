@@ -1,25 +1,43 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import css from "./BookingCard.module.css";
 
+interface ToolSummary {
+  _id: string;
+  name: string;
+  pricePerDay: string | number;
+  images?: string | string[];
+}
+
+interface Booking {
+  _id: string;
+  toolId: ToolSummary;
+  startDate: string;
+  endDate: string;
+  totalPrice: number;
+}
+
 interface BookingProps {
-  booking: any;
+  booking: Booking;
   onCancel: (id: string) => void;
 }
 
 export default function BookingCard({ booking, onCancel }: BookingProps) {
   const { _id, toolId: tool, startDate, endDate, totalPrice } = booking;
+
   if (!tool) return null;
 
   const calculateDays = (fromStr: string, toStr: string): number => {
     const from = new Date(fromStr);
     const to = new Date(toStr);
 
-    if (!from || !to || isNaN(from.getTime()) || isNaN(to.getTime())) return 0;
+    if (isNaN(from.getTime()) || isNaN(to.getTime())) return 0;
 
     const diffTime = to.getTime() - from.getTime();
-
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
     return diffDays > 0 ? diffDays : 0;
   };
 
@@ -30,7 +48,7 @@ export default function BookingCard({ booking, onCancel }: BookingProps) {
   const formatDate = (dateStr: string) =>
     new Date(dateStr).toLocaleDateString("uk-UA");
 
-  const getSafeImageSrc = () => {
+  const getSafeImageSrc = (): string => {
     const fallback = "/placeholder.png";
     if (!tool.images) return fallback;
     if (Array.isArray(tool.images)) {

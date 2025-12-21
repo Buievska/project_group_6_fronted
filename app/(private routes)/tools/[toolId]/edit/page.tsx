@@ -7,6 +7,13 @@ import styles from "./EditTool.module.css";
 import EditToolForm from "./EditToolForm";
 import { Tool } from "@/types/tool";
 
+// Створюємо допоміжний інтерфейс для категорії, якщо вона приходить як об'єкт
+interface CategoryObject {
+  _id?: string;
+  id?: string | number;
+  name?: string;
+}
+
 export default function EditToolPage() {
   const params = useParams();
   const toolId = params.toolId as string;
@@ -47,7 +54,10 @@ export default function EditToolPage() {
     notFound();
   }
 
-  const formatSpecifications = (specs: any): string => {
+  // Замінюємо any на Record<string, unknown> або string
+  const formatSpecifications = (
+    specs: Record<string, unknown> | string | undefined | null
+  ): string => {
     if (!specs) return "";
     if (typeof specs === "string") return specs;
 
@@ -56,19 +66,29 @@ export default function EditToolPage() {
       .join("\n");
   };
 
-  const categoryIdValue =
-    typeof tool.category === "object"
-      ? (tool.category as any)._id
-      : tool.category;
+  let categoryIdValue: string | number = "";
+
+  if (typeof tool.category === "object" && tool.category !== null) {
+    const cat = tool.category as CategoryObject;
+    // Пріоритет віддаємо _id, якщо його немає — беремо id
+    categoryIdValue = cat._id || cat.id || "";
+  } else if (
+    typeof tool.category === "string" ||
+    typeof tool.category === "number"
+  ) {
+    categoryIdValue = tool.category;
+  }
 
   const initialValues = {
     id: tool._id,
     name: tool.name,
     pricePerDay: tool.pricePerDay,
-    categoryId: categoryIdValue,
+    categoryId: categoryIdValue, // Тепер тут буде правильне значення
     terms: tool.rentalTerms || "",
     description: tool.description,
-    specifications: formatSpecifications(tool.specifications),
+    specifications: formatSpecifications(
+      tool.specifications as Record<string, unknown>
+    ),
     imageUrl: tool.images,
   };
 

@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
+import axios from "axios"; // Додано для перевірки типів помилок
 import FeedbackCard from "./FeedbackCard";
 import Icon from "./Icon";
 import AuthRequiredModal from "../AuthRequiredModal/AuthRequiredModal";
@@ -39,12 +40,11 @@ interface FeedbacksBlockProps {
   title?: string;
   showLeaveButton?: boolean;
   isToolsPage?: boolean;
-  isAuth: boolean;
 }
 
 const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
   productId,
-  title = "Остані відгуки",
+  title = "Останні відгуки",
   showLeaveButton = false,
   isToolsPage = false,
 }) => {
@@ -69,15 +69,23 @@ const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
         const response = await getFeedbacksByToolId(productId);
         fetchedData = response.data.feedbacks;
       } else {
-        const response = await $api.get("/feedbacks", {
+        const response = await $api.get<FeedbacksResponse>("/feedbacks", {
           params: { perPage: 10 },
         });
         fetchedData = response.data.data.feedbacks;
       }
 
       setFeedbacks(fetchedData);
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Не вдалося завантажити відгуки");
+    } catch (err: unknown) {
+      let errorMessage = "Не вдалося завантажити відгуки";
+
+      if (axios.isAxiosError(err)) {
+        errorMessage = err.response?.data?.message || errorMessage;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
