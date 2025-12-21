@@ -37,6 +37,12 @@
   text-transform: uppercase;
 }
 
+.infoSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .userName {
   font-weight: 700;
   font-size: 24px;
@@ -74,7 +80,7 @@
 @media (min-width: 768px) {
   .profileCard {
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     text-align: left;
     gap: 24px;
     margin-bottom: 40px;
@@ -87,6 +93,11 @@
 
   .avatarLetter {
     font-size: 48px;
+  }
+
+  .infoSection {
+    height: 120px;
+    justify-content: center;
   }
 }
 
@@ -107,5 +118,9 @@
 
   .userName {
     font-size: 32px;
+  }
+
+  .infoSection {
+    height: 154px;
   }
 }
