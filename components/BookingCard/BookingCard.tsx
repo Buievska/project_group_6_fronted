@@ -11,35 +11,42 @@ export default function BookingCard({ booking, onCancel }: BookingProps) {
   const { _id, toolId: tool, startDate, endDate, totalPrice } = booking;
   if (!tool) return null;
 
+  const calculateDays = (fromStr: string, toStr: string): number => {
+    const from = new Date(fromStr);
+    const to = new Date(toStr);
+
+    if (!from || !to || isNaN(from.getTime()) || isNaN(to.getTime())) return 0;
+
+    const diffTime = to.getTime() - from.getTime();
+
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    return diffDays > 0 ? diffDays : 0;
+  };
+
+  const days = calculateDays(startDate, endDate);
+  const pricePerDay = Number(tool.pricePerDay) || 0;
+  const finalPrice = days > 0 ? days * pricePerDay : totalPrice;
+
   const formatDate = (dateStr: string) =>
     new Date(dateStr).toLocaleDateString("uk-UA");
 
   const getSafeImageSrc = () => {
     const fallback = "/placeholder.png";
-
     if (!tool.images) return fallback;
-
     if (Array.isArray(tool.images)) {
-      return tool.images.length > 0 && typeof tool.images[0] === "string"
-        ? tool.images[0]
-        : fallback;
+      return tool.images.length > 0 ? tool.images[0] : fallback;
     }
-
-    if (typeof tool.images === "string" && tool.images.trim().length > 0) {
-      return tool.images;
-    }
-
-    return fallback;
+    return tool.images || fallback;
   };
-  const safeSrc = getSafeImageSrc();
 
   return (
     <div className={css.card}>
       <div className={css.imageWrapper}>
         <Image
-          src={tool.images || "/placeholder.png"}
+          src={getSafeImageSrc()}
           alt={tool.name}
           fill
+          sizes="(max-width: 768px) 100vw, 33vw"
           className={css.image}
         />
       </div>
@@ -56,7 +63,9 @@ export default function BookingCard({ booking, onCancel }: BookingProps) {
           {formatDate(startDate)} — {formatDate(endDate)}
         </p>
 
-        <p className={css.price}>Загальна сума: {totalPrice} грн</p>
+        <p className={css.price}>
+          Загальна сума: {finalPrice} грн ({days} дн.)
+        </p>
       </div>
 
       <Link href={`/tools/${tool._id}`} className={css.button}>
