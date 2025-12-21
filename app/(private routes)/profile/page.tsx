@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/api/clientApi";
 import { useAuthStore } from "@/lib/store/authStore";
+import styles from "./MyProfilePage.module.css";
 
 export default function MyProfilePage() {
   const router = useRouter();
@@ -35,8 +36,8 @@ export default function MyProfilePage() {
 
   if (isLoading) {
     return (
-      <main style={{ padding: "50px", textAlign: "center" }}>
-        <h2>Завантаження профілю...</h2>
+      <main className={styles.container}>
+        <span className={styles.spinner}></span>
       </main>
     );
   }
