@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/lib/store/authStore";
 import styles from "./FeedbackFormModal.module.css";
@@ -12,6 +12,11 @@ interface Props {
   productName?: string;
   onClose: () => void;
   onSuccess: () => void;
+}
+
+interface ApiErrorResponse {
+  message?: string;
+  details?: unknown;
 }
 
 export default function FeedbackFormModal({
@@ -28,7 +33,6 @@ export default function FeedbackFormModal({
   const [hoverRate, setHoverRate] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  // Блокування скролу
   useEffect(() => {
     const originalStyle = window.getComputedStyle(document.body).overflow;
     document.body.style.overflow = "hidden";
@@ -37,7 +41,6 @@ export default function FeedbackFormModal({
     };
   }, []);
 
-  // Закриття по Escape
   useEffect(() => {
     const esc = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -49,7 +52,6 @@ export default function FeedbackFormModal({
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Перевірка на заповнення
     if (!name.trim() || !description.trim() || rate === 0) {
       return toast.error("Заповніть усі поля та поставте оцінку");
     }
@@ -60,7 +62,7 @@ export default function FeedbackFormModal({
       const payload = {
         toolId: productId,
         description: description.trim(),
-        rate: Number(rate), // переконуємося, що це число
+        rate: Number(rate),
       };
 
       console.log("Відправляємо на сервер:", payload);
@@ -71,9 +73,8 @@ export default function FeedbackFormModal({
       onSuccess();
       onClose();
     } catch (err) {
-      const error = err as AxiosError<{ message?: string; details?: any }>;
+      const error = err as AxiosError<ApiErrorResponse>;
 
-      // Виводимо детальну помилку в консоль, щоб побачити, яке саме поле не подобається серверу
       console.error("Помилка 400. Деталі від сервера:", error.response?.data);
 
       toast.error(

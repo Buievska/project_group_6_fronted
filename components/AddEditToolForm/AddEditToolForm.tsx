@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Image from "next/image";
-import { AxiosError } from "axios";
+import axios from "axios";
 
 import styles from "./AddEditToolForm.module.css";
 import { createTool, getCategories, updateTool } from "@/lib/api/clientApi";
@@ -16,6 +16,7 @@ const PlaceholderIcon = () => (
     <use href="/sprite.svg#icon-placeholder-form" />
   </svg>
 );
+
 interface ToolFormValues {
   name: string;
   pricePerDay: number;
@@ -29,6 +30,10 @@ interface ToolFormValues {
 interface Category {
   _id: string;
   title: string;
+}
+
+interface CategoriesResponse {
+  data?: Category[];
 }
 
 type Props = {
@@ -63,13 +68,16 @@ const validationSchema: Yup.Schema<ToolFormValues> = Yup.object({
     .test(
       "fileSize",
       "Файл завеликий (макс 5MB)",
-      (value) => !value || value.size <= 5 * 1024 * 1024
+      (value) =>
+        !value || (value instanceof File && value.size <= 5 * 1024 * 1024)
     )
     .test(
       "fileType",
       "Тільки .jpg або .png",
       (value) =>
-        !value || ["image/jpeg", "image/png", "image/webp"].includes(value.type)
+        !value ||
+        (value instanceof File &&
+          ["image/jpeg", "image/png", "image/webp"].includes(value.type))
     ),
 });
 
@@ -84,7 +92,7 @@ export default function AddEditToolForm({
 
   useEffect(() => {
     getCategories()
-      .then((res: any) => {
+      .then((res: Category[] | CategoriesResponse) => {
         const cats = Array.isArray(res) ? res : res.data;
         setCategories(Array.isArray(cats) ? cats : []);
       })
@@ -114,7 +122,7 @@ export default function AddEditToolForm({
 
   const handleSubmit = async (
     values: ToolFormValues,
-    { setSubmitting, setErrors }: FormikHelpers<ToolFormValues>
+    { setSubmitting }: FormikHelpers<ToolFormValues>
   ) => {
     try {
       const formData = new FormData();
@@ -137,14 +145,22 @@ export default function AddEditToolForm({
       const tool = await (toolId
         ? updateTool(toolId, formData)
         : createTool(formData));
+
       toast.success(toolId ? "Інструмент оновлено!" : "Інструмент створено!");
 
       const newId = tool._id || tool.id || tool.data?._id;
       if (newId) router.push(`/tools/${newId}`);
       else router.push("/profile");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
-      const msg = error.response?.data?.message || error.message;
+      let msg = "Сталася помилка";
+
+      if (axios.isAxiosError(error)) {
+        msg = error.response?.data?.message || error.message;
+      } else if (error instanceof Error) {
+        msg = error.message;
+      }
+
       toast.error(msg);
     } finally {
       setSubmitting(false);
@@ -200,7 +216,6 @@ export default function AddEditToolForm({
               />
             </div>
 
-            {/* --- ІНПУТИ --- */}
             <label className={styles.formLabel}>
               Назва
               <Field
@@ -300,7 +315,6 @@ export default function AddEditToolForm({
             </label>
           </div>
 
-          {/* --- КНОПКИ --- */}
           <div className={styles.rightSide}>
             <button
               type="submit"

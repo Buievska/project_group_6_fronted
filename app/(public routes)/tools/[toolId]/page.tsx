@@ -10,7 +10,6 @@ import { Tool } from "@/types/tool";
 import ToolGallery from "@/components/ToolGallery/ToolGallery";
 import ToolInfoBlock from "@/components/ToolInfoBlock/ToolInfoBlock";
 import FeedbacksBlock from "@/components/FeedbacksBlock/FeedbacksBlock";
-import { useAuthStore } from "@/lib/store/authStore";
 
 import styles from "./ToolDetails.module.css";
 
@@ -20,9 +19,6 @@ export default function ToolDetailsPage() {
 
   const [tool, setTool] = useState<Tool | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const { user } = useAuthStore();
-  const isAuth = !!user;
 
   useEffect(() => {
     if (!toolId) {
@@ -65,7 +61,6 @@ export default function ToolDetailsPage() {
           productId={toolId}
           title="Відгуки"
           showLeaveButton
-          isAuth={isAuth}
           isToolsPage
         />
       </div>

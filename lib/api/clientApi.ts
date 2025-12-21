@@ -120,8 +120,16 @@ export const createBooking = async (data: CreateBookingRequest): Promise<CreateB
   return response.data;
 };
 
-export const updateUserProfile = async (userId: string, dataToSend: any) => {
-  const { data } = await $api.patch<UserProfile>(`/users/${userId}`, dataToSend);
+
+export const updateUserProfile = async (
+  userId: string,
+  dataToSend: Partial<UserProfile>
+) => {
+  const { data } = await $api.patch<UserProfile>(
+    `/users/${userId}`,
+    dataToSend
+  );
+
   return data;
 };
 
