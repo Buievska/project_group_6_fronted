@@ -54,21 +54,27 @@
   max-width: 166px;
   height: 40px;
   padding: 8px 20px;
-  background-color: #8808cc;
-  color: #ffffff;
-  border: none;
+  background-color: #ffffff;
+  color: #8808cc !important;
+  border: 2px solid #8808cc;
+
   border-radius: 12px;
   font-size: 14px;
   font-weight: 600;
-  text-decoration: none;
-  transition: all 0.2s ease;
+  text-decoration: none !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   white-space: nowrap;
 }
 
 .editButton:hover {
   background-color: #e7cdf4;
-  color: #000;
+  color: #000000 !important;
+  box-shadow: 0 4px 12px rgba(136, 8, 204, 0.2);
+}
+
+.editButton:active {
+  transform: scale(0.98);
 }
 
 @media (min-width: 768px) {
