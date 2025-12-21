@@ -96,7 +96,11 @@ const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
         }`}
       >
         <div
-          className={isToolsPage ? styles.toolsPageContainer : styles.container}
+          className={
+            isToolsPage
+              ? styles.toolsPageContainerFeedbacksBlock
+              : styles.containerFeedbacksBlock
+          }
         >
           <h2 className={styles.title}>{title}</h2>
           <p>Завантаження відгуків...</p>
@@ -112,7 +116,11 @@ const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
         }`}
       >
         <div
-          className={isToolsPage ? styles.toolsPageContainer : styles.container}
+          className={
+            isToolsPage
+              ? styles.toolsPageContainerFeedbacksBlock
+              : styles.containerFeedbacksBlock
+          }
         >
           <h2 className={styles.title}>{title}</h2>
           <p>Помилка: {error}</p>
@@ -127,7 +135,11 @@ const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
       }`}
     >
       <div
-        className={isToolsPage ? styles.toolsPageContainer : styles.container}
+        className={
+          isToolsPage
+            ? styles.toolsPageContainerFeedbacksBlock
+            : styles.containerFeedbacksBlock
+        }
       >
         <div className={styles.headerBlock}>
           <h2 className={styles.title}>{title}</h2>
