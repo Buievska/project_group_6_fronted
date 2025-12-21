@@ -19,6 +19,7 @@
   color: var(--color-neutral-darkest);
   text-align: left;
   text-decoration: none; /* ✅ remove default underline */
+  margin-bottom: 32px;
 }
 
 .filter_button:hover {
@@ -60,9 +61,13 @@
     justify-content: space-between;
     gap: 24px;
   }
+
+  .filter_button {
+    margin-bottom: 0px;
+  }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1440px) {
   .wrapper {
     max-width: 1440px;
   }
