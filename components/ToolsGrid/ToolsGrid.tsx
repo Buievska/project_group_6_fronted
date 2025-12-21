@@ -29,17 +29,19 @@ const ToolsGrid = ({
 }: ToolsGridProps) => {
   const [tools, setTools] = useState<Tool[]>(initialTools);
   const [page, setPage] = useState(propPage);
-  const [isLoading, setIsLoading] = useState(initialTools.length === 0);
+  const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialTools.length < totalToolsCount);
 
   useEffect(() => {
     setTools(initialTools);
-    setPage(propPage);
     setHasMore(initialTools.length < totalToolsCount);
-  }, [initialTools, totalToolsCount, propPage]);
+    setPage(propPage);
+  }, [initialTools.length, totalToolsCount, propPage, category, search]);
 
   useEffect(() => {
     if (page === 1 && initialTools.length > 0) return;
+
+    if (userId && page === 1) return;
 
     const loadTools = async () => {
       setIsLoading(true);
@@ -50,13 +52,11 @@ const ToolsGrid = ({
           category,
           search
         );
-
         const toolsData: Tool[] = Array.isArray(newTools)
           ? newTools
           : newTools.tools;
 
         setTools((prev) => (page === 1 ? toolsData : [...prev, ...toolsData]));
-
         setHasMore(toolsData.length === limit);
       } catch (err) {
         console.error("Помилка завантаження інструментів:", err);
@@ -65,8 +65,10 @@ const ToolsGrid = ({
       }
     };
 
-    loadTools();
-  }, [page, category, search, limit, initialTools.length]);
+    if (!initialTools.length || page > 1 || (!userId && page === 1)) {
+      loadTools();
+    }
+  }, [page, category, search, userId, initialTools.length, limit]);
 
   return (
     <div>
