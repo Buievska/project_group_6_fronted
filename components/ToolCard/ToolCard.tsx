@@ -22,7 +22,7 @@ export default function ToolCard({ tool }: Props) {
       </div>
 
       <div className={css.info}>
-        <StarRating rating={tool.rating} />
+        <StarRating rating={Number(tool.rating) || 0} />
         <p className={css.name}>{tool.name}</p>
         <p className={css.price}>{tool.pricePerDay} грн/день</p>
       </div>

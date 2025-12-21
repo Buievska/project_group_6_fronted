@@ -8,6 +8,8 @@ import Icon from "./Icon";
 import AuthRequiredModal from "../AuthRequiredModal/AuthRequiredModal";
 import FeedbackFormModal from "../FeedbackFormModal/FeedbackFormModal";
 import { useAuthStore } from "@/lib/store/authStore";
+import { $api } from "@/lib/api/api";
+import { getFeedbacksByToolId } from "@/lib/api/clientApi";
 
 import styles from "./FeedbacksBlock.module.css";
 import "swiper/css";
@@ -33,7 +35,7 @@ interface FeedbacksResponse {
 }
 
 interface FeedbacksBlockProps {
-  productId?: string;
+  productId: string;
   title?: string;
   showLeaveButton?: boolean;
   isToolsPage?: boolean;
@@ -59,26 +61,19 @@ const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
   const fetchFeedbacks = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch(
-        "https://project-group-6-backend.onrender.com/api/feedbacks?page=1&perPage=1000"
-      );
-      if (!response.ok) throw new Error("Не вдалося завантажити відгуки");
+      setError(null);
 
-      const result: FeedbacksResponse = await response.json();
+      let fetchedData = [];
 
-      const filteredFeedbacks = productId
-        ? result.data.feedbacks
-            .filter((fb) =>
-              typeof fb.tool === "string"
-                ? fb.tool === productId
-                : fb.tool?._id === productId
-            )
-            .slice(0, 10)
-        : result.data.feedbacks.slice(0, 10);
+      if (productId) {
+        const response = await getFeedbacksByToolId(productId);
+        fetchedData = response.data.feedbacks;
+      }
 
-      setFeedbacks(filteredFeedbacks);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Невідома помилка");
+      setFeedbacks(fetchedData);
+    } catch (err: any) {
+      console.error("Помилка при завантаженні відгуків:", err);
+      setError(err.response?.data?.message || "Не вдалося завантажити відгуки");
     } finally {
       setLoading(false);
     }
@@ -161,6 +156,7 @@ const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
           <div className={styles.swiperWrapper}>
             {feedbacks.length > 1 ? (
               <Swiper
+                key={productId + feedbacks.length}
                 modules={[Navigation, Pagination]}
                 spaceBetween={32}
                 slidesPerView={1}
