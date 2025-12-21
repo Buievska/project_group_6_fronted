@@ -3,12 +3,13 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast"; // Додано для сповіщень
 import styles from "./ToolInfoBlock.module.css";
 import { Tool } from "@/types/tool";
 import { UserProfile } from "@/types/user";
 import { useAuthStore } from "@/lib/store/authStore";
 import AuthRequiredModal from "@/components/AuthRequiredModal/AuthRequiredModal";
-import { getUserById } from "@/lib/api/clientApi";
+import { getUserById, deleteTool } from "@/lib/api/clientApi"; // Додано deleteTool
 
 interface Props {
   tool: Tool;
@@ -19,9 +20,8 @@ export default function ToolInfoBlock({ tool }: Props) {
   const { user } = useAuthStore();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [owner, setOwner] = useState<UserProfile | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false); // Стан для лоадера видалення
 
-  // Виправляємо Error: Unexpected any
-  // Визначаємо safeOwnerId, перевіряючи чи є owner об'єктом (populated) чи рядком (ID)
   const safeOwnerId =
     typeof tool.owner === "object" && tool.owner !== null
       ? (tool.owner as { _id: string })._id
@@ -33,11 +33,9 @@ export default function ToolInfoBlock({ tool }: Props) {
     specs: string | Record<string, string | number>
   ) => {
     if (!specs) return null;
-
     if (typeof specs === "string") {
       return <p className={styles.text}>{specs}</p>;
     }
-
     if (typeof specs === "object") {
       return (
         <ul className={styles.specsList}>
@@ -56,7 +54,6 @@ export default function ToolInfoBlock({ tool }: Props) {
   useEffect(() => {
     const fetchOwner = async () => {
       if (!safeOwnerId) return;
-
       try {
         const ownerData = await getUserById(safeOwnerId);
         setOwner(ownerData);
@@ -77,6 +74,27 @@ export default function ToolInfoBlock({ tool }: Props) {
 
   const handleEditClick = () => {
     router.push(`/tools/${tool._id}/edit`);
+  };
+
+  // НОВИЙ ОБРОБНИК ВИДАЛЕННЯ
+  const handleDeleteClick = async () => {
+    const confirmDelete = window.confirm(
+      "Ви впевнені, що хочете видалити це оголошення?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      setIsDeleting(true);
+      await deleteTool(tool._id);
+      toast.success("Оголошення видалено");
+      router.push("/profile"); // Перенаправляємо в профіль після видалення
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+      toast.error("Помилка при видаленні інструменту");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const ownerAvatar = owner?.avatarUrl;
@@ -134,15 +152,27 @@ export default function ToolInfoBlock({ tool }: Props) {
         </div>
       )}
 
-      {isOwner ? (
-        <button onClick={handleEditClick} className={styles.bookBtn}>
-          Редагувати оголошення
-        </button>
-      ) : (
-        <button onClick={handleBookingClick} className={styles.bookBtn}>
-          Забронювати
-        </button>
-      )}
+      {/* ОНОВЛЕНІ КНОПКИ ДЛЯ ВЛАСНИКА */}
+      <div className={styles.actions}>
+        {isOwner ? (
+          <div className={styles.ownerButtons}>
+            <button onClick={handleEditClick} className={styles.editBtn}>
+              Редагувати
+            </button>
+            <button
+              onClick={handleDeleteClick}
+              className={styles.deleteBtn}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Видалення..." : "Видалити"}
+            </button>
+          </div>
+        ) : (
+          <button onClick={handleBookingClick} className={styles.bookBtn}>
+            Забронювати
+          </button>
+        )}
+      </div>
 
       {isAuthModalOpen && (
         <AuthRequiredModal onClose={() => setIsAuthModalOpen(false)} />
