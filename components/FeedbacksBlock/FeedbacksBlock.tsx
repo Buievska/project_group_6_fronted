@@ -35,7 +35,7 @@ interface FeedbacksResponse {
 }
 
 interface FeedbacksBlockProps {
-  productId: string;
+  productId?: string;
   title?: string;
   showLeaveButton?: boolean;
   isToolsPage?: boolean;
@@ -63,16 +63,20 @@ const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
       setLoading(true);
       setError(null);
 
-      let fetchedData = [];
+      let fetchedData: Feedback[] = [];
 
       if (productId) {
         const response = await getFeedbacksByToolId(productId);
         fetchedData = response.data.feedbacks;
+      } else {
+        const response = await $api.get("/feedbacks", {
+          params: { perPage: 10 },
+        });
+        fetchedData = response.data.data.feedbacks;
       }
 
       setFeedbacks(fetchedData);
     } catch (err: any) {
-      console.error("Помилка при завантаженні відгуків:", err);
       setError(err.response?.data?.message || "Не вдалося завантажити відгуки");
     } finally {
       setLoading(false);
@@ -168,7 +172,7 @@ const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
           <div className={styles.swiperWrapper}>
             {feedbacks.length > 1 ? (
               <Swiper
-                key={productId + feedbacks.length}
+                key={(productId ?? "main") + feedbacks.length}
                 modules={[Navigation, Pagination]}
                 spaceBetween={32}
                 slidesPerView={1}
