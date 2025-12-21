@@ -134,3 +134,18 @@ export const updateUserProfile = async (userId: string, dataToSend: any) => {
   );
   return data;
 };
+
+export const getUserBookings = async () => {
+  try {
+    const response = await $api.get("/bookings/my");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+    throw error;
+  }
+};
+
+export const deleteBooking = async (bookingId: string) => {
+  const { data } = await $api.delete(`/bookings/${bookingId}`);
+  return data;
+};

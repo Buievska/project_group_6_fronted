@@ -4,14 +4,9 @@ import Link from "next/link";
 import type { AxiosError } from "axios";
 
 import { getUserProfile, getUserTools } from "@/lib/api/serverApi";
-
-import { UserProfile } from "@/components/UserProfile/UserProfile";
-import ToolsGrid from "@/components/ToolsGrid/ToolsGrid";
-import { ProfilePlaceholder } from "@/components/ProfilePlaceholder/ProfilePlaceholder";
+import ProfileTabs from "@/components/ProfileTabs/ProfileTabs";
 
 import css from "./Profile.module.css";
-
-const TOOLS_PER_PAGE = 8;
 
 export const dynamic = "force-dynamic";
 
@@ -47,32 +42,15 @@ export default async function ProfilePage({
 
     const initialTools = toolsData?.tools || [];
     const totalCount = toolsData?.total || 0;
-    const hasTools = initialTools.length > 0;
-
-    const profileId = targetUser._id || targetUser.id || "";
 
     return (
       <main className={css.mainContent}>
-        <section className={css.profileHeader}>
-          <UserProfile
-            userName={targetUser.name}
-            avatarUrl={targetUser.avatar}
-            profileId={profileId}
-          />
-        </section>
-
-        <h2 className={css.sectionTitle}>Інструменти</h2>
-
-        {hasTools ? (
-          <ToolsGrid
-            userId={userId}
-            initialTools={initialTools}
-            totalToolsCount={totalCount}
-            limit={TOOLS_PER_PAGE}
-          />
-        ) : (
-          <ProfilePlaceholder isOwner={false} />
-        )}
+        <ProfileTabs
+          user={targetUser}
+          initialTools={initialTools}
+          totalToolsCount={totalCount}
+          userId={userId}
+        />
       </main>
     );
   } catch (error) {
