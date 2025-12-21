@@ -152,3 +152,8 @@ export const getFeedbacksByToolId = async (toolId: string) => {
   const { data } = await $api.get(`/feedbacks/tool/${toolId}`);
   return data;
 };
+
+export const deleteTool = async (id: string) => {
+  const { data } = await $api.delete(`/tools/${id}`);
+  return data;
+};
