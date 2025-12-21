@@ -1,67 +1,78 @@
-/* ProfilePlaceholder.module.css */
-
 .placeholderContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 40px;
-  margin-top: 32px;
-  margin-bottom: 32px;
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
   text-align: center;
-}
-
-.textWrapper {
-  margin-bottom: 24px;
+  margin-top: 32px;
+  width: 100%;
 }
 
 .placeholderText {
-  font-size: 20px;
-  font-weight: 600;
-  color: #374151;
-  margin: 0;
-  line-height: 1.5;
+  font-size: 18px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 8px;
+  line-height: 1.2;
 }
 
 .highlightSpan {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 24px;
   display: block;
-  margin-top: 8px;
-  font-size: 16px;
-  font-weight: 400;
-  color: #6b7280;
-}
-
-.textBreak {
-  display: none;
 }
 
 .placeholderButton {
-  height: 40px;
-  padding: 10px 24px;
-  background: #8808cc;
-  color: #fff;
-  border: 1px solid #8808cc;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  width: 100%;
+  max-width: 335px;
+  height: 40px;
+  padding: 8px 20px;
+  background-color: #8808cc;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
   text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.placeholderButton:hover,
-.placeholderButton:focus {
-  background: transparent;
+.placeholderButton:hover {
+  background-color: #e7cdf4;
   color: #000;
-  box-shadow: 0 0 0 2px #8808cc;
 }
-.placeholderButton:active {
-  background: #e7cdf4;
-  color: #000;
+
+@media (min-width: 768px) {
+  .placeholderContainer {
+    align-items: flex-start;
+    text-align: left;
+    margin-top: 40px;
+  }
+
+  .placeholderText {
+    font-size: 20px;
+  }
+
+  .placeholderButton {
+    width: auto;
+  }
+}
+
+@media (min-width: 1440px) {
+  .placeholderContainer {
+    margin-top: 48px;
+  }
+
+  .placeholderText {
+    font-size: 24px;
+  }
+
+  .highlightSpan {
+    font-size: 16px;
+    margin-bottom: 32px;
+  }
 }

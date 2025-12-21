@@ -11,15 +11,28 @@ export const $api = axios.create({
   },
 });
 
-// $api.interceptors.request.use((config) => {
-//   // Перевіряємо, чи ми на клієнті (в браузері)
-//   if (typeof window !== "undefined") {
-//     const token = localStorage.getItem("accessToken");
+$api.interceptors.response.use(
+  (config) => {
+    return config;
+  },
+  async (error) => {
+    const originalRequest = error.config;
 
-//     // Якщо токен є — додаємо його в заголовок Authorization
-//     if (token && config.headers) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//     }
-//   }
-//   return config;
-// });
+    if (
+      error.response?.status === 401 &&
+      error.config &&
+      !error.config._isRetry
+    ) {
+      originalRequest._isRetry = true;
+
+      try {
+        await $api.post("/auth/refresh");
+
+        return $api.request(originalRequest);
+      } catch (e) {
+        console.log("Not authorized");
+      }
+    }
+    throw error;
+  }
+);

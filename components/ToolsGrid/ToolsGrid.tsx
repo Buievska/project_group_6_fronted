@@ -85,9 +85,9 @@ const ToolsGrid = ({
       </ul>
 
       {isLoading && tools.length === 0 && (
-        <p style={{ textAlign: "center", marginTop: "20px" }}>
-          Завантаження каталогу...
-        </p>
+        <div className={css.localLoaderWrapper}>
+          <span className={css.spinner}></span>
+        </div>
       )}
 
       {!isLoading && tools.length === 0 && (
