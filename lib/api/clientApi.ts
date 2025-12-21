@@ -83,12 +83,7 @@ export const createTool = async (formData: FormData) => {
   return data;
 };
 
-export async function fetchToolsPage(
-  page: number,
-  limit = 8,
-  category = "all",
-  search = ""
-) {
+export async function fetchToolsPage(page: number, limit = 8, category = "all", search = "") {
   const res = await $api.get<ToolsApiResponse>("/tools", {
     params: {
       page,
@@ -120,18 +115,13 @@ export const updateTool = async (id: string, formData: FormData) => {
   return data;
 };
 
-export const createBooking = async (
-  data: CreateBookingRequest
-): Promise<CreateBookingResponse> => {
+export const createBooking = async (data: CreateBookingRequest): Promise<CreateBookingResponse> => {
   const response = await $api.post<CreateBookingResponse>("/bookings", data);
   return response.data;
 };
 
 export const updateUserProfile = async (userId: string, dataToSend: any) => {
-  const { data } = await $api.patch<UserProfile>(
-    `/users/${userId}`,
-    dataToSend
-  );
+  const { data } = await $api.patch<UserProfile>(`/users/${userId}`, dataToSend);
   return data;
 };
 

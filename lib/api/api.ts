@@ -1,7 +1,6 @@
 import axios from "axios";
 
-export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api"; // <- 3001
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api"; // <- 3001
 
 export const $api = axios.create({
   baseURL: API_URL,
@@ -12,17 +11,13 @@ export const $api = axios.create({
 });
 
 $api.interceptors.response.use(
-  (config) => {
+  config => {
     return config;
   },
-  async (error) => {
+  async error => {
     const originalRequest = error.config;
 
-    if (
-      error.response?.status === 401 &&
-      error.config &&
-      !error.config._isRetry
-    ) {
+    if (error.response?.status === 401 && error.config && !error.config._isRetry) {
       originalRequest._isRetry = true;
 
       try {
@@ -34,5 +29,5 @@ $api.interceptors.response.use(
       }
     }
     throw error;
-  }
+  },
 );
