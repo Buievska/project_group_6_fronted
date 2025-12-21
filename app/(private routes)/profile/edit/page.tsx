@@ -11,6 +11,7 @@ import {
   CldUploadButton,
   CloudinaryUploadWidgetResults,
 } from "next-cloudinary";
+import axios from "axios";
 
 export default function EditProfilePage() {
   const router = useRouter();
@@ -77,9 +78,10 @@ export default function EditProfilePage() {
       console.error(error);
       let message = "Помилка при збереженні";
 
-      if (error instanceof Error) {
-        const axiosError = error as any;
-        message = axiosError.response?.data?.message || error.message;
+      if (axios.isAxiosError(error)) {
+        message = error.response?.data?.message || error.message;
+      } else if (error instanceof Error) {
+        message = error.message;
       }
 
       alert(message);
