@@ -8,13 +8,14 @@ import Link from "next/link";
 import loginImg from "../../../public/img/loginImage.png";
 import Image from "next/image";
 import axios from "axios"; // Використовуємо для типізації помилки
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const currentYear = new Date().getFullYear();
 
 const SignIn = () => {
   const [serverError, setServerError] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSubmit = async (
     values: LoginRequset,
@@ -32,7 +33,8 @@ const SignIn = () => {
       // 3. Перевіряємо response і робимо редірект
       if (response) {
         // Якщо потрібно просто на головну:
-        router.push("/");
+        const redirectTo = searchParams.get("from") || "/";
+        router.push(redirectTo);
       } else {
         setServerError("Неправильна електронна адреса або пароль");
       }
