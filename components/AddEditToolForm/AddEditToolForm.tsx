@@ -40,13 +40,54 @@ type Props = {
 };
 
 const validationSchema: Yup.Schema<ToolFormValues> = Yup.object({
-  name: Yup.string().min(3).required("Вкажіть назву"),
-  pricePerDay: Yup.number().positive().required("Вкажіть ціну"),
+  name: Yup.string()
+    .trim()
+    .min(3, "Назва повинна містити щонайменше 3 символи")
+    .max(80, "Назва занадто довга")
+    .required("Вкажіть назву інструменту"),
+
+  pricePerDay: Yup.number()
+    .typeError("Ціна має бути числом")
+    .min(1, "Ціна повинна бути більшою за 0")
+    .required("Вкажіть ціну за день"),
+
   categoryId: Yup.string().required("Оберіть категорію"),
-  rentalConditions: Yup.string().required("Вкажіть умови оренди"),
-  description: Yup.string().required("Вкажіть опис"),
-  specifications: Yup.string().required("Вкажіть характеристики"),
-  images: Yup.mixed<File>().optional(),
+
+  rentalConditions: Yup.string()
+    .min(10, "Опишіть умови оренди детальніше")
+    .required("Вкажіть умови оренди"),
+
+  description: Yup.string()
+    .min(20, "Опис має містити мінімум 20 символів")
+    .required("Додайте опис інструменту"),
+
+  specifications: Yup.string()
+    .required("Вкажіть характеристики")
+    .test(
+      "spec-format",
+      "Формат: Назва: Значення (кожен пункт з нового рядка)",
+      (value) =>
+        Boolean(
+          value
+            ?.split("\n")
+            .every((line) => line.includes(":") && line.split(":")[1]?.trim())
+        )
+    ),
+
+  images: Yup.mixed<File>()
+    .optional()
+    .test(
+      "fileSize",
+      "Максимальний розмір зображення — 5 MB",
+      (file) => !file || file.size <= 5 * 1024 * 1024
+    )
+    .test(
+      "fileType",
+      "Дозволені формати: JPG, PNG, WEBP",
+      (file) =>
+        !file ||
+        ["image/jpeg", "image/png", "image/webp"].includes(file.type)
+    ),
 });
 
 export default function AddEditToolForm({ mode, initialValues }: Props) {
@@ -112,11 +153,14 @@ export default function AddEditToolForm({ mode, initialValues }: Props) {
 
   return (
     <Formik
-      enableReinitialize
-      initialValues={formInitialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
+  enableReinitialize
+  initialValues={formInitialValues}
+  validationSchema={validationSchema}
+  validateOnBlur
+  validateOnChange={false}
+  onSubmit={handleSubmit}
+>
+
       {({ setFieldValue, isSubmitting }) => (
         <Form className={styles.formWrapper}>
           <div className={styles.leftSide}>
