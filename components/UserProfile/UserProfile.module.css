@@ -76,7 +76,6 @@
 .editButton:hover {
   background-color: #e7cdf4;
   color: #000000 !important;
-  box-shadow: 0 4px 12px rgba(136, 8, 204, 0.2);
 }
 
 .editButton:active {
