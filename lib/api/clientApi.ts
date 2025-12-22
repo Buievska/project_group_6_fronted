@@ -157,3 +157,60 @@ export const deleteTool = async (id: string) => {
   const { data } = await $api.delete(`/tools/${id}`);
   return data;
 };
+
+
+
+interface Feedback {
+  _id: string;
+  name: string;
+  description: string;
+  rate: number;
+}
+
+interface ToolWithFeedbacks {
+  _id: string;
+  feedbacks?: Feedback[];
+}
+
+export interface UserFeedbacksResponse {
+  feedbacks: Feedback[];
+  averageRating: number;
+  totalFeedbacks: number;
+}
+
+export const getUserFeedbacks = async (userId: string): Promise<UserFeedbacksResponse> => {
+  try {
+    // Отримуємо інструменти користувача
+    const { data } = await $api.get<{ tools: ToolWithFeedbacks[] }>(`/users/${userId}/tools`, {
+      params: { page: 1, perPage: 100 }
+    });
+
+    const tools = data.tools || [];
+    const allFeedbacks: Feedback[] = [];
+    
+    // Збираємо всі відгуки з усіх інструментів
+    tools.forEach((tool: ToolWithFeedbacks) => {
+      if (tool.feedbacks && Array.isArray(tool.feedbacks)) {
+        allFeedbacks.push(...tool.feedbacks);
+      }
+    });
+
+    // Обчислюємо середній рейтинг
+    const averageRating = allFeedbacks.length > 0
+      ? allFeedbacks.reduce((sum, fb) => sum + fb.rate, 0) / allFeedbacks.length
+      : 0;
+
+    return {
+      feedbacks: allFeedbacks,
+      averageRating: Math.round(averageRating * 10) / 10,
+      totalFeedbacks: allFeedbacks.length,
+    };
+  } catch (error) {
+    console.error('Error fetching user feedbacks:', error);
+    return {
+      feedbacks: [],
+      averageRating: 0,
+      totalFeedbacks: 0,
+    };
+  }
+};
