@@ -1,0 +1,286 @@
+/* components/BookingCalendar/BookingCalendar.module.css */
+
+.calendar {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.calendarContainer {
+  background: #fff;
+}
+
+/* Заголовок - без бордера */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.year {
+  font-family: "Intel", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #000000;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navBtn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #000000;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: opacity 0.2s;
+  line-height: 1;
+}
+
+.navBtn:hover {
+  opacity: 0.6;
+}
+
+.month {
+  font-family: "Intel", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #000000;
+  min-width: 100px;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+/* Таблиця з заокругленими кутами */
+.table {
+  border: 2px solid #000;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+/* Дні тижня */
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 2px solid #000;
+  transition: border-color 0.2s;
+}
+
+.weekday {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.5;
+  text-align: center;
+  color: #000;
+  padding: 15px 0;
+  border-right: 2px solid #000;
+  transition: border-color 0.2s;
+}
+
+.weekday:last-child {
+  border-right: none;
+}
+
+/* Сітка днів */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: center;
+  color: #000;
+
+  width: 100%;
+  min-height: 56px;
+  border: none;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  background: #fff;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.day:nth-child(7n) {
+  border-right: none;
+}
+
+.grid .day:nth-last-child(-n + 7) {
+  border-bottom: none;
+}
+
+/* Hover - тільки для звичайних доступних дат */
+.day:hover:not(:disabled):not(.dayDisabled):not(.dayBooked):not(.dayInRange):not(.dayRangeStart):not(.dayRangeEnd) {
+  background-color: #f5f5f5;
+}
+
+/* Дні поза поточним місяцем */
+.dayOutside {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Сьогоднішній день */
+
+.dayToday {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  text-align: center;
+  vertical-align: middle;
+  color: #a5b3bf;
+
+  position: relative;
+}
+
+.dayToday::after {
+  content: "";
+  position: absolute;
+
+  width: 24px;
+  height: 1px;
+
+  background-color: #a5b3bf;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Заблоковані дати (минулі) */
+.dayDisabled {
+  font-family: Inter;
+  font-weight: 400;
+  color: rgba(34, 39, 48, 1);
+  cursor: not-allowed;
+  background-color: #f9f9f9;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Заброньовані дати */
+.dayBooked {
+  color: rgba(0, 0, 0, 0.4);
+  cursor: not-allowed;
+  position: relative;
+  background-color: #f5f5f5;
+}
+
+.dayBooked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 2px;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Обраний діапазон */
+.dayInRange {
+  background-color: #e7cdf4;
+}
+
+.dayRangeStart,
+.dayRangeEnd {
+  background-color: #e7cdf4;
+}
+
+/* ===== СТИЛІ ПОМИЛКИ - ВСІ БОРДЕРИ ЧЕРВОНІ ===== */
+.calendarError .table {
+  border-color: rgba(196, 2, 2, 1);
+}
+
+.calendarError .weekdays {
+  border-bottom-color: rgba(196, 2, 2, 1);
+}
+
+.calendarError .weekday {
+  border-right-color: rgba(196, 2, 2, 1);
+}
+
+.calendarError .day {
+  border-right-color: rgba(196, 2, 2, 1);
+  border-bottom-color: rgba(196, 2, 2, 1);
+}
+
+/* Сповіщення про обрані дати */
+.selection {
+  margin-top: 12px;
+  font-family: "Work Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #000;
+}
+
+/* Помилка */
+.error {
+  display: block;
+  font-family: "Work Sans", sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(196, 2, 2, 1);
+  margin-top: 8px;
+}
+
+/* Адаптивність */
+
+@media screen and (min-width: 768px) {
+  .day {
+    min-height: 56px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .year {
+    font-size: 18px;
+  }
+
+  .month {
+    font-size: 18px;
+  }
+
+  .day {
+    min-height: 56px;
+    width: 123px;
+  }
+
+  .weekday {
+    font-size: 20px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(7, 123px);
+  }
+
+  .weekdays {
+    grid-template-columns: repeat(7, 123px);
+  }
+}

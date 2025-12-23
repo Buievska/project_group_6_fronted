@@ -4,65 +4,97 @@ import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { useId } from "react";
 import styles from "./BookingToolForm.module.css";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createBooking, getToolById } from "@/lib/api/clientApi";
+import { useRouter } from "next/navigation";
+import { BookingToolFormValues, CreateBookingRequest, CreateBookingResponse } from "@/types/booking";
+import toast from "react-hot-toast";
+import { Tool } from "@/types/tool";
+import CalendarField from "../BookingCalendar/CalendarField";
+import PriceBlock from "./PriceBlock";
 
-interface BookingToolFormValues {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  startDate: string;
-  endDate: string;
-  city: string;
-  postOffice: string;
+interface BookingToolFormProps {
+  toolId: string;
 }
 
 const initialValues: BookingToolFormValues = {
   firstName: "",
   lastName: "",
   phone: "",
-  startDate: "",
-  endDate: "",
-  city: "",
-  postOffice: "",
+  dateRange: { from: null, to: null },
+  deliveryCity: "",
+  deliveryBranch: "",
 };
 
 const validationSchema = Yup.object({
   firstName: Yup.string().trim().min(2, "Мінімум 2 символи").required("Імʼя обовʼязкове"),
-
   lastName: Yup.string().trim().min(2, "Мінімум 2 символи").required("Прізвище обовʼязкове"),
-
   phone: Yup.string()
     .required("Номер телефону обовʼязковий")
-    .test("is-ua-phone", "Невірний формат телефону", value => {
-      if (!value) return false;
-
-      const cleaned = value.replace(/\D/g, "");
-
-      return /^380\d{9}$/.test(cleaned) || /^0\d{9}$/.test(cleaned);
-    }),
-
-  startDate: Yup.date()
-    .transform((value, originalValue) => (originalValue === "" ? null : new Date(originalValue)))
-    .nullable()
-    .required("Оберіть початкову дату"),
-
-  endDate: Yup.date()
-    .transform((value, originalValue) => (originalValue === "" ? null : new Date(originalValue)))
-    .nullable()
-    .required("Оберіть кінцеву дату")
-    .min(Yup.ref("startDate"), "Кінцева дата має бути пізніше початкової"),
-
-  city: Yup.string().trim().required("Місто обовʼязкове"),
-
-  postOffice: Yup.string().trim().required("Відділення обовʼязкове"),
+    .matches(/^\+380\d{9}$/, "Номер телефону має бути у форматі +380XXXXXXXXX"),
+  dateRange: Yup.object({
+    from: Yup.date().nullable().required("Оберіть дату початку"),
+    to: Yup.date().nullable().required("Оберіть дату завершення"),
+  }).test("dates-required", "Оберіть період бронювання", value => value?.from !== null && value?.to !== null),
+  deliveryCity: Yup.string().trim().required("Місто обовʼязкове"),
+  deliveryBranch: Yup.string().trim().required("Відділення обовʼязкове"),
 });
 
-export default function BookingToolForm() {
+export default function BookingToolForm({ toolId }: BookingToolFormProps) {
   const fieldId = useId();
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const {
+    data: tool,
+    isLoading,
+    error,
+  } = useQuery<Tool>({
+    queryKey: ["tool", toolId],
+    queryFn: () => getToolById(toolId),
+    enabled: Boolean(toolId),
+  });
+
+  const { mutate, isPending } = useMutation<CreateBookingResponse, Error, CreateBookingRequest>({
+    mutationFn: createBooking,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["tool", toolId] });
+
+      await queryClient.invalidateQueries({ queryKey: ["my-bookings"] });
+
+      router.push("/confirm/booking");
+    },
+    onError: error => {
+      toast.error(error.message || "Помилка створення бронювання");
+    },
+  });
 
   const handleSubmit = (values: BookingToolFormValues, actions: FormikHelpers<BookingToolFormValues>) => {
-    console.log("Form submitted:", values);
-    actions.resetForm();
+    if (!values.dateRange.from || !values.dateRange.to) return;
+
+    const payload: CreateBookingRequest = {
+      toolId,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      phone: values.phone,
+      startDate: values.dateRange.from.toISOString().split("T")[0],
+      endDate: values.dateRange.to.toISOString().split("T")[0],
+      deliveryCity: values.deliveryCity,
+      deliveryBranch: values.deliveryBranch,
+    };
+
+    mutate(payload, {
+      onError: () => actions.setSubmitting(false),
+    });
   };
+
+  if (isLoading) {
+    return <p>Завантаження інструмента...</p>;
+  }
+
+  if (error || !tool) {
+    return <p>Інструмент не знайдено</p>;
+  }
 
   return (
     <section className={styles.container}>
@@ -88,7 +120,6 @@ export default function BookingToolForm() {
               />
               <ErrorMessage name="firstName" component="span" className={styles.error} />
             </div>
-
             <div className={styles.inputWrapper}>
               <label className={styles.label} htmlFor={`${fieldId}-lastName`}>
                 Прізвище
@@ -118,56 +149,46 @@ export default function BookingToolForm() {
             <ErrorMessage name="phone" component="span" className={styles.error} />
           </div>
 
-          <fieldset className={`${styles.fieldGroup} ${styles.fieldsetReset}`}>
-            <legend className={styles.label}>Виберіть період бронювання</legend>
-
-            <div className={styles.selectWrapper}>
-              <div className={styles.selectInner}>
-                <Field as="select" className={styles.select} type="date" name="startDate" id={`${fieldId}-startDate`}>
-                  <option value="">Початкова дата</option>
-                </Field>
-              </div>
-              <ErrorMessage name="startDate" component="span" className={styles.error} />
-            </div>
-
-            <div className={styles.selectWrapper}>
-              <div className={styles.selectInner}>
-                <Field as="select" className={styles.select} type="date" name="endDate" id={`${fieldId}-endDate`}>
-                  <option value="">Кінцева дата</option>
-                </Field>
-              </div>
-              <ErrorMessage name="endDate" component="span" className={styles.error} />
-            </div>
-          </fieldset>
+          <CalendarField
+            bookedRanges={tool.bookedDates.map((d: { from: string; to: string }) => ({
+              from: new Date(d.from),
+              to: new Date(d.to),
+            }))}
+          />
 
           <fieldset className={`${styles.fieldGroup} ${styles.fieldsetReset}`}>
             <div className={styles.inputWrapper}>
-              <label className={styles.label} htmlFor={`${fieldId}-city`}>
+              <label className={styles.label} htmlFor={`${fieldId}-deliveryCity`}>
                 Місто доставки
               </label>
-              <Field className={styles.input} id={`${fieldId}-city`} name="city" type="text" placeholder="Ваше місто" />
-              <ErrorMessage name="city" component="span" className={styles.error} />
+              <Field
+                className={styles.input}
+                id={`${fieldId}-deliveryCity`}
+                name="deliveryCity"
+                type="text"
+                placeholder="Ваше місто"
+              />
+              <ErrorMessage name="deliveryCity" component="span" className={styles.error} />
             </div>
-
             <div className={styles.inputWrapper}>
-              <label className={styles.label} htmlFor={`${fieldId}-postOffice`}>
+              <label className={styles.label} htmlFor={`${fieldId}-deliveryBranch`}>
                 Відділення Нової Пошти
               </label>
               <Field
                 className={styles.input}
-                id={`${fieldId}-postOffice`}
-                name="postOffice"
+                id={`${fieldId}-deliveryBranch`}
+                name="deliveryBranch"
                 type="text"
                 placeholder="24"
               />
-              <ErrorMessage name="postOffice" component="span" className={styles.error} />
+              <ErrorMessage name="deliveryBranch" component="span" className={styles.error} />
             </div>
           </fieldset>
 
           <div className={styles.formActions}>
-            <p className={styles.textPrice}>Ціна: 2100 грн</p>
-            <button className={styles.button} type="submit">
-              Забронювати
+            <PriceBlock pricePerDay={tool.pricePerDay} />
+            <button className={styles.button} type="submit" disabled={isPending}>
+              {isPending ? "Завантаження..." : "Забронювати"}
             </button>
           </div>
         </Form>

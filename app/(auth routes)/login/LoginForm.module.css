@@ -103,12 +103,27 @@
 }
 
 .btnLogin:hover {
-  background-color: #6a069e;
+  border: 1px solid #8808cc;
+  background-color: white;
+  color: #000000;
+}
+
+.btnLogin:focus {
+  border-color: #8808cc;
+  color: #000000;
+}
+
+.btnLogin:active {
+  border-color: #8808cc;
+  color: #000000;
+  background-color: #e7cdf4;
 }
 
 .btnLogin:disabled {
-  background-color: #ccc;
   cursor: not-allowed;
+  background-color: #8808cc;
+  color: white;
+  opacity: 0.5;
 }
 
 /* --- НИЖНІЙ ТЕКСТ --- */

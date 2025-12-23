@@ -35,19 +35,16 @@ export function Header() {
 
     router.push("/");
   };
-
   return (
     <>
       <header className={styles.header}>
         <div className={styles.containerHeader}>
           {/* LOGO */}
           <Link href="/" className={styles.logoLink}>
-            <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
+            <Image src="/logo.svg" alt="RentTools" width={124} height={20} />
           </Link>
 
-          {/* === DESKTOP PART (ПК) === */}
-
-          <div className={styles.desktopContainer}>
+          <div className={styles.headerRight}>
             {!user ? (
               <>
                 <nav className={styles.navLinks}>
@@ -68,14 +65,19 @@ export function Header() {
                 </nav>
 
                 <div className={styles.userActions}>
-                  <Link href="/create" className={styles.publishBtn}>
+                  <Link href="/tools/new" className={styles.publishBtn}>
                     Опублікувати оголошення
                   </Link>
 
                   <div className={styles.userInfo}>
-                    {user.avatar ? (
+                    {user.avatarUrl ? (
                       <Image
-                        src={user.avatar}
+                        key={user.avatarUrl}
+                        src={
+                          user.avatarUrl.includes("?")
+                            ? `${user.avatarUrl}&v=${Date.now()}`
+                            : `${user.avatarUrl}?v=${Date.now()}`
+                        }
                         alt={user.name || "User"}
                         width={32}
                         height={32}
@@ -91,10 +93,16 @@ export function Header() {
                     </span>
                   </div>
 
-                  <div className={styles.divider}></div>
+                  <Image
+                    src="/icon-exit.svg"
+                    alt=""
+                    width={1}
+                    height={39}
+                    className={styles.userDivider}
+                  />
 
                   <button
-                    className={styles.logoutBtn}
+                    className={styles.logout}
                     onClick={() => setIsLogoutOpen(true)}
                     aria-label="Вийти"
                   >

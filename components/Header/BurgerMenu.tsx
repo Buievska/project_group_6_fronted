@@ -7,6 +7,7 @@ import styles from "./Header.module.css";
 type User = {
   name: string;
   avatar?: string | null;
+  avatarUrl?: string | null;
 };
 
 type Props = {
@@ -24,14 +25,12 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
       onClick={onClose}
     >
       <div className={styles.menu} onClick={(e) => e.stopPropagation()}>
-        {/* HEADER */}
         <div className={styles.menuHeader}>
           <Link href="/" className={styles.logoLink} onClick={onClose}>
-            <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
+            <Image src="/logo.svg" alt="RentTools" width={124} height={20} />
           </Link>
         </div>
 
-        {/* NAVIGATION */}
         <nav className={styles.navMobile}>
           <Link href="/" onClick={onClose}>
             Головна
@@ -41,7 +40,7 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
           </Link>
 
           {!user && (
-            <Link href="/auth/login" onClick={onClose}>
+            <Link href="/login" onClick={onClose}>
               Увійти
             </Link>
           )}
@@ -53,12 +52,11 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
           )}
         </nav>
 
-        {/* USER BLOCK — ВНИЗУ */}
         {user && (
           <div className={styles.mobileUserCentered}>
-            {user.avatar ? (
+            {user.avatarUrl ? (
               <Image
-                src={user.avatar}
+                src={user.avatarUrl}
                 alt={user.name || "User"}
                 width={32}
                 height={32}
@@ -74,7 +72,6 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
               {user.name || "Користувач"}
             </span>
 
-            {/* РИСКА */}
             <Image
               src="/icon-exit.svg"
               alt=""
@@ -91,13 +88,10 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
               }}
               aria-label="Вийти"
             >
-
               <Image src="/button-exit.svg" alt="" width={24} height={24} />
-
             </button>
           </div>
         )}
-
 
         {/* REGISTER (тільки для гостя) */}
 

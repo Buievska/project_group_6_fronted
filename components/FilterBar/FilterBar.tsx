@@ -1,6 +1,7 @@
 import css from "./FilterBar.module.css";
 import { fetchCategories } from "@/lib/api/clientApi";
 import FilterSelectClient from "./FilterSelectCLient";
+import Link from "next/link";
 
 export default async function FilterBar({
   selected,
@@ -19,9 +20,9 @@ export default async function FilterBar({
         search={search}
       />
 
-      <a className={css.filter_button} href="/tools">
+      <Link className={css.filter_button} href="/tools">
         Скинути фільтри
-      </a>
+      </Link>
     </div>
   );
 }

@@ -2,25 +2,34 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getToolById } from "@/lib/api/clientApi";
-import { Tool } from "@/types/tool";
-import ToolGallery from "@/components/ToolGallery/ToolGallery";
-import ToolInfoBlock from "@/components/ToolInfoBlock/ToolInfoBlock";
-import styles from "./ToolDetails.module.css";
 import { toast } from "react-toastify";
 
+import { getToolById } from "@/lib/api/clientApi";
+import { Tool } from "@/types/tool";
+
+import ToolGallery from "@/components/ToolGallery/ToolGallery";
+import ToolInfoBlock from "@/components/ToolInfoBlock/ToolInfoBlock";
+import FeedbacksBlock from "@/components/FeedbacksBlock/FeedbacksBlock";
+
+import styles from "./ToolDetails.module.css";
+
 export default function ToolDetailsPage() {
-  const { toolId } = useParams();
+  const params = useParams();
+  const toolId = typeof params.toolId === "string" ? params.toolId : null;
+
   const [tool, setTool] = useState<Tool | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!toolId) {
+      setLoading(false);
+      return;
+    }
+
     const fetchTool = async () => {
       try {
-        if (typeof toolId === "string") {
-          const data = await getToolById(toolId);
-          setTool(data);
-        }
+        const data = await getToolById(toolId);
+        setTool(data);
       } catch (error) {
         console.error(error);
         toast.error("Не вдалося завантажити інструмент");
@@ -33,7 +42,7 @@ export default function ToolDetailsPage() {
   }, [toolId]);
 
   if (loading) return <div className={styles.loading}>Завантаження...</div>;
-  if (!tool)
+  if (!tool || !toolId)
     return <div className={styles.loading}>Інструмент не знайдено</div>;
 
   return (
@@ -42,10 +51,18 @@ export default function ToolDetailsPage() {
         <div className={styles.leftColumn}>
           <ToolGallery image={tool.images} name={tool.name} />
         </div>
-
         <div className={styles.rightColumn}>
           <ToolInfoBlock tool={tool} />
         </div>
+      </div>
+
+      <div className={styles.feedbacksSection}>
+        <FeedbacksBlock
+          productId={toolId}
+          title="Відгуки"
+          showLeaveButton
+          isToolsPage
+        />
       </div>
     </div>
   );

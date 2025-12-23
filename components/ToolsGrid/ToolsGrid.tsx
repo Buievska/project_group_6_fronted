@@ -1,48 +1,77 @@
-import Link from "next/link";
-import ToolCard from "../ToolCard/ToolCard";
-import css from "./ToolsGrid.module.css";
+"use client";
+
+import { useEffect, useState } from "react";
+import { Tool } from "@/types/tool";
 import { fetchToolsPage } from "@/lib/api/clientApi";
+import css from "./ToolsGrid.module.css";
+import ToolCard from "../ToolCard/ToolCard";
 
-const LIMIT = 8;
+interface ToolsGridProps {
+  category?: string;
+  search?: string;
+  userId?: string;
+  initialTools?: Tool[];
+  totalToolsCount?: number;
+  limit?: number;
+  page?: number;
+}
 
-export default async function ToolsGrid({
-  page,
-  category,
-  search,
-}: {
-  page: number;
-  category: string;
-  search: string;
-}) {
-  const pages = await Promise.all(
-    Array.from({ length: page }, (_, i) =>
-      fetchToolsPage(i + 1, LIMIT, category, search)
-    )
-  );
+type ToolsPageResponse = Tool[] | { tools: Tool[] };
 
-  const tools = pages.flatMap((p) => p.tools);
-  const last = pages[pages.length - 1];
-  const hasNext = last.page < last.pages;
+const ToolsGrid = ({
+  category = "all",
+  search = "",
+  userId,
+  initialTools = [],
+  totalToolsCount = 0,
+  limit = 8,
+  page: propPage = 1,
+}: ToolsGridProps) => {
+  const [tools, setTools] = useState<Tool[]>(initialTools);
+  const [page, setPage] = useState(propPage);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(initialTools.length < totalToolsCount);
 
-  if (tools.length === 0) {
-    return (
-      <div className={css.empty}>
-        <h2 className={css.emptyTitle}>Нічого не знайдено</h2>
-        <p className={css.emptyText}>
-          Спробуйте обрати іншу категорію або скинути фільтри.
-        </p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    setTools(initialTools);
+    setHasMore(initialTools.length < totalToolsCount);
+    setPage(propPage);
+  }, [initialTools.length, totalToolsCount, propPage, category, search]);
 
-  const nextHref = `?${new URLSearchParams({
-    ...(category !== "all" && { category }),
-    ...(search && { search }),
-    page: String(page + 1),
-  }).toString()}`;
+  useEffect(() => {
+    if (page === 1 && initialTools.length > 0) return;
+
+    if (userId && page === 1) return;
+
+    const loadTools = async () => {
+      setIsLoading(true);
+      try {
+        const newTools: ToolsPageResponse = await fetchToolsPage(
+          page,
+          limit,
+          category,
+          search
+        );
+        const toolsData: Tool[] = Array.isArray(newTools)
+          ? newTools
+          : newTools.tools;
+
+        setTools((prev) => (page === 1 ? toolsData : [...prev, ...toolsData]));
+        setHasMore(toolsData.length === limit);
+      } catch (err) {
+        console.error("Помилка завантаження інструментів:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (!initialTools.length || page > 1 || (!userId && page === 1)) {
+      loadTools();
+    }
+  }, [page, category, search, userId, initialTools.length, limit]);
 
   return (
-    <>
+    <div>
       <ul className={css.toolsList}>
         {tools.map((tool) => (
           <li key={tool._id} className={css.toolsItem}>
@@ -51,13 +80,32 @@ export default async function ToolsGrid({
         ))}
       </ul>
 
-      {hasNext && (
-        <div className={css.loadMoreWrapper}>
-          <Link className={css.btn} href={nextHref} scroll={false}>
-            Показати більше
-          </Link>
+      {isLoading && tools.length === 0 && (
+        <div className={css.localLoaderWrapper}>
+          <span className={css.spinner}></span>
         </div>
       )}
-    </>
+
+      {!isLoading && tools.length === 0 && (
+        <div className={css.empty}>
+          <p className={css.emptyTitle}>Інструментів не знайдено</p>
+          <p className={css.emptyText}>Спробуйте змінити параметри пошуку</p>
+        </div>
+      )}
+
+      {hasMore && (
+        <div className={css.loadMoreWrapper}>
+          <button
+            onClick={() => setPage((p) => p + 1)}
+            className={css.btn}
+            disabled={isLoading}
+          >
+            {isLoading ? <span className={css.loader}></span> : "Показати ще"}
+          </button>
+        </div>
+      )}
+    </div>
   );
-}
+};
+
+export default ToolsGrid;
