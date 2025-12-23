@@ -1,12 +1,11 @@
 .footer {
   background-color: #f3e6f9;
-  margin-top: auto;
 }
 
 .container {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 20px 20px;
 }
 
 .top {
@@ -43,7 +42,7 @@
   color: #000;
   text-decoration: none;
   transition: color 0.3s ease;
-}  
+}
 
 .navLink::after {
   content: "";
@@ -110,7 +109,6 @@
   background-color: #6a069e;
 }
 
-
 .socials {
   display: flex;
   align-items: center;
@@ -133,7 +131,7 @@
 }
 
 .socialLink svg {
-    fill: currentColor; 
+  fill: currentColor;
 }
 
 .divider {
