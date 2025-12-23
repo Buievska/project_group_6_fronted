@@ -7,7 +7,12 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "ftp.goit.study",
         port: "",
-        pathname: "/img/tools-next/**",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
       },
       {
         protocol: "https",
@@ -25,7 +30,7 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api-proxy/:path*",
+        source: "/api/:path*",
         destination: "https://project-group-6-backend.onrender.com/api/:path*",
       },
     ];

@@ -14,27 +14,29 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 .year {
-  font-family: "Work Sans", sans-serif;
+  font-family: "Intel", sans-serif;
+  font-weight: 700;
   font-size: 16px;
-  font-weight: 600;
-  color: #000;
+  line-height: 1.5;
+  color: #000000;
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
 }
 
 .navBtn {
   background: none;
   border: none;
   font-size: 20px;
-  color: #000;
+  color: #000000;
   cursor: pointer;
   padding: 4px 8px;
   transition: opacity 0.2s;
@@ -46,10 +48,11 @@
 }
 
 .month {
-  font-family: "Work Sans", sans-serif;
+  font-family: "Intel", sans-serif;
+  font-weight: 700;
   font-size: 16px;
-  font-weight: 400;
-  color: #000;
+  line-height: 1.5;
+  color: #000000;
   min-width: 100px;
   text-align: center;
   text-transform: capitalize;
@@ -72,13 +75,13 @@
 }
 
 .weekday {
-  font-family: "Work Sans", sans-serif;
-  font-weight: 600;
-  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
   line-height: 1.5;
   text-align: center;
   color: #000;
-  padding: 12px 0;
+  padding: 15px 0;
   border-right: 2px solid #000;
   transition: border-color 0.2s;
 }
@@ -98,7 +101,7 @@
   align-items: center;
   justify-content: center;
 
-  font-family: "Work Sans", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 16px;
   line-height: 1.5;
@@ -131,19 +134,53 @@
 
 /* Дні поза поточним місяцем */
 .dayOutside {
-  color: rgba(0, 0, 0, 0.3);
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: center;
+  vertical-align: middle;
 }
 
 /* Сьогоднішній день */
+
 .dayToday {
-  font-weight: 700;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  text-align: center;
+  vertical-align: middle;
+  color: #a5b3bf;
+
+  position: relative;
+}
+
+.dayToday::after {
+  content: "";
+  position: absolute;
+
+  width: 24px;
+  height: 1px;
+
+  background-color: #a5b3bf;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* Заблоковані дати (минулі) */
 .dayDisabled {
-  color: rgba(0, 0, 0, 0.3);
+  font-family: Inter;
+  font-weight: 400;
+  color: rgba(34, 39, 48, 1);
   cursor: not-allowed;
   background-color: #f9f9f9;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: center;
+  vertical-align: middle;
 }
 
 /* Заброньовані дати */
@@ -214,17 +251,6 @@
 }
 
 /* Адаптивність */
-@media screen and (max-width: 767px) {
-  .day {
-    min-height: 44px;
-    font-size: 14px;
-  }
-
-  .weekday {
-    font-size: 14px;
-    padding: 8px 0;
-  }
-}
 
 @media screen and (min-width: 768px) {
   .day {
@@ -233,9 +259,21 @@
 }
 
 @media screen and (min-width: 1440px) {
+  .year {
+    font-size: 18px;
+  }
+
+  .month {
+    font-size: 18px;
+  }
+
   .day {
     min-height: 56px;
     width: 123px;
+  }
+
+  .weekday {
+    font-size: 20px;
   }
 
   .grid {

@@ -1,0 +1,217 @@
+.container {
+  --color-purple: #7e22ce;
+  --color-purple-hover: #6b21a8;
+  --color-purple-light: #e9d5ff;
+  --color-text-main: #111111;
+  --color-text-secondary: #757575;
+  --color-border: #e0e0e0;
+  --color-bg-grey: #f3f3f3;
+  --color-white: #ffffff;
+
+  width: 100%;
+  max-width: 335px;
+  margin: 0 auto;
+  padding: 40px 0 80px;
+  font-family: inherit;
+  color: var(--color-text-main);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 32px;
+  text-align: left;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.avatarSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.avatarWrapper {
+  width: 100px;
+  height: 100px;
+  background-color: var(--color-bg-grey);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: 600;
+  color: #555;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  position: relative;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-main);
+}
+
+.input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font-size: 16px;
+  outline: none;
+  background-color: var(--color-white);
+  box-sizing: border-box;
+  transition: all 0.2s ease-in-out;
+}
+
+.input:focus {
+  border-color: var(--color-purple);
+  box-shadow: 0 0 0 1px var(--color-purple);
+}
+
+.input:disabled {
+  background-color: #fafafa;
+  color: var(--color-text-secondary);
+  border-color: #eeeeee;
+  cursor: not-allowed;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.btn {
+  flex: 1;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.btnPrimary {
+  background-color: var(--color-purple);
+  color: var(--color-white);
+  border: 1px solid var(--color-purple);
+}
+
+.btnPrimary:hover,
+.btnPrimary:focus {
+  background-color: var(--color-white);
+  color: var(--color-purple);
+  border: 1px solid var(--color-purple);
+}
+
+.btnPrimary:active {
+  background-color: var(--color-purple-hover);
+  color: var(--color-white);
+  border-color: var(--color-purple-hover);
+}
+
+.btnPrimary:disabled {
+  background-color: var(--color-purple-light);
+  border-color: var(--color-purple-light);
+  color: var(--color-white);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btnSecondary {
+  background-color: var(--color-white);
+  color: var(--color-text-main);
+  border: 1px solid var(--color-text-main);
+}
+
+.btnSecondary:hover,
+.btnSecondary:focus {
+  background-color: var(--color-white);
+  color: var(--color-purple);
+  border: 1px solid var(--color-purple);
+}
+
+.btnSecondary:active {
+  background-color: #f5f3ff;
+  border-color: var(--color-purple-hover);
+  color: var(--color-purple-hover);
+}
+
+.uploadBtn {
+  background-color: var(--color-bg-grey);
+  color: var(--color-text-main);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  display: inline-block;
+}
+
+.uploadBtn:hover {
+  background-color: #e5e5e5;
+  color: var(--color-purple);
+}
+
+.uploadBtn:active {
+  background-color: #d4d4d4;
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 656px;
+    padding-top: 64px;
+  }
+
+  .title {
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .form {
+    background: var(--color-white);
+    padding: 48px;
+    border-radius: 24px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .buttonGroup {
+    gap: 24px;
+    justify-content: center;
+  }
+
+  .btn {
+    flex: initial;
+    width: 200px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .container {
+    padding-top: 30px;
+  }
+}

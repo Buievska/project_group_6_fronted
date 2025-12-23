@@ -3,19 +3,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { AxiosError } from "axios";
 
-import {
-  getUserProfile,
-  getUserTools,
-  getCurrentAuthUser,
-} from "@/lib/api/serverApi";
-
-import { UserProfile } from "@/components/UserProfile/UserProfile";
-import ToolsGrid from "@/components/ToolsGrid/ToolsGrid";
-import { ProfilePlaceholder } from "@/components/ProfilePlaceholder/ProfilePlaceholder";
+import { getUserProfile, getUserTools } from "@/lib/api/serverApi";
+import ProfileTabs from "@/components/ProfileTabs/ProfileTabs";
 
 import css from "./Profile.module.css";
-
-const TOOLS_PER_PAGE = 8;
 
 export const dynamic = "force-dynamic";
 
@@ -44,41 +35,22 @@ export default async function ProfilePage({
   const { userId } = await params;
 
   try {
-    const [targetUser, toolsData, currentAuthUser] = await Promise.all([
+    const [targetUser, toolsData] = await Promise.all([
       getUserProfile(userId),
       getUserTools(userId),
-      getCurrentAuthUser(),
     ]);
 
     const initialTools = toolsData?.tools || [];
     const totalCount = toolsData?.total || 0;
 
-    const isOwner =
-      currentAuthUser && String(currentAuthUser.id) === String(targetUser.id);
-    const hasTools = initialTools.length > 0;
-
     return (
       <main className={css.mainContent}>
-        <section className={css.profileHeader}>
-          <UserProfile
-            userName={targetUser.name}
-            avatarUrl={targetUser.avatar}
-            isOwner={!!isOwner}
-          />
-        </section>
-
-        <h2 className={css.sectionTitle}>Інструменти користувача</h2>
-
-        {hasTools ? (
-          <ToolsGrid
-            userId={userId}
-            initialTools={initialTools}
-            totalToolsCount={totalCount}
-            limit={TOOLS_PER_PAGE}
-          />
-        ) : (
-          <ProfilePlaceholder isOwner={!!isOwner} />
-        )}
+        <ProfileTabs
+          user={targetUser}
+          initialTools={initialTools}
+          totalToolsCount={totalCount}
+          userId={userId}
+        />
       </main>
     );
   } catch (error) {

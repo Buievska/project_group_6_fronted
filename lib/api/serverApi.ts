@@ -1,3 +1,4 @@
+// lib/api/serverApi.ts
 import axios from "axios";
 import { cookies } from "next/headers";
 import { UserProfile } from "@/types/user";
@@ -8,31 +9,23 @@ export interface ToolsResponse {
   total: number;
 }
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api-proxy";
+const BASE_URL = "https://project-group-6-backend.onrender.com/api";
 
-const getAuthHeaders = async (isMultipart = false) => {
+const getCookieHeaders = async () => {
   const cookieStore = await cookies();
-
-  const token =
-    cookieStore.get("accessToken")?.value ||
-    cookieStore.get("auth_token")?.value;
-
   return {
     headers: {
-      Authorization: token ? `Bearer ${token}` : "",
-      "Content-Type": isMultipart ? "multipart/form-data" : "application/json",
+      Cookie: cookieStore.toString(),
     },
   };
 };
 
 export async function getCurrentAuthUser(): Promise<UserProfile | null> {
   try {
-    const config = await getAuthHeaders();
-    if (!config.headers.Authorization) return null;
+    const config = await getCookieHeaders();
 
     const response = await axios.get(`${BASE_URL}/users/current`, config);
-    const userData = response.data.data;
+    const userData = response.data.data || response.data;
 
     if (!userData) return null;
 
@@ -41,7 +34,6 @@ export async function getCurrentAuthUser(): Promise<UserProfile | null> {
       name: userData.name,
       email: userData.email,
       avatar: userData.avatarUrl || userData.avatar,
-
       _id: userData._id,
       avatarUrl: userData.avatarUrl,
     } as UserProfile;
@@ -53,28 +45,31 @@ export async function getCurrentAuthUser(): Promise<UserProfile | null> {
 export async function getUserProfile(userId: string): Promise<UserProfile> {
   const response = await axios.get(`${BASE_URL}/users/${userId}`);
   const data = response.data;
-
   return {
     id: data.id || data._id,
     name: data.name,
     avatar: data.avatarUrl || data.avatar,
     email: "",
-
     _id: data._id || data.id,
     avatarUrl: data.avatarUrl,
   } as UserProfile;
 }
 
 export async function getUserTools(userId: string): Promise<ToolsResponse> {
-  const response = await axios.get(`${BASE_URL}/users/${userId}/tools`);
-
+  const response = await axios.get(`${BASE_URL}/users/${userId}/tools`, {
+    params: {
+      page: 1,
+      perPage: 100,
+    },
+  });
+  const data = response.data;
   return {
-    tools: response.data.tools || [],
-    total: response.data.totalItems || 0,
+    tools: data.tools || [],
+    total: data.totalItems || 0,
   };
 }
 
 export async function deleteTool(toolId: string): Promise<void> {
-  const config = await getAuthHeaders();
+  const config = await getCookieHeaders();
   await axios.delete(`${BASE_URL}/tools/${toolId}`, config);
 }

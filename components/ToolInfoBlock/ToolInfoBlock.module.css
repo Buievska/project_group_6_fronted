@@ -113,6 +113,8 @@
   margin: 0;
   white-space: pre-line;
   margin-top: 24px;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 .specsList {
@@ -155,6 +157,58 @@
 
 .bookBtn:hover {
   background-color: #6a069e;
+}
+
+.actions {
+  margin-top: 32px;
+}
+
+.ownerButtons {
+  display: flex;
+  gap: 12px;
+}
+
+.editBtn,
+.deleteBtn,
+.bookBtn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.editBtn {
+  background-color: #8808cc;
+  color: white;
+  flex: 1;
+}
+
+.editBtn:hover {
+  background-color: #7106aa;
+}
+
+.deleteBtn {
+  background-color: #fff;
+  color: #ff4d4f;
+  border: 1px solid #ff4d4f;
+  flex: 1;
+}
+
+.deleteBtn:hover {
+  background-color: #fff1f0;
+}
+
+.deleteBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bookBtn {
+  background-color: #8808cc;
+  color: white;
+  width: 100%;
 }
 
 @media (min-width: 768px) {

@@ -8,12 +8,11 @@ const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
   title: "ToolNext - Платформа для інструментів",
-  description: "ToolNext — платформа для швидкої та зручної оренди інструментів",
-
+  description:
+    "ToolNext — платформа для швидкої та зручної оренди інструментів",
   icons: {
     icon: "/favicon.svg",
   },
-
   openGraph: {
     title: "ToolNext",
     description: "Платформа для швидкої та зручної оренди інструментів",

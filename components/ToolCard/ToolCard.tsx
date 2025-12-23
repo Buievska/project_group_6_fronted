@@ -11,16 +11,18 @@ type Props = {
 export default function ToolCard({ tool }: Props) {
   return (
     <div className={css.card}>
-      <Image
-        src={tool.images}
-        alt={tool.name}
-        width={335}
-        height={412}
-        className={css.image}
-      />
+      <div className={css.imageWrapper}>
+        <Image
+          src={tool.images}
+          alt={tool.name}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+          className={css.image}
+        />
+      </div>
 
       <div className={css.info}>
-        <StarRating rating={tool.rating} />
+        <StarRating rating={Number(tool.rating) || 0} />
         <p className={css.name}>{tool.name}</p>
         <p className={css.price}>{tool.pricePerDay} грн/день</p>
       </div>

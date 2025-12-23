@@ -4,7 +4,6 @@ import FeaturedToolsBlock from "@/components/FeaturedToolsBlock/FeaturedToolsBlo
 import FeedbacksBlock from "@/components/FeedbacksBlock/FeedbacksBlock";
 import { RegistrationBlock } from "@/components/RegistrationBlock/RegistrationBlock";
 import HeroBlock from "@/components/HeroBlock/HeroBlock";
-// import BookingToolForm from "@/components/BookingToolForm/BookingToolForm";
 
 export default function HomePage() {
   return (
@@ -19,7 +18,6 @@ export default function HomePage() {
       <FeedbacksBlock />
       {/* 5. RegistrationBlock: Пропозиція реєстрації */}
       <RegistrationBlock />
-      {/* <BookingToolForm /> */}
     </main>
   );
 }

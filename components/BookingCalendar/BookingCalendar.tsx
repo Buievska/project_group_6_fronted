@@ -17,15 +17,12 @@ import {
   startOfDay,
 } from "date-fns";
 import { uk } from "date-fns/locale";
+import toast from "react-hot-toast";
 import styles from "./BookingCalendar.module.css";
-
-interface DateRange {
-  from: Date | null;
-  to: Date | null;
-}
+import { BookedRange, DateRange } from "@/types/booking";
 
 interface BookingCalendarProps {
-  bookedDates?: Date[];
+  bookedRanges?: BookedRange[];
   value: DateRange;
   onChange: (range: DateRange) => void;
   error?: string;
@@ -33,12 +30,7 @@ interface BookingCalendarProps {
 
 const WEEKDAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"];
 
-export default function BookingCalendar({
-  bookedDates = [],
-  value,
-  onChange,
-  error,
-}: BookingCalendarProps) {
+export default function BookingCalendar({ bookedRanges = [], value, onChange, error }: BookingCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [hoverDate, setHoverDate] = useState<Date | null>(null);
 
@@ -61,21 +53,14 @@ export default function BookingCalendar({
     return days;
   }, [currentMonth]);
 
-  const isDateBooked = (date: Date): boolean => {
-    return bookedDates.some((bookedDate) => isSameDay(date, bookedDate));
-  };
+  const isDateBooked = (date: Date) => bookedRanges.some(range => date >= range.from && date <= range.to);
 
-  const isDatePast = (date: Date): boolean => {
-    return isBefore(date, today);
-  };
+  const isDatePast = (date: Date) => isBefore(date, today);
 
-  const isDateDisabled = (date: Date): boolean => {
-    return isDatePast(date) || isDateBooked(date);
-  };
+  const isDateDisabled = (date: Date) => isDatePast(date) || isDateBooked(date);
 
-  const isInRange = (date: Date): boolean => {
+  const isInRange = (date: Date) => {
     if (!value.from) return false;
-
     const endDate = value.to || hoverDate;
     if (!endDate) return false;
 
@@ -85,8 +70,21 @@ export default function BookingCalendar({
     return isWithinInterval(date, { start, end });
   };
 
+  // Функція для пошуку наступного вільного періоду
+  const findNextAvailableRange = (durationDays: number): { from: Date; to: Date } => {
+    const sorted = [...bookedRanges].sort((a, b) => a.to.getTime() - b.to.getTime());
+    const lastBooked = sorted[sorted.length - 1];
+    const from = new Date(lastBooked.to);
+    from.setDate(from.getDate() + 1);
+
+    const to = new Date(from);
+    to.setDate(to.getDate() + durationDays);
+
+    return { from, to };
+  };
+
   const handleDateClick = (date: Date) => {
-    if (isDateDisabled(date)) return;
+    if (isDatePast(date)) return;
 
     let newRange: DateRange;
 
@@ -100,43 +98,38 @@ export default function BookingCalendar({
       } else {
         newRange = { from: value.from, to: date };
       }
+
+      // Перевірка перетину з бронюванням
+      if (newRange.from && newRange.to) {
+        const conflict = bookedRanges.find(b => newRange.from! <= b.to && newRange.to! >= b.from);
+
+        if (conflict) {
+          const duration = Math.ceil((newRange.to.getTime() - newRange.from.getTime()) / (1000 * 60 * 60 * 24)) || 1;
+
+          const nextRange = findNextAvailableRange(duration);
+
+          toast.error(
+            `Обраний період зайнятий.\nНайближчі вільні дати: ${nextRange.from.toLocaleDateString()} – ${nextRange.to.toLocaleDateString()}`,
+          );
+
+          newRange = { from: nextRange.from, to: nextRange.to };
+        }
+      }
     }
 
     onChange(newRange);
   };
 
-  const getDayClasses = (date: Date): string => {
+  const getDayClasses = (date: Date) => {
     const classes = [styles.day];
 
-    if (!isSameMonth(date, currentMonth)) {
-      classes.push(styles.dayOutside);
-    }
-
-    if (isSameDay(date, today)) {
-      classes.push(styles.dayToday);
-    }
-
-    if (isDateBooked(date)) {
-      classes.push(styles.dayBooked);
-      return classes.join(" ");
-    }
-
-    if (isDatePast(date)) {
-      classes.push(styles.dayDisabled);
-      return classes.join(" ");
-    }
-
-    if (value.from && isSameDay(date, value.from)) {
-      classes.push(styles.dayRangeStart);
-    }
-
-    if (value.to && isSameDay(date, value.to)) {
-      classes.push(styles.dayRangeEnd);
-    }
-
-    if (isInRange(date)) {
-      classes.push(styles.dayInRange);
-    }
+    if (!isSameMonth(date, currentMonth)) classes.push(styles.dayOutside);
+    if (isSameDay(date, today)) classes.push(styles.dayToday);
+    if (isDateBooked(date)) classes.push(styles.dayBooked);
+    if (isDatePast(date)) classes.push(styles.dayDisabled);
+    if (value.from && isSameDay(date, value.from)) classes.push(styles.dayRangeStart);
+    if (value.to && isSameDay(date, value.to)) classes.push(styles.dayRangeEnd);
+    if (isInRange(date)) classes.push(styles.dayInRange);
 
     return classes.join(" ");
   };
@@ -144,17 +137,16 @@ export default function BookingCalendar({
   const monthName = format(currentMonth, "LLLL", { locale: uk });
   const year = format(currentMonth, "yyyy");
 
-  // Текст для обраних дат
   const getSelectionText = (): string | null => {
     if (!value.from) return null;
-
     if (value.to) {
       if (isSameDay(value.from, value.to)) {
         return `Обрано: ${format(value.from, "d MMMM yyyy", { locale: uk })}`;
       }
-      return `Обрано: ${format(value.from, "d MMMM", { locale: uk })} – ${format(value.to, "d MMMM yyyy", { locale: uk })}`;
+      return `Обрано: ${format(value.from, "d MMMM", { locale: uk })} – ${format(value.to, "d MMMM yyyy", {
+        locale: uk,
+      })}`;
     }
-
     return "Оберіть кінцеву дату";
   };
 
@@ -164,7 +156,6 @@ export default function BookingCalendar({
   return (
     <div className={`${styles.calendar} ${hasError ? styles.calendarError : ""}`}>
       <div className={styles.calendarContainer}>
-        {/* Заголовок з навігацією */}
         <div className={styles.header}>
           <span className={styles.year}>{year}</span>
           <div className={styles.nav}>
@@ -188,29 +179,24 @@ export default function BookingCalendar({
           </div>
         </div>
 
-        {/* Таблиця з заокругленими кутами */}
         <div className={styles.table}>
-          {/* Дні тижня */}
           <div className={styles.weekdays}>
-            {WEEKDAYS.map((day) => (
+            {WEEKDAYS.map(day => (
               <div key={day} className={styles.weekday}>
                 {day}
               </div>
             ))}
           </div>
 
-          {/* Сітка днів */}
           <div className={styles.grid}>
-            {calendarDays.map((date, index) => (
+            {calendarDays.map((date, idx) => (
               <button
-                key={index}
+                key={idx}
                 type="button"
                 className={getDayClasses(date)}
                 onClick={() => handleDateClick(date)}
                 onMouseEnter={() => {
-                  if (value.from && !value.to && !isDateDisabled(date)) {
-                    setHoverDate(date);
-                  }
+                  if (value.from && !value.to && !isDateDisabled(date)) setHoverDate(date);
                 }}
                 onMouseLeave={() => setHoverDate(null)}
                 disabled={isDateDisabled(date)}
@@ -223,11 +209,7 @@ export default function BookingCalendar({
         </div>
       </div>
 
-      {/* Показуємо або обрані дати, або помилку */}
-      {selectionText && !hasError && (
-        <p className={styles.selection}>{selectionText}</p>
-      )}
-
+      {selectionText && !hasError && <p className={styles.selection}>{selectionText}</p>}
       {hasError && <span className={styles.error}>{error}</span>}
     </div>
   );
