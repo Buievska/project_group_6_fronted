@@ -11,27 +11,10 @@ export default function PublicLayout({
   return (
     <TanStackProvider>
       <AuthProvider>
-      <div
-          style={{
-            minHeight: "100vh",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Header />
-          <main
-             style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            {children}
-          </main>
-          <Footer />
-        </div> 
+        <Header />
+        <main>{children}</main>
+        <Footer />
       </AuthProvider>
     </TanStackProvider>
   );
 }
-

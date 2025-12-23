@@ -11,6 +11,7 @@ import { useAuthStore } from "@/lib/store/authStore";
 import css from "./ProfileTabs.module.css";
 import gridCss from "@/components/ToolsGrid/ToolsGrid.module.css";
 import { Tool } from "@/types/tool";
+import FeedbacksBlock from "../FeedbacksBlock/FeedbacksBlock"; // Імпортуйте ваш блок відгуків
 
 import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
 
