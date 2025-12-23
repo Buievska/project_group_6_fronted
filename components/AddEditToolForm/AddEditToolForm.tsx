@@ -90,6 +90,7 @@ export default function AddEditToolForm({
   const [preview, setPreview] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
 
+
   useEffect(() => {
     getCategories()
       .then((res: Category[] | CategoriesResponse) => {
