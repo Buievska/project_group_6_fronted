@@ -53,31 +53,51 @@ type Props = {
 
 const validationSchema: Yup.Schema<ToolFormValues> = Yup.object({
   name: Yup.string()
-    .min(3, "Назва має містити мінімум 3 символи")
-    .required("Вкажіть назву"),
+    .trim()
+    .min(3, "Назва повинна містити щонайменше 3 символи")
+    .max(80, "Назва занадто довга")
+    .required("Вкажіть назву інструменту"),
 
   pricePerDay: Yup.number()
-    .positive("Ціна має бути більше 0")
-    .required("Вкажіть ціну"),
+    .typeError("Ціна має бути числом")
+    .min(1, "Ціна повинна бути більшою за 0")
+    .required("Вкажіть ціну за день"),
+
   categoryId: Yup.string().required("Оберіть категорію"),
-  rentalTerms: Yup.string().required("Вкажіть умови оренди"),
-  description: Yup.string().required("Вкажіть опис"),
-  specifications: Yup.string().required("Вкажіть характеристики"),
+
+  rentalTerms: Yup.string()
+    .min(10, "Опишіть умови оренди детальніше")
+    .required("Вкажіть умови оренди"),
+
+  description: Yup.string()
+    .min(20, "Опис має містити мінімум 20 символів")
+    .required("Додайте опис інструменту"),
+
+  specifications: Yup.string()
+    .required("Вкажіть характеристики")
+    .test(
+      "spec-format",
+      "Формат: Назва: Значення (кожен пункт з нового рядка)",
+      (value) =>
+        Boolean(
+          value
+            ?.split("\n")
+            .every((line) => line.includes(":") && line.split(":")[1]?.trim())
+        )
+    ),
+
   images: Yup.mixed<File>()
     .optional()
     .test(
       "fileSize",
-      "Файл завеликий (макс 5MB)",
-      (value) =>
-        !value || (value instanceof File && value.size <= 5 * 1024 * 1024)
+      "Максимальний розмір зображення — 1 MB",
+      (file) => !file || file.size <= 1 * 1024 * 1024
     )
     .test(
       "fileType",
-      "Тільки .jpg або .png",
-      (value) =>
-        !value ||
-        (value instanceof File &&
-          ["image/jpeg", "image/png", "image/webp"].includes(value.type))
+      "Дозволені формати: JPG, PNG, WEBP",
+      (file) =>
+        !file || ["image/jpeg", "image/png", "image/webp"].includes(file.type)
     ),
 });
 
@@ -89,7 +109,6 @@ export default function AddEditToolForm({
   const router = useRouter();
   const [preview, setPreview] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
-
 
   useEffect(() => {
     getCategories()
@@ -173,6 +192,8 @@ export default function AddEditToolForm({
       enableReinitialize
       initialValues={formInitialValues}
       validationSchema={validationSchema}
+      validateOnBlur
+      validateOnChange={false}
       onSubmit={handleSubmit}
     >
       {({ setFieldValue, isSubmitting }) => (
