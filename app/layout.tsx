@@ -16,10 +16,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ToolNext",
     description: "Платформа для швидкої та зручної оренди інструментів",
-    url: "https://toolnext.app", // підставити сюди реальну URL коли буде
+    url: "https://project-group-6-fronted.vercel.app",
     siteName: "ToolNext",
     type: "website",
-
     images: [
       {
         url: "/og-toolnext.jpg",
@@ -29,6 +28,7 @@ export const metadata: Metadata = {
       },
     ],
   },
+
   twitter: {
     card: "summary_large_image",
     title: "ToolNext",
