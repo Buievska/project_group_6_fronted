@@ -56,10 +56,16 @@ export async function getUserProfile(userId: string): Promise<UserProfile> {
 }
 
 export async function getUserTools(userId: string): Promise<ToolsResponse> {
-  const response = await axios.get(`${BASE_URL}/users/${userId}/tools`);
+  const response = await axios.get(`${BASE_URL}/users/${userId}/tools`, {
+    params: {
+      page: 1,
+      perPage: 100,
+    },
+  });
+  const data = response.data;
   return {
-    tools: response.data.tools || [],
-    total: response.data.totalItems || 0,
+    tools: data.tools || [],
+    total: data.totalItems || 0,
   };
 }
 
