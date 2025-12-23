@@ -65,7 +65,7 @@ const validationSchema: Yup.Schema<ToolFormValues> = Yup.object({
 
   categoryId: Yup.string().required("Оберіть категорію"),
 
-  rentalConditions: Yup.string()
+  rentalTerms: Yup.string()
     .min(10, "Опишіть умови оренди детальніше")
     .required("Вкажіть умови оренди"),
 
@@ -97,9 +97,7 @@ const validationSchema: Yup.Schema<ToolFormValues> = Yup.object({
       "fileType",
       "Дозволені формати: JPG, PNG, WEBP",
       (file) =>
-        !file ||
-        ["image/jpeg", "image/png", "image/webp"].includes(file.type)
-
+        !file || ["image/jpeg", "image/png", "image/webp"].includes(file.type)
     ),
 });
 
@@ -111,7 +109,6 @@ export default function AddEditToolForm({
   const router = useRouter();
   const [preview, setPreview] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
-
 
   useEffect(() => {
     getCategories()
@@ -192,14 +189,13 @@ export default function AddEditToolForm({
 
   return (
     <Formik
-  enableReinitialize
-  initialValues={formInitialValues}
-  validationSchema={validationSchema}
-  validateOnBlur
-  validateOnChange={false}
-  onSubmit={handleSubmit}
->
-
+      enableReinitialize
+      initialValues={formInitialValues}
+      validationSchema={validationSchema}
+      validateOnBlur
+      validateOnChange={false}
+      onSubmit={handleSubmit}
+    >
       {({ setFieldValue, isSubmitting }) => (
         <Form className={styles.formWrapper}>
           <div className={styles.leftSide}>
