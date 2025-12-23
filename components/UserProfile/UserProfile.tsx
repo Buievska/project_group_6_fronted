@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import StarRating from "../FeedbacksBlock/StarRating";
+
 import css from "./UserProfile.module.css";
 import { useAuthStore } from "@/lib/store/authStore";
 
@@ -19,8 +19,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   userName,
   avatarUrl,
   profileId,
-  averageRating = 0,
-  totalFeedbacks = 0,
 }) => {
   const avatarLetter = userName ? userName.charAt(0).toUpperCase() : "?";
 
@@ -71,32 +69,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({
         <div className={css.contactInfo}>
           <p className={css.subText}>Профіль учасника спільноти ToolNext</p>
         </div> */}
-
-           {/* Блок з рейтингом */}
-           <div className={css.ratingSection}>
-          {totalFeedbacks > 0 ? (
-            <>
-              <div className={css.starsWrapper}>
-                <StarRating rating={averageRating} />
-                <span className={css.ratingNumber}>{averageRating.toFixed(1)}</span>
-              </div>
-              <p className={css.feedbacksCount}>
-                {totalFeedbacks} {totalFeedbacks === 1 ? 'відгук' : 
-                  totalFeedbacks < 5 ? 'відгуки' : 'відгуків'}
-              </p>
-            </>
-          ) : (
-            <div className={css.noFeedbacks}>
-              <p className={css.noFeedbacksText}>
-                У цього користувача немає жодного відгуку.
-              </p>
-              <p className={css.noFeedbacksSubtext}>
-                Ми впевнені скоро їх буде значно більше!
-              </p>
-            </div>
-          )}
-        </div>
-
       </div>
     </div>
   );
