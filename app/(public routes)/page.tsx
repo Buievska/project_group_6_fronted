@@ -10,16 +10,12 @@ export default function HomePage() {
     <main className={styles.main}>
       {/* 1. HeroBlock: Заголовок та пошук */}
       <HeroBlock />
-
       {/* 2. BenefitsBlock: Переваги */}
       <BenefitsBlock />
-
       {/* 3. FeaturedToolsBlock: Популярні інструменти */}
       <FeaturedToolsBlock />
-
       {/* 4. FeedbacksBlock: Відгуки (свайпер) */}
       <FeedbacksBlock />
-
       {/* 5. RegistrationBlock: Пропозиція реєстрації */}
       <RegistrationBlock />
     </main>

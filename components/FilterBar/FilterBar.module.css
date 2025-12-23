@@ -1,0 +1,74 @@
+.select {
+  width: 335px;
+  height: 40px;
+  border: 2px solid black;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 24px;
+}
+
+.filter_button {
+  position: relative; /* ✅ anchor for ::after */
+  display: inline-block; /* ✅ underline fits text width */
+  background-color: transparent;
+  border: none;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  color: var(--color-neutral-darkest);
+  text-align: left;
+  text-decoration: none; /* ✅ remove default underline */
+  margin-bottom: 32px;
+}
+
+.filter_button:hover {
+  color: black;
+}
+
+.filter_button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 0;
+  height: 2px;
+  background: black;
+  transition:
+    width 0.3s ease,
+    left 0.3s ease;
+}
+
+.filter_button:hover::after,
+.filter_button:focus-visible::after {
+  width: 100%;
+  left: 0;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 335px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .wrapper {
+    max-width: 768px;
+
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .filter_button {
+    margin-bottom: 0px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .wrapper {
+    max-width: 1440px;
+  }
+}

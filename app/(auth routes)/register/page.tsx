@@ -10,7 +10,6 @@ import { register } from "@/lib/api/clientApi";
 import { useAuthStore } from "@/lib/store/authStore";
 import { User } from "@/types/user";
 import Image from "next/image";
-import registerImage from "../../../public/img/registerImage.jpg";
 
 /* ================= TYPES ================= */
 
@@ -97,7 +96,7 @@ export default function RegisterPage() {
       <div className={styles.formSide}>
         <div className={styles.navbar}>
           <Link href="/" className={styles.logoLink}>
-            <Image src="/Logo.svg" alt="RentTools" width={124} height={20} />
+            <Image src="/logo.svg" alt="RentTools" width={124} height={20} />
           </Link>
         </div>
 
@@ -120,9 +119,7 @@ export default function RegisterPage() {
                   Імʼя*
                 </label>
                 <Field
-                  className={`${styles.inputField} ${
-                    errors.username && touched.username ? styles.inputError : ""
-                  }`}
+                  className={`${styles.inputField} ${errors.username && touched.username ? styles.inputError : ""}`}
                   name="username"
                   id={`${fieldId}-username`}
                   placeholder="Ваше ім'я"
@@ -139,9 +136,7 @@ export default function RegisterPage() {
                   Пошта*
                 </label>
                 <Field
-                  className={`${styles.inputField} ${
-                    errors.email && touched.email ? styles.inputError : ""
-                  }`}
+                  className={`${styles.inputField} ${errors.email && touched.email ? styles.inputError : ""}`}
                   name="email"
                   type="email"
                   id={`${fieldId}-email`}
@@ -159,9 +154,7 @@ export default function RegisterPage() {
                   Пароль*
                 </label>
                 <Field
-                  className={`${styles.inputField} ${
-                    errors.password && touched.password ? styles.inputError : ""
-                  }`}
+                  className={`${styles.inputField} ${errors.password && touched.password ? styles.inputError : ""}`}
                   name="password"
                   type="password"
                   id={`${fieldId}-password`}
@@ -229,10 +222,10 @@ export default function RegisterPage() {
       {/* ПРАВА ЧАСТИНА (Картинка) */}
       <div className={styles.imageSide}>
         <Image
-          src={registerImage}
+          src="/img/register-placeholder.jpg"
           alt="Registration illustration"
+          fill
           className={styles.registerImage}
-          priority
         />
       </div>
     </div>
