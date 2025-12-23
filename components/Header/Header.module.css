@@ -10,7 +10,6 @@
 
 .containerHeader {
   width: 100%;
-  max-width: 1440px;
   margin: 0 auto;
   padding: 0 20px;
   height: 72px;
@@ -225,9 +224,17 @@
 
 /* ================= MEDIA QUERIES ================= */
 
+@media (min-width: 375px) {
+  .containerHeader {
+    max-width: 375px;
+    padding: 0 20px;
+  }
+}
+
 /* -------- TABLET (768px+) -------- */
 @media (min-width: 768px) {
   .containerHeader {
+    max-width: 768px;
     padding: 0 32px;
   }
 
@@ -243,12 +250,13 @@
 
 /* -------- DESKTOP (1440px+) -------- */
 @media (min-width: 1440px) {
-  .burger {
-    display: none;
+  .containerHeader {
+    max-width: 1440px;
+    padding: 0 64px;
   }
 
-  .containerHeader {
-    padding: 0 64px;
+  .burger {
+    display: none;
   }
 
   .headerRight {
@@ -287,13 +295,11 @@
   .userActions {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 16px;
   }
 
   .registerBtn {
     border: 1px solid rgb(136, 8, 204);
-    background-color: rgb(136, 8, 204);
-
     display: block;
     padding: 10px 24px;
     background-color: #8808cc;
@@ -319,18 +325,26 @@
   .publishBtn {
     display: block;
     padding: 10px 24px;
+    border: 1px solid rgb(136, 8, 204);
     background-color: #8808cc;
     color: #fff;
     border-radius: 8px;
     font-size: 14px;
     font-weight: 600;
     text-decoration: none;
-    transition: background-color 0.2s;
+    transition: background-color 0.3s ease;
     white-space: nowrap;
   }
 
-  .publishBtn:hover {
-    background-color: #6a069e;
+  .publishBtn:hover,
+  .publishBtn:focus {
+    color: black;
+    background-color: white;
+  }
+
+  .publishBtn:active {
+    color: white;
+    background-color: #e7cdf4;
   }
 
   /* Інфо користувача */
