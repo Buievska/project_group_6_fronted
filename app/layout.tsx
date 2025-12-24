@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-toolnext.jpg",
+        url: "@/public/img/og-toolnext.jpg",
         width: 1200,
         height: 630,
         alt: "ToolNext preview",
