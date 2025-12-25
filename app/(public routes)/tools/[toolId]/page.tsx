@@ -49,7 +49,11 @@ export default function ToolDetailsPage() {
 
   const currentUserId = currentUser?._id || currentUser?.id;
 
-  const toolOwnerId = (tool.owner as any)?._id || (tool.owner as any);
+  type Owner = string | { _id: string };
+
+  const owner = tool.owner as Owner;
+
+  const toolOwnerId = typeof owner === "string" ? owner : owner._id;
 
   const isOwner = !!(
     currentUserId &&

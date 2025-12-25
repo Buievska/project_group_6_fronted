@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 
 export const API_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
@@ -12,9 +12,15 @@ export const $api = axios.create({
 });
 
 let isRefreshing = false;
-let failedQueue: any[] = [];
 
-const processQueue = (error: any, token: string | null = null) => {
+type QueueItem = {
+  resolve: (value?: unknown) => void;
+  reject: (reason?: unknown) => void;
+};
+
+let failedQueue: QueueItem[] = [];
+
+const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
@@ -22,14 +28,16 @@ const processQueue = (error: any, token: string | null = null) => {
       prom.resolve(token);
     }
   });
+
   failedQueue = [];
 };
-// ----------------------
 
 $api.interceptors.response.use(
   (config) => config,
-  async (error) => {
-    const originalRequest = error.config;
+  async (error: AxiosError) => {
+    const originalRequest = error.config as AxiosRequestConfig & {
+      _isRetry?: boolean;
+    };
 
     if (
       error.response?.status === 401 &&
@@ -39,15 +47,11 @@ $api.interceptors.response.use(
       originalRequest.url !== "/auth/logout"
     ) {
       if (isRefreshing) {
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
-          .then(() => {
-            return $api.request(originalRequest);
-          })
-          .catch((err) => {
-            return Promise.reject(err);
-          });
+          .then(() => $api.request(originalRequest))
+          .catch((err) => Promise.reject(err));
       }
 
       originalRequest._isRetry = true;
@@ -65,19 +69,24 @@ $api.interceptors.response.use(
         processQueue(refreshError, null);
 
         console.error("Сесія повністю прострочена");
+
         if (typeof window !== "undefined") {
           localStorage.removeItem("isLoggedIn");
           window.location.href = "/login";
         }
+
         return Promise.reject(refreshError);
       }
     }
 
     if (
       error.response?.status === 401 &&
-      originalRequest.url === "/auth/logout"
+      originalRequest?.url === "/auth/logout"
     ) {
-      if (typeof window !== "undefined") window.location.href = "/login";
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
+
       return Promise.resolve();
     }
 
