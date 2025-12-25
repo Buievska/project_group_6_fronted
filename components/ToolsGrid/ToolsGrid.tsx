@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Tool } from "@/types/tool";
 import { fetchToolsPage } from "@/lib/api/clientApi";
 import css from "./ToolsGrid.module.css";
@@ -9,19 +9,15 @@ import ToolCard from "../ToolCard/ToolCard";
 interface ToolsGridProps {
   category?: string;
   search?: string;
-  userId?: string;
   initialTools?: Tool[];
   totalToolsCount?: number;
   limit?: number;
   page?: number;
 }
 
-type ToolsPageResponse = Tool[] | { tools: Tool[] };
-
 const ToolsGrid = ({
   category = "all",
   search = "",
-  userId,
   initialTools = [],
   totalToolsCount = 0,
   limit = 8,
@@ -30,45 +26,52 @@ const ToolsGrid = ({
   const [tools, setTools] = useState<Tool[]>(initialTools);
   const [page, setPage] = useState(propPage);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(initialTools.length < totalToolsCount);
+  const [hasMore, setHasMore] = useState(totalToolsCount > initialTools.length);
 
-  useEffect(() => {
-    setTools(initialTools);
-    setHasMore(initialTools.length < totalToolsCount);
-    setPage(propPage);
-  }, [initialTools, totalToolsCount, propPage, category, search]);
+  const isFirstRender = useRef(true);
 
-  useEffect(() => {
-    if (page === 1 && initialTools.length > 0) return;
+  const loadTools = async (targetPage: number, shouldReset: boolean) => {
+    setIsLoading(true);
+    try {
+      const response = await fetchToolsPage(
+        targetPage,
+        limit,
+        category,
+        search
+      );
+      const toolsData = response.tools || [];
+      const totalCount = response.total || 0;
 
-    if (userId && page === 1) return;
+      setTools((prev) => {
+        const updatedTools = shouldReset ? toolsData : [...prev, ...toolsData];
 
-    const loadTools = async () => {
-      setIsLoading(true);
-      try {
-        const newTools: ToolsPageResponse = await fetchToolsPage(
-          page,
-          limit,
-          category,
-          search
-        );
-        const toolsData: Tool[] = Array.isArray(newTools)
-          ? newTools
-          : newTools.tools;
+        setHasMore(updatedTools.length < totalCount);
 
-        setTools((prev) => (page === 1 ? toolsData : [...prev, ...toolsData]));
-        setHasMore(toolsData.length === limit);
-      } catch (err) {
-        console.error("Помилка завантаження інструментів:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (!initialTools.length || page > 1 || (!userId && page === 1)) {
-      loadTools();
+        return updatedTools;
+      });
+    } catch (err) {
+      console.error("Помилка завантаження інструментів:", err);
+      setHasMore(false);
+    } finally {
+      setIsLoading(false);
     }
-  }, [page, category, search, userId, initialTools.length, limit]);
+  };
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      if (initialTools.length > 0) return;
+    }
+
+    setPage(1);
+    loadTools(1, true);
+  }, [category, search]);
+
+  useEffect(() => {
+    if (page > 1) {
+      loadTools(page, false);
+    }
+  }, [page]);
 
   return (
     <div>
@@ -100,7 +103,7 @@ const ToolsGrid = ({
             className={css.btn}
             disabled={isLoading}
           >
-            {isLoading ? <span className={css.loader}></span> : "Показати ще"}
+            {isLoading ? "Завантаження..." : "Показати ще"}
           </button>
         </div>
       )}

@@ -83,13 +83,21 @@ export const createTool = async (formData: FormData) => {
   return data;
 };
 
-export async function fetchToolsPage(page: number, limit = 8, category = "all", search = "") {
+export async function fetchToolsPage(
+  page: number,
+  perPage = 8,
+  category = "all",
+  search = "",
+  userId?: string
+) {
+  console.log("API CALL: userId =", userId);
   const res = await $api.get<ToolsApiResponse>("/tools", {
     params: {
       page,
-      limit,
+      perPage,
       ...(category !== "all" && { category }),
       ...(search && { search }),
+      ...(userId && { owner: userId }),
     },
   });
 
@@ -115,11 +123,12 @@ export const updateTool = async (id: string, formData: FormData) => {
   return data;
 };
 
-export const createBooking = async (data: CreateBookingRequest): Promise<CreateBookingResponse> => {
+export const createBooking = async (
+  data: CreateBookingRequest
+): Promise<CreateBookingResponse> => {
   const response = await $api.post<CreateBookingResponse>("/bookings", data);
   return response.data;
 };
-
 
 export const updateUserProfile = async (
   userId: string,
@@ -158,8 +167,6 @@ export const deleteTool = async (id: string) => {
   return data;
 };
 
-
-
 interface Feedback {
   _id: string;
   name: string;
@@ -178,27 +185,31 @@ export interface UserFeedbacksResponse {
   totalFeedbacks: number;
 }
 
-export const getUserFeedbacks = async (userId: string): Promise<UserFeedbacksResponse> => {
+export const getUserFeedbacks = async (
+  userId: string
+): Promise<UserFeedbacksResponse> => {
   try {
-    // Отримуємо інструменти користувача
-    const { data } = await $api.get<{ tools: ToolWithFeedbacks[] }>(`/users/${userId}/tools`, {
-      params: { page: 1, perPage: 100 }
-    });
+    const { data } = await $api.get<{ tools: ToolWithFeedbacks[] }>(
+      `/users/${userId}/tools`,
+      {
+        params: { page: 1, perPage: 100 },
+      }
+    );
 
     const tools = data.tools || [];
     const allFeedbacks: Feedback[] = [];
-    
-    // Збираємо всі відгуки з усіх інструментів
+
     tools.forEach((tool: ToolWithFeedbacks) => {
       if (tool.feedbacks && Array.isArray(tool.feedbacks)) {
         allFeedbacks.push(...tool.feedbacks);
       }
     });
 
-    // Обчислюємо середній рейтинг
-    const averageRating = allFeedbacks.length > 0
-      ? allFeedbacks.reduce((sum, fb) => sum + fb.rate, 0) / allFeedbacks.length
-      : 0;
+    const averageRating =
+      allFeedbacks.length > 0
+        ? allFeedbacks.reduce((sum, fb) => sum + fb.rate, 0) /
+          allFeedbacks.length
+        : 0;
 
     return {
       feedbacks: allFeedbacks,
@@ -206,7 +217,7 @@ export const getUserFeedbacks = async (userId: string): Promise<UserFeedbacksRes
       totalFeedbacks: allFeedbacks.length,
     };
   } catch (error) {
-    console.error('Error fetching user feedbacks:', error);
+    console.error("Error fetching user feedbacks:", error);
     return {
       feedbacks: [],
       averageRating: 0,

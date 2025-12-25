@@ -10,7 +10,6 @@ import css from "./Profile.module.css";
 
 export const dynamic = "force-dynamic";
 
-
 export async function generateMetadata({
   params,
 }: {
@@ -42,7 +41,7 @@ export default async function ProfilePage({
     ]);
 
     const initialTools = toolsData?.tools || [];
-    const totalCount = toolsData?.total || 0;
+    const totalCount = initialTools.length;
 
     return (
       <main className={css.mainContent}>

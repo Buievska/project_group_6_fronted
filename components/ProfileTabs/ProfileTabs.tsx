@@ -3,15 +3,14 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { UserProfile } from "@/components/UserProfile/UserProfile";
-import ToolsGrid from "@/components/ToolsGrid/ToolsGrid";
+import UserToolsGrid from "@/components/UserToolsGrid/UserToolsGrid";
 import BookingCard from "@/components/BookingCard/BookingCard";
-import { ProfilePlaceholder } from "@/components/ProfilePlaceholder/ProfilePlaceholder";
 import { getUserBookings, deleteBooking } from "@/lib/api/clientApi";
 import { useAuthStore } from "@/lib/store/authStore";
 import css from "./ProfileTabs.module.css";
 import gridCss from "@/components/ToolsGrid/ToolsGrid.module.css";
 import { Tool } from "@/types/tool";
-import FeedbacksBlock from "../FeedbacksBlock/FeedbacksBlock"; // Імпортуйте ваш блок відгуків
+import FeedbacksBlock from "../FeedbacksBlock/FeedbacksBlock";
 
 import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
 
@@ -22,7 +21,6 @@ interface ProfileUser {
   avatar?: string | null;
 }
 
-// Інтерфейс для бронювання (має збігатися з очікуваннями BookingCard)
 interface Booking {
   _id: string;
   toolId: {
@@ -43,12 +41,7 @@ interface ProfileTabsProps {
   userId: string;
 }
 
-export default function ProfileTabs({
-  user,
-  initialTools,
-  totalToolsCount,
-  userId,
-}: ProfileTabsProps) {
+export default function ProfileTabs({ user, userId }: ProfileTabsProps) {
   const { user: currentUser } = useAuthStore();
   const [activeTab, setActiveTab] = useState<"tools" | "bookings">("tools");
   const queryClient = useQueryClient();
@@ -64,8 +57,6 @@ export default function ProfileTabs({
     queryKey: ["my-bookings"],
     queryFn: async () => {
       const data = await getUserBookings();
-      // data зазвичай приходить як масив або об'єкт з масивом,
-      // переконайтеся, що getUserBookings повертає масив
       const results = Array.isArray(data) ? data : data.data || [];
 
       return results.filter(
@@ -128,16 +119,7 @@ export default function ProfileTabs({
 
       <div className={css.content}>
         {activeTab === "tools" ? (
-          initialTools.length > 0 ? (
-            <ToolsGrid
-              userId={userId}
-              initialTools={initialTools}
-              totalToolsCount={totalToolsCount}
-              limit={8}
-            />
-          ) : (
-            <ProfilePlaceholder isOwner={isOwner} />
-          )
+          <UserToolsGrid userId={userId} />
         ) : (
           <ul className={gridCss.toolsList}>
             {!isLoadingBookings &&
@@ -153,7 +135,7 @@ export default function ProfileTabs({
       <div className={css.feedbacksWrapper}>
         <FeedbacksBlock
           userId={userId}
-          title="Відгуки"
+          title="Відгуки "
           showLeaveButton={!isOwner}
           isProfilePage={true}
         />
