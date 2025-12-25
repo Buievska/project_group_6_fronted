@@ -29,7 +29,7 @@
 }
 
 .title {
-  margin-bottom: 48px;
+  margin-bottom: 24px;
   color: #000;
   font-weight: 700;
   font-size: 32px;
@@ -200,11 +200,9 @@
 }
 
 .leaveFeedbackBtn {
-  height: 40px;
-  padding: 10px 24px;
-  background: #8808cc;
-  color: #fff;
-  border: 1px solid #8808cc;
+  background: #f5f5f5;
+  color: #000;
+
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
@@ -213,13 +211,19 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-decoration: none;
+  white-space: nowrap;
+  border: 2px solid #000;
+  padding: 10px 24px;
+  max-width: 335px;
+  width: 100%;
+  height: 44px;
+  margin-bottom: 30px;
 }
 
 .leaveFeedbackBtn:hover,
 .leaveFeedbackBtn:focus {
-  background: transparent;
-  color: #000;
+  background: #e0e0e0;
+  border-color: #000;
 }
 
 .leaveFeedbackBtn:active {
@@ -229,13 +233,6 @@
 .leaveFeedbackBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.headerBlock {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
 }
 
 /* Стилі тільки для сторінки інструментів */
@@ -265,6 +262,19 @@
   color: var(--color-scheme-1-text);
 }
 
+/* Стилі спеціально для профілю користувача */
+.profilePage {
+  padding: 20px 0;
+  background-color: transparent !important;
+}
+
+.profilePageContainer {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
 /* ===== TABLET 768px ===== */
 @media (min-width: 768px) {
   .feedbacksSection {
@@ -282,7 +292,7 @@
 
   .title {
     font-size: 36px;
-    margin-bottom: 60px;
+    margin-bottom: 0;
   }
 
   .feedbackCard {
@@ -321,6 +331,23 @@
     width: 22px;
     height: 22px;
   }
+
+  .headerBlock {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 60px;
+  }
+
+  .leaveFeedbackBtn {
+    max-width: 180px;
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .profilePage {
+    padding: 40px 0;
+  }
 }
 
 /* ===== DESKTOP 1440px ===== */
@@ -340,7 +367,6 @@
 
   .title {
     font-size: 48px;
-    margin-bottom: 80px;
   }
 
   .feedbackText {
@@ -354,4 +380,33 @@
   .swiper {
     margin-bottom: 48px;
   }
+
+  .profilePage {
+    padding: 40px 0;
+  }
+}
+
+/* ===== Кнопки навігації ===== */
+
+.hideAlways {
+  display: none !important;
+}
+
+@media (min-width: 768px) {
+  .hideTabletUp {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  .hideDesktop {
+    display: none !important;
+  }
+}
+
+.navigationBlock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
 }

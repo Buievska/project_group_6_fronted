@@ -36,7 +36,7 @@ const ToolsGrid = ({
     setTools(initialTools);
     setHasMore(initialTools.length < totalToolsCount);
     setPage(propPage);
-  }, [initialTools.length, totalToolsCount, propPage, category, search]);
+  }, [initialTools, totalToolsCount, propPage, category, search]);
 
   useEffect(() => {
     if (page === 1 && initialTools.length > 0) return;

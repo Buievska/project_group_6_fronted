@@ -150,6 +150,15 @@ export default function ProfileTabs({
         )}
       </div>
 
+      <div className={css.feedbacksWrapper}>
+        <FeedbacksBlock
+          userId={userId}
+          title="Відгуки"
+          showLeaveButton={!isOwner}
+          isProfilePage={true}
+        />
+      </div>
+
       {isModalOpen && (
         <ConfirmationModal
           title="Ви дійсно хочете скасувати це бронювання?"
