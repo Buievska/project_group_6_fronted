@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
-
 import { getToolById } from "@/lib/api/clientApi";
 import { Tool } from "@/types/tool";
+import { useAuthStore } from "@/lib/store/authStore";
 
 import ToolGallery from "@/components/ToolGallery/ToolGallery";
 import ToolInfoBlock from "@/components/ToolInfoBlock/ToolInfoBlock";
@@ -19,6 +19,8 @@ export default function ToolDetailsPage() {
 
   const [tool, setTool] = useState<Tool | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const { user: currentUser } = useAuthStore();
 
   useEffect(() => {
     if (!toolId) {
@@ -45,6 +47,16 @@ export default function ToolDetailsPage() {
   if (!tool || !toolId)
     return <div className={styles.loading}>Інструмент не знайдено</div>;
 
+  const currentUserId = currentUser?._id || currentUser?.id;
+
+  const toolOwnerId = (tool.owner as any)?._id || (tool.owner as any);
+
+  const isOwner = !!(
+    currentUserId &&
+    toolOwnerId &&
+    String(currentUserId) === String(toolOwnerId)
+  );
+
   return (
     <div className={styles.container}>
       <div className={styles.pageLayout}>
@@ -60,7 +72,7 @@ export default function ToolDetailsPage() {
         <FeedbacksBlock
           productId={toolId}
           title="Відгуки"
-          showLeaveButton
+          showLeaveButton={!isOwner}
           isToolsPage
         />
       </div>
