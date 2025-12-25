@@ -84,7 +84,7 @@ $api.interceptors.response.use(
       originalRequest?.url === "/auth/logout"
     ) {
       if (typeof window !== "undefined") {
-        window.location.href = "/login";
+        window.location.href = "/";
       }
 
       return Promise.resolve();
