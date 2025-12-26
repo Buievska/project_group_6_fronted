@@ -1,4 +1,4 @@
-/* ================= MOBILE FIRST ================= */
+/*  MOBILE FIRST */
 .header {
   width: 100%;
   position: sticky;
@@ -10,18 +10,18 @@
 
 .containerHeader {
   width: 100%;
+  max-width: 375px;
   margin: 0 auto;
-  padding: 0 20px;
-  height: 72px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
   box-sizing: border-box;
 }
 
-/* ================= LOGO ================= */
+/*  LOGO */
 .logoLink {
-  display: block;
   flex-shrink: 0;
 }
 
@@ -30,56 +30,24 @@
   height: 20px;
 }
 
-/* ================= NAVIGATION ================= */
-.headerRight {
-  display: none; /* ховаємо для мобільних */
-}
-
-.navLinks {
+/*  NAV  */
+.navWrapper,
+.navLinks,
+.userActions,
+.publishBtn,
+.registerBtn,
+.publishWrapper {
   display: none;
 }
 
-.navMobile {
+.authMobile {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  justify-content: center;
   align-items: center;
-}
-
-.navLinks a,
-.navMobile a {
-  position: relative;
-  display: inline-block;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 150%;
-  color: #000;
-  text-decoration: none;
-}
-
-.navLinks a::after,
-.navMobile a::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -6px;
-  width: 0;
-  height: 2px;
-  background: #8808cc;
-  transition:
-    width 0.3s ease,
-    left 0.3s ease;
-}
-
-.navLinks a:hover::after,
-.navLinks a:focus::after,
-.navMobile a:hover::after,
-.navMobile a:focus::after {
   width: 100%;
-  left: 0;
+  margin-top: 16px;
 }
 
-/* ================= BUTTONS ================= */
 .register,
 .registerMobile {
   height: 40px;
@@ -109,24 +77,49 @@
   background: #e7cdf4;
 }
 
-.registerBtn {
-  display: none; /* для мобільних ховаємо */
-}
-
-.publishBtn {
-  display: none; /* для мобільних ховаємо */
-}
-
-/* ================= BURGER ================= */
+/*  BURGER  */
 .burger {
   background: none;
   border: none;
-  padding: 0;
   cursor: pointer;
-  z-index: 200;
 }
 
-/* ================= MOBILE USER ================= */
+/*  MOBILE MENU  */
+.navMobile {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.navMobile a,
+.navLinks a {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  text-decoration: none;
+  position: relative;
+}
+
+.navMobile a::after,
+.navLinks a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 0;
+  height: 2px;
+  background: #8808cc;
+  transition: all 0.3s ease;
+}
+
+.navMobile a:hover::after,
+.navLinks a:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+/*  MOBILE USER  */
 .mobileUserCentered {
   margin-top: 16px;
   padding: 0 16px;
@@ -141,7 +134,6 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  object-fit: cover;
 }
 
 .mobileInitial,
@@ -151,49 +143,33 @@
   border-radius: 50%;
   background: #8808cc;
   color: #fff;
-  font-size: 14px;
-  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 600;
 }
 
 .mobileUserName,
 .userName {
   font-size: 14px;
   font-weight: 500;
-  white-space: nowrap;
 }
 
 .mobileLogout,
 .logout {
   background: none;
   border: none;
-  padding: 4px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
 }
 
-.userDivider,
-.mobileDivider {
-  opacity: 0.6;
-}
-
-.authMobile {
-  margin: 0 auto;
-  margin-top: 16px;
-}
-
-/* ================= OVERLAY ================= */
+/* OVERLAY */
 .overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 100;
+  transition: 0.3s;
 }
 
 .overlay.open {
@@ -202,77 +178,112 @@
 }
 
 .menu {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background: #f2f2f2;
-  display: flex;
-  flex-direction: column;
   transform: translateX(100%);
-  transition: transform 0.3s ease;
-  position: absolute;
-  top: 0;
-  right: 0;
+  transition: 0.3s;
 }
 
 .overlay.open .menu {
   transform: translateX(0);
 }
 
-.menuHeader {
-  padding: 32px 16px;
-}
-
-/* ================= MEDIA QUERIES ================= */
+/*  MEDIA QUERIES */
 
 @media (min-width: 375px) {
   .containerHeader {
     max-width: 375px;
-    padding: 0 20px;
+    padding: 16px 20px;
   }
 }
 
-/* -------- TABLET (768px+) -------- */
+/* TABLET (768px)*/
 @media (min-width: 768px) {
   .containerHeader {
     max-width: 768px;
-    padding: 0 32px;
+    padding: 16px 32px;
   }
 
-  .menuHeader {
-    padding: 32px 32px;
+  .publishWrapper {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
   }
 
-  .registerMobile {
-    width: auto;
-    min-width: 160px;
+  .publishBtn {
+    display: block;
+    border-radius: 6px;
+    padding: 8px 20px;
+    width: 228px;
+    height: 37px;
+    border: 1px solid rgb(136, 8, 204);
+    background-color: #8808cc;
+    color: #fff;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 150%;
+    border-radius: 8px;
+
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+    margin-right: 0;
+  }
+
+  .publishBtn:hover,
+  .publishBtn:focus {
+    color: black;
+    background-color: white;
+  }
+
+  .publishBtn:active {
+    color: white;
+    background-color: #e7cdf4;
   }
 }
 
-/* -------- DESKTOP (1440px+) -------- */
+/*  DESKTOP (1440px) */
 @media (min-width: 1440px) {
   .containerHeader {
     max-width: 1440px;
     padding: 0 64px;
+    margin: 0 auto;
+    padding: 16px 64px;
+    gap: 16px;
+    box-sizing: border-box;
+  }
+  .navWrapper {
+    display: flex;
+
+    align-items: center;
+    gap: 16px;
+    margin-left: auto;
+  }
+
+  /* Навігація */
+  .navLinks {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .publishWrapper {
+    display: flex;
+    align-items: center;
+    margin-left: 0;
+  }
+
+  .userActions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
   }
 
   .burger {
     display: none;
   }
 
-  .headerRight {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .desktopContainer {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    margin-left: auto;
-  }
-
-  /* Навігація */
   .navLinks {
     display: flex;
     align-items: center;
@@ -291,11 +302,17 @@
     color: #8808cc;
   }
 
-  /* Блок дій (справа) */
   .userActions {
     display: flex;
     align-items: center;
     gap: 16px;
+  }
+
+  .publishBtn {
+    width: 254px;
+    height: 40px;
+    font-size: 16px;
+    line-height: 150%;
   }
 
   .registerBtn {
@@ -322,32 +339,6 @@
     background-color: #e7cdf4;
   }
 
-  .publishBtn {
-    display: block;
-    padding: 10px 24px;
-    border: 1px solid rgb(136, 8, 204);
-    background-color: #8808cc;
-    color: #fff;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-    white-space: nowrap;
-  }
-
-  .publishBtn:hover,
-  .publishBtn:focus {
-    color: black;
-    background-color: white;
-  }
-
-  .publishBtn:active {
-    color: white;
-    background-color: #e7cdf4;
-  }
-
-  /* Інфо користувача */
   .userInfo {
     display: flex;
     align-items: center;
