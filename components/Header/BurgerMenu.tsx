@@ -25,10 +25,18 @@ export default function BurgerMenu({ isOpen, onClose, user, onLogout }: Props) {
       onClick={onClose}
     >
       <div className={styles.menu} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.menuHeader}>
+        <div className={styles.containerHeader}>
           <Link href="/" className={styles.logoLink} onClick={onClose}>
             <Image src="/logo.svg" alt="RentTools" width={124} height={20} />
           </Link>
+
+          <button
+            className={styles.burger}
+            onClick={onClose}
+            aria-label="Close menu"
+          >
+            <Image src="/burger-close.svg" alt="" width={40} height={40} />
+          </button>
         </div>
 
         <nav className={styles.navMobile}>
