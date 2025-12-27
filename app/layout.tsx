@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 
 import { TanStackProvider } from "@/components/TanStackProvider/TanStackProvider";
 import { AuthProvider } from "@/components/AuthProvider/AuthProvider";
 import "./globals.css";
-const inter = Inter({ subsets: ["latin", "cyrillic"] });
+import { inter } from "./fonts";
 
 export const metadata: Metadata = {
   title: "ToolNext - Платформа для інструментів",
-  description:
-    "ToolNext — платформа для швидкої та зручної оренди інструментів",
+  description: "ToolNext — платформа для швидкої та зручної оренди інструментів",
   icons: {
     icon: "/favicon.svg",
   },

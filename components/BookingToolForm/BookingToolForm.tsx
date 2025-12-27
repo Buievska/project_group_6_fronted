@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { Tool } from "@/types/tool";
 import CalendarField from "../BookingCalendar/CalendarField";
 import PriceBlock from "./PriceBlock";
+import { workSans } from "@/app/fonts";
 
 interface BookingToolFormProps {
   toolId: string;
@@ -118,7 +119,7 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
                 type="text"
                 placeholder="Ваше ім'я"
               />
-              <ErrorMessage name="firstName" component="span" className={styles.error} />
+              <ErrorMessage name="firstName" component="span" className={`${styles.error} ${workSans.className}`} />
             </div>
             <div className={styles.inputWrapper}>
               <label className={styles.label} htmlFor={`${fieldId}-lastName`}>
