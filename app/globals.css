@@ -71,6 +71,7 @@ body {
     -apple-system,
     sans-serif;
   font-size: 16px;
+  margin: 0;
 }
 
 a {
@@ -104,6 +105,29 @@ ol {
     padding: 0 64px;
     max-width: 1440px;
   }
+}
+
+main {
+  flex: 1 0 auto;
+  min-height: calc(100vh - 72px - 300px); /* header - footer */
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+footer {
+  flex-shrink: 0;
 }
 
 /* .container {

@@ -55,22 +55,26 @@ const validationSchema: Yup.Schema<ToolFormValues> = Yup.object({
   name: Yup.string()
     .trim()
     .min(3, "Назва повинна містити щонайменше 3 символи")
-    .max(80, "Назва занадто довга")
+    .max(96, "Назва занадто довга (максимум 96 символів)")
     .required("Вкажіть назву інструменту"),
 
   pricePerDay: Yup.number()
     .typeError("Ціна має бути числом")
-    .min(1, "Ціна повинна бути більшою за 0")
+    .min(0, "Ціна не може бути меншою за 0")
     .required("Вкажіть ціну за день"),
 
   categoryId: Yup.string().required("Оберіть категорію"),
 
   rentalTerms: Yup.string()
-    .min(10, "Опишіть умови оренди детальніше")
+    .trim()
+    .min(20, "Умови оренди мають бути детальнішими (мінімум 20 символів)")
+    .max(1000, "Умови оренди занадто довгі (максимум 1000 символів)")
     .required("Вкажіть умови оренди"),
 
   description: Yup.string()
+    .trim()
     .min(20, "Опис має містити мінімум 20 символів")
+    .max(2000, "Опис занадто довгий (максимум 2000 символів)")
     .required("Додайте опис інструменту"),
 
   specifications: Yup.string()
@@ -90,8 +94,8 @@ const validationSchema: Yup.Schema<ToolFormValues> = Yup.object({
     .optional()
     .test(
       "fileSize",
-      "Максимальний розмір зображення — 1 MB",
-      (file) => !file || file.size <= 1 * 1024 * 1024
+      "Файл занадто великий. Максимальний розмір — 1 MB",
+      (file) => !file || (file && file.size <= 1024 * 1024) // Перевірка на 1MB
     )
     .test(
       "fileType",

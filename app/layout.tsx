@@ -49,14 +49,8 @@ export default function RootLayout({
       <body className={inter.className}>
         <TanStackProvider>
           <AuthProvider>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                minHeight: "100vh",
-              }}
-            >
-              <main style={{ flex: 1 }}>{children}</main>
+            <div className="app-wrapper">
+              <main>{children}</main>
             </div>
             {modal}
           </AuthProvider>

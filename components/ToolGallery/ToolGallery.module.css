@@ -12,19 +12,32 @@
   position: relative;
   width: 100%;
   height: 280px;
-
   border-radius: 12px;
   overflow: hidden;
-  background-color: #f9f9f9;
+  background-color: #fff; /* Білий фон як у вашій консолі */
   border: 1px solid #e0e0e0;
 
+  /* Важливо: flex-центрування дозволить картинці з width: auto стояти по центру */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .mainImage {
-  object-fit: cover;
+  /* Next.js fill додає інлайн-стилі (width: 100%, inset: 0). 
+     Щоб їх змінити на ті, що в консолі, використовуємо !important */
+  position: absolute !important;
+  height: 100% !important;
+  width: auto !important; /* Як у консолі */
+  inset: auto !important; /* Прибираємо притискання до країв */
+
+  /* Скидаємо конкретні координати для точності */
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+
+  object-fit: contain; /* Використовуйте contain, щоб інструмент не обрізався */
   transition: transform 0.3s ease;
 }
 

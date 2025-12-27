@@ -11,9 +11,11 @@ export default function PublicLayout({
   return (
     <TanStackProvider>
       <AuthProvider>
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <div className="app-wrapper">
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </div>
       </AuthProvider>
     </TanStackProvider>
   );
