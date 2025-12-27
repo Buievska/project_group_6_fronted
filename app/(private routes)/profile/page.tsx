@@ -33,27 +33,4 @@ export default function MyProfilePage() {
 
     checkAuth();
   }, [router, loginToStore]);
-
-  if (isLoading) {
-    return (
-      <main className={styles.container}>
-        <span className={styles.spinner}></span>
-      </main>
-    );
-  }
-
-  return (
-    <main style={{ padding: "50px", textAlign: "center" }}>
-      <h1>Помилка авторизації</h1>
-      <p>
-        Не вдалося знайти ваш профіль. Можливо, термін дії сесії закінчився.
-      </p>
-      <Link
-        href="/login"
-        style={{ color: "blue", textDecoration: "underline" }}
-      >
-        Перейти до входу
-      </Link>
-    </main>
-  );
 }
