@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
+import { Navigation } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
 import axios from "axios";
 import FeedbackCard from "./FeedbackCard";
 import Icon from "./Icon";
@@ -15,7 +16,6 @@ import { getFeedbacksByToolId, getUserFeedbacks } from "@/lib/api/clientApi";
 import styles from "./FeedbacksBlock.module.css";
 import "swiper/css";
 import "swiper/css/navigation";
-import "swiper/css/pagination";
 
 interface Feedback {
   _id: string;
@@ -57,6 +57,11 @@ const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
 
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+
+  // Для кастомної пагінації
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [totalSlides, setTotalSlides] = useState(0);
+  const swiperRef = useRef<SwiperType | null>(null);
 
   const fetchFeedbacks = useCallback(async () => {
     try {
@@ -107,11 +112,65 @@ const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
     else setShowAuthModal(true);
   };
 
-  // Допоміжна функція для вибору класу контейнера
   const getContainerClass = () => {
     if (isToolsPage) return styles.toolsPageContainerFeedbacksBlock;
     if (isProfilePage) return styles.profilePageContainer;
     return styles.containerFeedbacksBlock;
+  };
+
+  // Функція для генерації крапок пагінації (максимум 5)
+  const renderPaginationDots = () => {
+    if (totalSlides <= 1) return null;
+
+    const maxDots = 5;
+    const dots: React.ReactNode[] = [];
+
+    let startIndex = 0;
+    let endIndex = totalSlides - 1;
+
+    if (totalSlides > maxDots) {
+      // Визначаємо діапазон крапок для відображення
+      const half = Math.floor(maxDots / 2);
+
+      if (activeIndex <= half) {
+        // На початку - показуємо перші 5
+        startIndex = 0;
+        endIndex = maxDots - 1;
+      } else if (activeIndex >= totalSlides - half - 1) {
+        // В кінці - показуємо останні 5
+        startIndex = totalSlides - maxDots;
+        endIndex = totalSlides - 1;
+      } else {
+        // В середині - activeIndex по центру
+        startIndex = activeIndex - half;
+        endIndex = activeIndex + half;
+      }
+    }
+
+    for (let i = startIndex; i <= endIndex; i++) {
+      const isActive = i === activeIndex;
+      const distance = Math.abs(i - activeIndex);
+
+      let sizeClass = styles.dotMedium;
+      if (isActive) {
+        sizeClass = styles.dotLarge;
+      } else if (distance === 1) {
+        sizeClass = styles.dotMedium;
+      } else if (distance >= 2) {
+        sizeClass = styles.dotSmall;
+      }
+
+      dots.push(
+        <button
+          key={i}
+          className={`${styles.paginationDot} ${isActive ? styles.dotActive : ""} ${sizeClass}`}
+          onClick={() => swiperRef.current?.slideTo(i)}
+          aria-label={`Перейти до слайду ${i + 1}`}
+        />
+      );
+    }
+
+    return dots;
   };
 
   if (loading || error)
@@ -158,16 +217,19 @@ const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
           <div className={styles.swiperWrapper}>
             <Swiper
               key={(productId ?? userId ?? "main") + feedbacks.length}
-              modules={[Navigation, Pagination]}
+              modules={[Navigation]}
               spaceBetween={32}
               slidesPerView={1}
+              onSwiper={(swiper) => {
+                swiperRef.current = swiper;
+                setTotalSlides(swiper.slides.length);
+              }}
+              onSlideChange={(swiper) => {
+                setActiveIndex(swiper.activeIndex);
+              }}
               navigation={{
                 nextEl: ".swiper-button-next-custom",
                 prevEl: ".swiper-button-prev-custom",
-              }}
-              pagination={{
-                el: ".swiper-pagination-custom",
-                clickable: true,
               }}
               breakpoints={{
                 375: { slidesPerView: 1, spaceBetween: 20 },
@@ -185,9 +247,9 @@ const FeedbacksBlock: React.FC<FeedbacksBlockProps> = ({
 
             {feedbacks.length > 1 && (
               <div className={`${styles.navigationBlock} ${getNavClass()}`}>
-                <div
-                  className={`swiper-pagination-custom ${styles.customPagination}`}
-                ></div>
+                <div className={styles.customPagination}>
+                  {renderPaginationDots()}
+                </div>
                 <div className={styles.navigationButtons}>
                   <button
                     className="swiper-button-prev-custom"
