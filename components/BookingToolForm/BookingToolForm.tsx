@@ -20,6 +20,14 @@ import { Tool } from "@/types/tool";
 import CalendarField from "../BookingCalendar/CalendarField";
 import PriceBlock from "./PriceBlock";
 
+type ApiError = {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+};
+
 interface BookingToolFormProps {
   toolId: string;
 }
@@ -122,13 +130,12 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
     onError: (err: unknown) => {
       let message = "Сталася помилка";
 
-      if (
-        typeof err === "object" &&
-        err !== null &&
-        "response" in err &&
-        typeof (err as any).response?.data?.message === "string"
-      ) {
-        message = (err as any).response.data.message;
+      if (typeof err === "object" && err !== null) {
+        const e = err as ApiError;
+
+        if (e.response?.data?.message) {
+          message = e.response.data.message;
+        }
       }
 
       toast.error(message);
@@ -219,15 +226,12 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
                 }))}
             />
             <ErrorMessage name="dateRange">
-              {(msg) => {
+              {(msg: string | Record<string, string>) => {
                 const errorDisplay =
-                  typeof msg === "string"
-                    ? msg
-                    : Object.values(msg as object)[0];
+                  typeof msg === "string" ? msg : Object.values(msg)[0];
+
                 return errorDisplay ? (
-                  <span className={styles.errorText}>
-                    {String(errorDisplay)}
-                  </span>
+                  <span className={styles.errorText}>{errorDisplay}</span>
                 ) : null;
               }}
             </ErrorMessage>
