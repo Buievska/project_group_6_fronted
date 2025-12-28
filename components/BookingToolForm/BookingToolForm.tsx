@@ -1,6 +1,7 @@
 "use client";
 
-import { useId, useMemo } from "react";
+import { useMemo } from "react";
+
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -9,7 +10,7 @@ import toast from "react-hot-toast";
 
 import styles from "./BookingToolForm.module.css";
 import { createBooking, getToolById } from "@/lib/api/clientApi";
-import { useAuthStore } from "@/lib/store/authStore"; // Переконайтеся, що імпорт вірний
+import { useAuthStore } from "@/lib/store/authStore";
 import {
   BookingToolFormValues,
   CreateBookingRequest,
@@ -32,7 +33,6 @@ const initialValues: BookingToolFormValues = {
   deliveryBranch: "",
 };
 
-// Допоміжні функції залишаємо зовні
 const getPureDateValue = (d: Date | string | null) => {
   if (!d) return 0;
   const date = new Date(d);
@@ -49,11 +49,9 @@ const formatLocalDate = (date: Date) => {
 };
 
 export default function BookingToolForm({ toolId }: BookingToolFormProps) {
-  const fieldId = useId();
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  // 1. Отримуємо поточного юзера всередині компонента
   const { user } = useAuthStore();
 
   const {
@@ -66,7 +64,6 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
     enabled: Boolean(toolId),
   });
 
-  // 2. Оновлюємо схему валідації
   const validationSchema = useMemo(() => {
     return Yup.object({
       firstName: Yup.string()
@@ -87,7 +84,6 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
         "no-overlaps",
         "Ви вже орендували цей інструмент на ці дати. Оберіть інший період.",
         (value) => {
-          // Якщо немає дат або даних про інструмент/юзера — пропускаємо
           if (!value?.from || !value?.to || !tool?.bookedDates || !user)
             return true;
 
@@ -95,8 +91,6 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
           const selectedEnd = getPureDateValue(value.to);
 
           const hasOverlap = tool.bookedDates.some((booked) => {
-            // ПЕРЕВІРКА: чи це бронювання належить поточному юзеру
-            // Порівнюємо ID як рядки для безпеки
             const isMine = String(booked.userId) === String(user._id);
             if (!isMine) return false;
 
@@ -112,7 +106,7 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
       deliveryCity: Yup.string().trim().required("Місто обовʼязкове"),
       deliveryBranch: Yup.string().trim().required("Відділення обовʼязкове"),
     });
-  }, [tool, user]); // Додаємо user в залежності
+  }, [tool, user]);
 
   const { mutate, isPending } = useMutation<
     CreateBookingResponse,
@@ -125,9 +119,19 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
       await queryClient.invalidateQueries({ queryKey: ["my-bookings"] });
       router.push("/confirm/booking");
     },
-    onError: (err: any) => {
-      const msg = err.response?.data?.message || "Сталася помилка";
-      toast.error(msg);
+    onError: (err: unknown) => {
+      let message = "Сталася помилка";
+
+      if (
+        typeof err === "object" &&
+        err !== null &&
+        "response" in err &&
+        typeof (err as any).response?.data?.message === "string"
+      ) {
+        message = (err as any).response.data.message;
+      }
+
+      toast.error(message);
     },
   });
 
@@ -171,7 +175,7 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
         <Form className={styles.form}>
           <fieldset className={`${styles.fieldGroup} ${styles.fieldsetReset}`}>
             <div className={styles.inputWrapper}>
-              <label className={styles.label}>Ім'я</label>
+              <label className={styles.label}>Ім&rsquo;я</label>
               <Field className={styles.input} name="firstName" />
               <ErrorMessage
                 name="firstName"
