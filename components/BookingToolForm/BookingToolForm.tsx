@@ -1,17 +1,32 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
-import { useId } from "react";
-import styles from "./BookingToolForm.module.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createBooking, getToolById } from "@/lib/api/clientApi";
 import { useRouter } from "next/navigation";
-import { BookingToolFormValues, CreateBookingRequest, CreateBookingResponse } from "@/types/booking";
 import toast from "react-hot-toast";
+
+import styles from "./BookingToolForm.module.css";
+import { createBooking, getToolById } from "@/lib/api/clientApi";
+import { useAuthStore } from "@/lib/store/authStore";
+import {
+  BookingToolFormValues,
+  CreateBookingRequest,
+  CreateBookingResponse,
+} from "@/types/booking";
 import { Tool } from "@/types/tool";
 import CalendarField from "../BookingCalendar/CalendarField";
 import PriceBlock from "./PriceBlock";
+
+type ApiError = {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+};
 
 interface BookingToolFormProps {
   toolId: string;
@@ -26,24 +41,26 @@ const initialValues: BookingToolFormValues = {
   deliveryBranch: "",
 };
 
-const validationSchema = Yup.object({
-  firstName: Yup.string().trim().min(2, "Мінімум 2 символи").required("Імʼя обовʼязкове"),
-  lastName: Yup.string().trim().min(2, "Мінімум 2 символи").required("Прізвище обовʼязкове"),
-  phone: Yup.string()
-    .required("Номер телефону обовʼязковий")
-    .matches(/^\+380\d{9}$/, "Номер телефону має бути у форматі +380XXXXXXXXX"),
-  dateRange: Yup.object({
-    from: Yup.date().nullable().required("Оберіть дату початку"),
-    to: Yup.date().nullable().required("Оберіть дату завершення"),
-  }).test("dates-required", "Оберіть період бронювання", value => value?.from !== null && value?.to !== null),
-  deliveryCity: Yup.string().trim().required("Місто обовʼязкове"),
-  deliveryBranch: Yup.string().trim().required("Відділення обовʼязкове"),
-});
+const getPureDateValue = (d: Date | string | null) => {
+  if (!d) return 0;
+  const date = new Date(d);
+  return (
+    date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate()
+  );
+};
+
+const formatLocalDate = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 export default function BookingToolForm({ toolId }: BookingToolFormProps) {
-  const fieldId = useId();
   const queryClient = useQueryClient();
   const router = useRouter();
+
+  const { user } = useAuthStore();
 
   const {
     data: tool,
@@ -55,46 +72,102 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
     enabled: Boolean(toolId),
   });
 
-  const { mutate, isPending } = useMutation<CreateBookingResponse, Error, CreateBookingRequest>({
+  const validationSchema = useMemo(() => {
+    return Yup.object({
+      firstName: Yup.string()
+        .trim()
+        .min(2, "Мінімум 2 символи")
+        .required("Імʼя обовʼязкове"),
+      lastName: Yup.string()
+        .trim()
+        .min(2, "Мінімум 2 символи")
+        .required("Прізвище обовʼязкове"),
+      phone: Yup.string()
+        .required("Номер телефону обовʼязковий")
+        .matches(/^\+380\d{9}$/, "Формат: +380XXXXXXXXX"),
+      dateRange: Yup.object({
+        from: Yup.date().nullable().required("Оберіть дату початку"),
+        to: Yup.date().nullable().required("Оберіть дату завершення"),
+      }).test(
+        "no-overlaps",
+        "Ви вже орендували цей інструмент на ці дати. Оберіть інший період.",
+        (value) => {
+          if (!value?.from || !value?.to || !tool?.bookedDates || !user)
+            return true;
+
+          const selectedStart = getPureDateValue(value.from);
+          const selectedEnd = getPureDateValue(value.to);
+
+          const hasOverlap = tool.bookedDates.some((booked) => {
+            const isMine = String(booked.userId) === String(user._id);
+            if (!isMine) return false;
+
+            const bookedStart = getPureDateValue(booked.from);
+            const bookedEnd = getPureDateValue(booked.to);
+
+            return selectedStart <= bookedEnd && selectedEnd >= bookedStart;
+          });
+
+          return !hasOverlap;
+        }
+      ),
+      deliveryCity: Yup.string().trim().required("Місто обовʼязкове"),
+      deliveryBranch: Yup.string().trim().required("Відділення обовʼязкове"),
+    });
+  }, [tool, user]);
+
+  const { mutate, isPending } = useMutation<
+    CreateBookingResponse,
+    Error,
+    CreateBookingRequest
+  >({
     mutationFn: createBooking,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["tool", toolId] });
-
       await queryClient.invalidateQueries({ queryKey: ["my-bookings"] });
-
       router.push("/confirm/booking");
     },
-    onError: error => {
-      toast.error(error.message || "Помилка створення бронювання");
+    onError: (err: unknown) => {
+      let message = "Сталася помилка";
+
+      if (typeof err === "object" && err !== null) {
+        const e = err as ApiError;
+
+        if (e.response?.data?.message) {
+          message = e.response.data.message;
+        }
+      }
+
+      toast.error(message);
     },
   });
 
-  const handleSubmit = (values: BookingToolFormValues, actions: FormikHelpers<BookingToolFormValues>) => {
+  const handleSubmit = (
+    values: BookingToolFormValues,
+    actions: FormikHelpers<BookingToolFormValues>
+  ) => {
     if (!values.dateRange.from || !values.dateRange.to) return;
 
-    const payload: CreateBookingRequest = {
-      toolId,
-      firstName: values.firstName,
-      lastName: values.lastName,
-      phone: values.phone,
-      startDate: values.dateRange.from.toISOString().split("T")[0],
-      endDate: values.dateRange.to.toISOString().split("T")[0],
-      deliveryCity: values.deliveryCity,
-      deliveryBranch: values.deliveryBranch,
-    };
-
-    mutate(payload, {
-      onError: () => actions.setSubmitting(false),
-    });
+    mutate(
+      {
+        toolId,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        phone: values.phone,
+        startDate: formatLocalDate(values.dateRange.from),
+        endDate: formatLocalDate(values.dateRange.to),
+        deliveryCity: values.deliveryCity,
+        deliveryBranch: values.deliveryBranch,
+      },
+      {
+        onSettled: () => actions.setSubmitting(false),
+      }
+    );
   };
 
-  if (isLoading) {
-    return <p>Завантаження інструмента...</p>;
-  }
-
-  if (error || !tool) {
-    return <p>Інструмент не знайдено</p>;
-  }
+  if (isLoading) return <div className={styles.loading}>Завантаження...</div>;
+  if (error || !tool)
+    return <div className={styles.error}>Інструмент не знайдено</div>;
 
   return (
     <section className={styles.container}>
@@ -104,91 +177,95 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
+        enableReinitialize
       >
         <Form className={styles.form}>
           <fieldset className={`${styles.fieldGroup} ${styles.fieldsetReset}`}>
             <div className={styles.inputWrapper}>
-              <label className={styles.label} htmlFor={`${fieldId}-firstName`}>
-                {"Ім'я"}
-              </label>
-              <Field
-                className={styles.input}
-                id={`${fieldId}-firstName`}
+              <label className={styles.label}>Ім&rsquo;я</label>
+              <Field className={styles.input} name="firstName" />
+              <ErrorMessage
                 name="firstName"
-                type="text"
-                placeholder="Ваше ім'я"
+                component="span"
+                className={styles.errorText}
               />
-              <ErrorMessage name="firstName" component="span" className={styles.error} />
             </div>
             <div className={styles.inputWrapper}>
-              <label className={styles.label} htmlFor={`${fieldId}-lastName`}>
-                Прізвище
-              </label>
-              <Field
-                className={styles.input}
-                id={`${fieldId}-lastName`}
+              <label className={styles.label}>Прізвище</label>
+              <Field className={styles.input} name="lastName" />
+              <ErrorMessage
                 name="lastName"
-                type="text"
-                placeholder="Ваше прізвище"
+                component="span"
+                className={styles.errorText}
               />
-              <ErrorMessage name="lastName" component="span" className={styles.error} />
             </div>
           </fieldset>
 
           <div className={styles.inputWrapper}>
-            <label className={styles.label} htmlFor={`${fieldId}-phone`}>
-              Номер телефону
-            </label>
+            <label className={styles.label}>Телефон</label>
             <Field
               className={styles.input}
-              id={`${fieldId}-phone`}
               name="phone"
-              type="text"
-              placeholder="+38 (XXX) XXX XX XX"
+              placeholder="+380XXXXXXXXX"
             />
-            <ErrorMessage name="phone" component="span" className={styles.error} />
+            <ErrorMessage
+              name="phone"
+              component="span"
+              className={styles.errorText}
+            />
           </div>
 
-          <CalendarField
-            bookedRanges={tool.bookedDates.map((d: { from: string; to: string }) => ({
-              from: new Date(d.from),
-              to: new Date(d.to),
-            }))}
-          />
+          <div className={styles.calendarBox}>
+            <CalendarField
+              bookedRanges={tool.bookedDates
+
+                .filter((d) => String(d.userId) === String(user?._id))
+                .map((d) => ({
+                  from: new Date(d.from),
+                  to: new Date(d.to),
+                }))}
+            />
+            <ErrorMessage name="dateRange">
+              {(msg: string | Record<string, string>) => {
+                const errorDisplay =
+                  typeof msg === "string" ? msg : Object.values(msg)[0];
+
+                return errorDisplay ? (
+                  <span className={styles.errorText}>{errorDisplay}</span>
+                ) : null;
+              }}
+            </ErrorMessage>
+          </div>
 
           <fieldset className={`${styles.fieldGroup} ${styles.fieldsetReset}`}>
             <div className={styles.inputWrapper}>
-              <label className={styles.label} htmlFor={`${fieldId}-deliveryCity`}>
-                Місто доставки
-              </label>
-              <Field
-                className={styles.input}
-                id={`${fieldId}-deliveryCity`}
+              <label className={styles.label}>Місто</label>
+              <Field className={styles.input} name="deliveryCity" />
+              <ErrorMessage
                 name="deliveryCity"
-                type="text"
-                placeholder="Ваше місто"
+                component="span"
+                className={styles.errorText}
               />
-              <ErrorMessage name="deliveryCity" component="span" className={styles.error} />
             </div>
             <div className={styles.inputWrapper}>
-              <label className={styles.label} htmlFor={`${fieldId}-deliveryBranch`}>
-                Відділення Нової Пошти
-              </label>
-              <Field
-                className={styles.input}
-                id={`${fieldId}-deliveryBranch`}
+              <label className={styles.label}>Відділення НП</label>
+              <Field className={styles.input} name="deliveryBranch" />
+              <ErrorMessage
                 name="deliveryBranch"
-                type="text"
-                placeholder="24"
+                component="span"
+                className={styles.errorText}
               />
-              <ErrorMessage name="deliveryBranch" component="span" className={styles.error} />
             </div>
           </fieldset>
 
           <div className={styles.formActions}>
             <PriceBlock pricePerDay={tool.pricePerDay} />
-            <button className={styles.button} type="submit" disabled={isPending}>
-              {isPending ? "Завантаження..." : "Забронювати"}
+            <button
+              className={styles.button}
+              type="submit"
+              disabled={isPending}
+            >
+              {isPending ? "Бронювання..." : "Забронювати"}
             </button>
           </div>
         </Form>

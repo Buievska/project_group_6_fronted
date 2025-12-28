@@ -3,13 +3,14 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast"; // Додано для сповіщень
+import toast from "react-hot-toast";
 import styles from "./ToolInfoBlock.module.css";
 import { Tool } from "@/types/tool";
 import { UserProfile } from "@/types/user";
 import { useAuthStore } from "@/lib/store/authStore";
 import AuthRequiredModal from "@/components/AuthRequiredModal/AuthRequiredModal";
-import { getUserById, deleteTool } from "@/lib/api/clientApi"; // Додано deleteTool
+import { getUserById, deleteTool } from "@/lib/api/clientApi";
+import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
 
 interface Props {
   tool: Tool;
@@ -20,7 +21,8 @@ export default function ToolInfoBlock({ tool }: Props) {
   const { user } = useAuthStore();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [owner, setOwner] = useState<UserProfile | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false); // Стан для лоадера видалення
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const safeOwnerId =
     typeof tool.owner === "object" && tool.owner !== null
@@ -76,27 +78,22 @@ export default function ToolInfoBlock({ tool }: Props) {
     router.push(`/tools/${tool._id}/edit`);
   };
 
-  // НОВИЙ ОБРОБНИК ВИДАЛЕННЯ
-  const handleDeleteClick = async () => {
-    const confirmDelete = window.confirm(
-      "Ви впевнені, що хочете видалити це оголошення?"
-    );
-    if (!confirmDelete) return;
+  const handleDeleteClick = () => {
+    setIsConfirmModalOpen(true);
+  };
 
+  const handleActualDelete = async () => {
     try {
-      setIsDeleting(true);
       await deleteTool(tool._id);
       toast.success("Оголошення видалено");
-      router.push("/profile"); // Перенаправляємо в профіль після видалення
+      router.push("/profile");
       router.refresh();
     } catch (error) {
       console.error(error);
       toast.error("Помилка при видаленні інструменту");
-    } finally {
-      setIsDeleting(false);
+      throw error;
     }
   };
-
   const ownerAvatar = owner?.avatarUrl;
   const ownerName = owner?.name || "Завантаження...";
   const ownerInitial = (ownerName[0] || "U").toUpperCase();
@@ -174,8 +171,15 @@ export default function ToolInfoBlock({ tool }: Props) {
         )}
       </div>
 
-      {isAuthModalOpen && (
-        <AuthRequiredModal onClose={() => setIsAuthModalOpen(false)} />
+      {isConfirmModalOpen && (
+        <ConfirmationModal
+          title="Ви впевнені, що хочете видалити це оголошення?"
+          confirmButtonText="Так, видалити"
+          cancelButtonText="Назад"
+          confirmButtonColor="#ef4444"
+          onConfirm={handleActualDelete}
+          onCancel={() => setIsConfirmModalOpen(false)}
+        />
       )}
     </div>
   );
