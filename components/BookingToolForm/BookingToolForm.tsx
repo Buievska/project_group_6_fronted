@@ -7,10 +7,10 @@ import styles from "./BookingToolForm.module.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createBooking, getToolById } from "@/lib/api/clientApi";
 import { useRouter } from "next/navigation";
-import { BookingToolFormValues, CreateBookingRequest, CreateBookingResponse } from "@/types/booking";
+import { BookedRange, BookingToolFormValues, CreateBookingRequest, CreateBookingResponse } from "@/types/booking";
 import toast from "react-hot-toast";
 import { Tool } from "@/types/tool";
-import CalendarField from "../BookingCalendar/CalendarField";
+import CalendarField, { isOverlapping } from "../BookingCalendar/CalendarField";
 import PriceBlock from "./PriceBlock";
 import { workSans } from "@/app/fonts";
 
@@ -27,19 +27,22 @@ const initialValues: BookingToolFormValues = {
   deliveryBranch: "",
 };
 
-const validationSchema = Yup.object({
-  firstName: Yup.string().trim().min(2, "Мінімум 2 символи").required("Імʼя обовʼязкове"),
-  lastName: Yup.string().trim().min(2, "Мінімум 2 символи").required("Прізвище обовʼязкове"),
-  phone: Yup.string()
-    .required("Номер телефону обовʼязковий")
-    .matches(/^\+380\d{9}$/, "Номер телефону має бути у форматі +380XXXXXXXXX"),
-  dateRange: Yup.object({
-    from: Yup.date().nullable().required("Оберіть дату початку"),
-    to: Yup.date().nullable().required("Оберіть дату завершення"),
-  }).test("dates-required", "Оберіть період бронювання", value => value?.from !== null && value?.to !== null),
-  deliveryCity: Yup.string().trim().required("Місто обовʼязкове"),
-  deliveryBranch: Yup.string().trim().required("Відділення обовʼязкове"),
-});
+const validationSchema = (bookedRanges: BookedRange[]) =>
+  Yup.object<BookingToolFormValues>({
+    firstName: Yup.string().trim().min(2, "Мінімум 2 символи").required("Імʼя обовʼязкове"),
+    lastName: Yup.string().trim().min(2, "Мінімум 2 символи").required("Прізвище обовʼязкове"),
+    phone: Yup.string()
+      .required("Номер телефону обовʼязковий")
+      .matches(/^\+380\d{9}$/, "Номер телефону має бути у форматі +380XXXXXXXXX"),
+
+    dateRange: Yup.object({
+      from: Yup.date().nullable().required("Оберіть дату початку"),
+      to: Yup.date().nullable().required("Оберіть дату завершення"),
+    }),
+
+    deliveryCity: Yup.string().trim().required("Місто обовʼязкове"),
+    deliveryBranch: Yup.string().trim().required("Відділення обовʼязкове"),
+  });
 
 export default function BookingToolForm({ toolId }: BookingToolFormProps) {
   const fieldId = useId();
@@ -73,6 +76,17 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
   const handleSubmit = (values: BookingToolFormValues, actions: FormikHelpers<BookingToolFormValues>) => {
     if (!values.dateRange.from || !values.dateRange.to) return;
 
+    const bookedRanges: BookedRange[] = tool!.bookedDates.map(d => ({
+      from: new Date(d.from),
+      to: new Date(d.to),
+    }));
+
+    if (isOverlapping(values.dateRange, bookedRanges)) {
+      toast.error("Ці дати вже заброньовані");
+      actions.setSubmitting(false);
+      return;
+    }
+
     const payload: CreateBookingRequest = {
       toolId,
       firstName: values.firstName,
@@ -98,12 +112,16 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
   }
 
   return (
-    <section className={styles.container}>
-      <h1 className={styles.title}>Підтвердження бронювання</h1>
-
+    <section>
       <Formik<BookingToolFormValues>
         initialValues={initialValues}
-        validationSchema={validationSchema}
+        validationSchema={validationSchema(
+          tool.bookedDates.map(d => ({
+            from: new Date(d.from),
+            to: new Date(d.to),
+          })),
+        )}
+        validateOnChange
         onSubmit={handleSubmit}
       >
         <Form className={styles.form}>

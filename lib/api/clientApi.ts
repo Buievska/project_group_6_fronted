@@ -2,6 +2,7 @@ import { $api } from "./api";
 import { Tool } from "@/types/tool";
 import { User, UserProfile } from "@/types/user";
 import { CreateBookingRequest, CreateBookingResponse } from "@/types/booking";
+import { AxiosError } from "axios";
 
 export type UserRequest = {
   name: string;
@@ -83,13 +84,7 @@ export const createTool = async (formData: FormData) => {
   return data;
 };
 
-export async function fetchToolsPage(
-  page: number,
-  perPage = 8,
-  category = "all",
-  search = "",
-  userId?: string
-) {
+export async function fetchToolsPage(page: number, perPage = 8, category = "all", search = "", userId?: string) {
   console.log("API CALL: userId =", userId);
   const res = await $api.get<ToolsApiResponse>("/tools", {
     params: {
@@ -123,21 +118,19 @@ export const updateTool = async (id: string, formData: FormData) => {
   return data;
 };
 
-export const createBooking = async (
-  data: CreateBookingRequest
-): Promise<CreateBookingResponse> => {
-  const response = await $api.post<CreateBookingResponse>("/bookings", data);
-  return response.data;
+export const createBooking = async (data: CreateBookingRequest): Promise<CreateBookingResponse> => {
+  try {
+    const response = await $api.post<CreateBookingResponse>("/bookings", data);
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError<{ message?: string }>;
+
+    throw new Error(err?.response?.data?.message || "Помилка бронювання");
+  }
 };
 
-export const updateUserProfile = async (
-  userId: string,
-  dataToSend: Partial<UserProfile>
-) => {
-  const { data } = await $api.patch<UserProfile>(
-    `/users/${userId}`,
-    dataToSend
-  );
+export const updateUserProfile = async (userId: string, dataToSend: Partial<UserProfile>) => {
+  const { data } = await $api.patch<UserProfile>(`/users/${userId}`, dataToSend);
 
   return data;
 };
@@ -185,16 +178,11 @@ export interface UserFeedbacksResponse {
   totalFeedbacks: number;
 }
 
-export const getUserFeedbacks = async (
-  userId: string
-): Promise<UserFeedbacksResponse> => {
+export const getUserFeedbacks = async (userId: string): Promise<UserFeedbacksResponse> => {
   try {
-    const { data } = await $api.get<{ tools: ToolWithFeedbacks[] }>(
-      `/users/${userId}/tools`,
-      {
-        params: { page: 1, perPage: 100 },
-      }
-    );
+    const { data } = await $api.get<{ tools: ToolWithFeedbacks[] }>(`/users/${userId}/tools`, {
+      params: { page: 1, perPage: 100 },
+    });
 
     const tools = data.tools || [];
     const allFeedbacks: Feedback[] = [];
@@ -206,10 +194,7 @@ export const getUserFeedbacks = async (
     });
 
     const averageRating =
-      allFeedbacks.length > 0
-        ? allFeedbacks.reduce((sum, fb) => sum + fb.rate, 0) /
-          allFeedbacks.length
-        : 0;
+      allFeedbacks.length > 0 ? allFeedbacks.reduce((sum, fb) => sum + fb.rate, 0) / allFeedbacks.length : 0;
 
     return {
       feedbacks: allFeedbacks,

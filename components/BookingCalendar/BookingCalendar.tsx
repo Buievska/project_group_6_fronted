@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   format,
   startOfMonth,
@@ -17,7 +17,6 @@ import {
   startOfDay,
 } from "date-fns";
 import { uk } from "date-fns/locale";
-import toast from "react-hot-toast";
 import styles from "./BookingCalendar.module.css";
 import { BookedRange, DateRange } from "@/types/booking";
 
@@ -26,13 +25,25 @@ interface BookingCalendarProps {
   value: DateRange;
   onChange: (range: DateRange) => void;
   error?: string;
+  hoverDate: Date | null;
+  setHoverDate: (date: Date | null) => void;
 }
 
 const WEEKDAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"];
 
-export default function BookingCalendar({ bookedRanges = [], value, onChange, error }: BookingCalendarProps) {
+export default function BookingCalendar({
+  bookedRanges = [],
+  value,
+  onChange,
+  error,
+  hoverDate,
+  setHoverDate,
+}: BookingCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [hoverDate, setHoverDate] = useState<Date | null>(null);
+
+  useEffect(() => {
+    if (value.from) setCurrentMonth(startOfMonth(value.from));
+  }, [value.from]);
 
   const today = startOfDay(new Date());
 
@@ -54,67 +65,26 @@ export default function BookingCalendar({ bookedRanges = [], value, onChange, er
   }, [currentMonth]);
 
   const isDateBooked = (date: Date) => bookedRanges.some(range => date >= range.from && date <= range.to);
-
   const isDatePast = (date: Date) => isBefore(date, today);
-
-  const isDateDisabled = (date: Date) => isDatePast(date) || isDateBooked(date);
+  const isDateDisabled = (date: Date) => isDatePast(date);
 
   const isInRange = (date: Date) => {
-    if (!value.from) return false;
-    const endDate = value.to || hoverDate;
-    if (!endDate) return false;
+    if (!value.from || !value.to) return false;
 
-    const start = value.from < endDate ? value.from : endDate;
-    const end = value.from < endDate ? endDate : value.from;
+    const start = value.from < value.to ? value.from : value.to;
+    const end = value.from < value.to ? value.to : value.from;
 
     return isWithinInterval(date, { start, end });
-  };
-
-  // Функція для пошуку наступного вільного періоду
-  const findNextAvailableRange = (durationDays: number): { from: Date; to: Date } => {
-    const sorted = [...bookedRanges].sort((a, b) => a.to.getTime() - b.to.getTime());
-    const lastBooked = sorted[sorted.length - 1];
-    const from = new Date(lastBooked.to);
-    from.setDate(from.getDate() + 1);
-
-    const to = new Date(from);
-    to.setDate(to.getDate() + durationDays);
-
-    return { from, to };
   };
 
   const handleDateClick = (date: Date) => {
     if (isDatePast(date)) return;
 
     let newRange: DateRange;
-
-    if (!value.from || (value.from && value.to)) {
+    if (!value.from || value.to) {
       newRange = { from: date, to: null };
     } else {
-      if (date < value.from) {
-        newRange = { from: date, to: value.from };
-      } else if (isSameDay(date, value.from)) {
-        newRange = { from: date, to: date };
-      } else {
-        newRange = { from: value.from, to: date };
-      }
-
-      // Перевірка перетину з бронюванням
-      if (newRange.from && newRange.to) {
-        const conflict = bookedRanges.find(b => newRange.from! <= b.to && newRange.to! >= b.from);
-
-        if (conflict) {
-          const duration = Math.ceil((newRange.to.getTime() - newRange.from.getTime()) / (1000 * 60 * 60 * 24)) || 1;
-
-          const nextRange = findNextAvailableRange(duration);
-
-          toast.error(
-            `Обраний період зайнятий.\nНайближчі вільні дати: ${nextRange.from.toLocaleDateString()} – ${nextRange.to.toLocaleDateString()}`,
-          );
-
-          newRange = { from: nextRange.from, to: nextRange.to };
-        }
-      }
+      newRange = date < value.from ? { from: date, to: value.from } : { from: value.from, to: date };
     }
 
     onChange(newRange);
@@ -140,9 +110,7 @@ export default function BookingCalendar({ bookedRanges = [], value, onChange, er
   const getSelectionText = (): string | null => {
     if (!value.from) return null;
     if (value.to) {
-      if (isSameDay(value.from, value.to)) {
-        return `Обрано: ${format(value.from, "d MMMM yyyy", { locale: uk })}`;
-      }
+      if (isSameDay(value.from, value.to)) return `Обрано: ${format(value.from, "d MMMM yyyy", { locale: uk })}`;
       return `Обрано: ${format(value.from, "d MMMM", { locale: uk })} – ${format(value.to, "d MMMM yyyy", {
         locale: uk,
       })}`;
@@ -159,21 +127,11 @@ export default function BookingCalendar({ bookedRanges = [], value, onChange, er
         <div className={styles.header}>
           <span className={styles.year}>{year}</span>
           <div className={styles.nav}>
-            <button
-              type="button"
-              className={styles.navBtn}
-              onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-              aria-label="Попередній місяць"
-            >
+            <button type="button" className={styles.navBtn} onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}>
               ‹
             </button>
             <span className={styles.month}>{monthName}</span>
-            <button
-              type="button"
-              className={styles.navBtn}
-              onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-              aria-label="Наступний місяць"
-            >
+            <button type="button" className={styles.navBtn} onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}>
               ›
             </button>
           </div>
