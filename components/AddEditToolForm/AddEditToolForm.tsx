@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 
 import styles from "./AddEditToolForm.module.css";
 import { createTool, getCategories, updateTool } from "@/lib/api/clientApi";
@@ -113,6 +114,7 @@ export default function AddEditToolForm({
   const router = useRouter();
   const [preview, setPreview] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     getCategories()
@@ -169,6 +171,11 @@ export default function AddEditToolForm({
       const tool = await (toolId
         ? updateTool(toolId, formData)
         : createTool(formData));
+
+      await queryClient.invalidateQueries({ queryKey: ["tools"] });
+      await queryClient.invalidateQueries({ queryKey: ["user-tools"] });
+
+      router.refresh();
 
       toast.success(toolId ? "Інструмент оновлено!" : "Інструмент створено!");
 

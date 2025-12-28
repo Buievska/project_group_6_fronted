@@ -11,7 +11,6 @@ export interface ToolFormValues {
   specifications?: string;
 
   images: File | null;
-
 }
 
 export interface Tool {
@@ -33,7 +32,11 @@ export interface Tool {
     rate: number;
   };
   rentalTerms?: string;
-  bookedDates: { from: string; to: string }[];
+  bookedDates: {
+    from: string;
+    to: string;
+    userId: string;
+  }[];
 }
 export interface ToolFormInitialValues {
   name: string;

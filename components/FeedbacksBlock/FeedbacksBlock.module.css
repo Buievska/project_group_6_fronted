@@ -80,6 +80,7 @@
   color: #000;
   flex-grow: 1;
   margin: 0;
+  min-height: 90px;
 }
 
 .feedbackAuthor {
@@ -90,33 +91,93 @@
   margin: 0;
 }
 
-/* Navigation */
+/* Navigation Block */
 .navigationBlock {
-  position: relative;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  height: 40px;
+  align-items: center; /* Змінено з flex-end на center */
+  margin-top: 24px;
 }
 
+/* Custom Pagination - крапки зліва, вирівняні по центру */
 .customPagination {
-  position: absolute;
-  left: 40px !important;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex !important;
-  gap: 8px;
+  display: flex;
   align-items: center;
-  width: auto !important;
+  gap: 8px;
+  min-height: 40px; /* Висота як у кнопок для вертикального центрування */
 }
 
+/* Pagination Dots */
+.paginationDot {
+  border: none;
+  border-radius: 50%;
+  background: #c4c4c4;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.paginationDot:hover {
+  background: #999;
+}
+
+.dotActive {
+  background: #000 !important;
+}
+
+/* Розміри крапок */
+.dotLarge {
+  width: 12px;
+  height: 12px;
+}
+
+.dotMedium {
+  width: 10px;
+  height: 10px;
+}
+
+.dotSmall {
+  width: 6px;
+  height: 6px;
+  opacity: 0.5;
+}
+
+/* Navigation Buttons - кнопки справа */
 .navigationButtons {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: 8px;
+}
+
+.paginationDot:hover {
+  background: #999;
+}
+
+.dotActive {
+  background: #000 !important;
+}
+
+/* Розміри крапок */
+.dotLarge {
+  width: 12px;
+  height: 12px;
+}
+
+.dotMedium {
+  width: 10px;
+  height: 10px;
+}
+
+.dotSmall {
+  width: 6px;
+  height: 6px;
+  opacity: 0.5;
+}
+
+/* Navigation Buttons - кнопки справа */
+.navigationButtons {
+  display: flex;
+  gap: 8px;
 }
 
 /* Buttons */
@@ -169,23 +230,6 @@
   pointer-events: none;
 }
 
-/* Pagination */
-.customPagination :global(.swiper-pagination-bullet) {
-  background: #666;
-  opacity: 0.3;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-}
-
-.customPagination :global(.swiper-pagination-bullet-active) {
-  background: #000;
-  opacity: 1;
-  width: 12px;
-  height: 12px;
-}
-
 /* States */
 .loadingState,
 .errorState,
@@ -202,7 +246,6 @@
 .leaveFeedbackBtn {
   background: #f5f5f5;
   color: #000;
-
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
@@ -317,7 +360,7 @@
   }
 
   .navigationBlock {
-    height: 44px;
+    margin-top: 32px;
   }
 
   .navigationButtons :global(.swiper-button-prev-custom),
@@ -386,8 +429,7 @@
   }
 }
 
-/* ===== Кнопки навігації ===== */
-
+/* ===== Кнопки навігації - приховування ===== */
 .hideAlways {
   display: none !important;
 }
@@ -402,11 +444,4 @@
   .hideDesktop {
     display: none !important;
   }
-}
-
-.navigationBlock {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 24px;
 }
