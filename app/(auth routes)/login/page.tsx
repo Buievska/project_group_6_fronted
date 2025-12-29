@@ -24,22 +24,17 @@ const SignIn = () => {
     setServerError("");
 
     try {
-      // 1. Зберігаємо результат у змінну response
       const response = await login(values);
 
-      // 2. Зберігаємо статус входу
-      localStorage.setItem("isLoggedIn", "true");
-
-      // 3. Перевіряємо response і робимо редірект
       if (response) {
-        // Якщо потрібно просто на головну:
+        localStorage.setItem("isLoggedIn", "true");
+
         const redirectTo = searchParams.get("from") || "/";
         router.push(redirectTo);
       } else {
         setServerError("Неправильна електронна адреса або пароль");
       }
     } catch (error) {
-      // 4. Правильна обробка помилок TypeScript з axios
       if (axios.isAxiosError(error)) {
         const message = error.response?.data?.message || "Помилка сервера";
         setServerError(message);
