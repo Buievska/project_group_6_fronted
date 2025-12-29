@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -59,7 +58,6 @@ const formatLocalDate = (date: Date) => {
 export default function BookingToolForm({ toolId }: BookingToolFormProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
-
   const { user } = useAuthStore();
 
   const {
@@ -129,15 +127,12 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
     },
     onError: (err: unknown) => {
       let message = "Сталася помилка";
-
       if (typeof err === "object" && err !== null) {
         const e = err as ApiError;
-
         if (e.response?.data?.message) {
           message = e.response.data.message;
         }
       }
-
       toast.error(message);
     },
   });
@@ -179,96 +174,111 @@ export default function BookingToolForm({ toolId }: BookingToolFormProps) {
         onSubmit={handleSubmit}
         enableReinitialize
       >
-        <Form className={styles.form}>
-          <fieldset className={`${styles.fieldGroup} ${styles.fieldsetReset}`}>
+        {({ errors, touched }) => (
+          <Form className={styles.form}>
+            <fieldset
+              className={`${styles.fieldGroup} ${styles.fieldsetReset}`}
+            >
+              <div className={styles.inputWrapper}>
+                <label className={styles.label}>Ім&rsquo;я</label>
+                <Field
+                  className={`${styles.input} ${errors.firstName && touched.firstName ? styles.inputError : ""}`}
+                  name="firstName"
+                />
+                <ErrorMessage
+                  name="firstName"
+                  component="span"
+                  className={styles.errorText}
+                />
+              </div>
+              <div className={styles.inputWrapper}>
+                <label className={styles.label}>Прізвище</label>
+                <Field
+                  className={`${styles.input} ${errors.lastName && touched.lastName ? styles.inputError : ""}`}
+                  name="lastName"
+                />
+                <ErrorMessage
+                  name="lastName"
+                  component="span"
+                  className={styles.errorText}
+                />
+              </div>
+            </fieldset>
+
             <div className={styles.inputWrapper}>
-              <label className={styles.label}>Ім&rsquo;я</label>
-              <Field className={styles.input} name="firstName" />
+              <label className={styles.label}>Телефон</label>
+              <Field
+                className={`${styles.input} ${errors.phone && touched.phone ? styles.inputError : ""}`}
+                name="phone"
+                placeholder="+380XXXXXXXXX"
+              />
               <ErrorMessage
-                name="firstName"
+                name="phone"
                 component="span"
                 className={styles.errorText}
               />
             </div>
-            <div className={styles.inputWrapper}>
-              <label className={styles.label}>Прізвище</label>
-              <Field className={styles.input} name="lastName" />
-              <ErrorMessage
-                name="lastName"
-                component="span"
-                className={styles.errorText}
-              />
-            </div>
-          </fieldset>
 
-          <div className={styles.inputWrapper}>
-            <label className={styles.label}>Телефон</label>
-            <Field
-              className={styles.input}
-              name="phone"
-              placeholder="+380XXXXXXXXX"
-            />
-            <ErrorMessage
-              name="phone"
-              component="span"
-              className={styles.errorText}
-            />
-          </div>
-
-          <div className={styles.calendarBox}>
-            <CalendarField
-              bookedRanges={tool.bookedDates
-
-                .filter((d) => String(d.userId) === String(user?._id))
-                .map((d) => ({
+            <div className={styles.calendarBox}>
+              <label className={styles.label}>Оберіть період оренди</label>
+              <CalendarField
+                bookedRanges={tool.bookedDates.map((d) => ({
                   from: new Date(d.from),
                   to: new Date(d.to),
                 }))}
-            />
-            <ErrorMessage name="dateRange">
-              {(msg: string | Record<string, string>) => {
-                const errorDisplay =
-                  typeof msg === "string" ? msg : Object.values(msg)[0];
-
-                return errorDisplay ? (
-                  <span className={styles.errorText}>{errorDisplay}</span>
-                ) : null;
-              }}
-            </ErrorMessage>
-          </div>
-
-          <fieldset className={`${styles.fieldGroup} ${styles.fieldsetReset}`}>
-            <div className={styles.inputWrapper}>
-              <label className={styles.label}>Місто</label>
-              <Field className={styles.input} name="deliveryCity" />
-              <ErrorMessage
-                name="deliveryCity"
-                component="span"
-                className={styles.errorText}
               />
+              <ErrorMessage name="dateRange">
+                {(msg: string | Record<string, string>) => {
+                  const errorDisplay =
+                    typeof msg === "string" ? msg : Object.values(msg)[0];
+                  return errorDisplay ? (
+                    <span className={styles.errorText}>{errorDisplay}</span>
+                  ) : null;
+                }}
+              </ErrorMessage>
             </div>
-            <div className={styles.inputWrapper}>
-              <label className={styles.label}>Відділення НП</label>
-              <Field className={styles.input} name="deliveryBranch" />
-              <ErrorMessage
-                name="deliveryBranch"
-                component="span"
-                className={styles.errorText}
-              />
-            </div>
-          </fieldset>
 
-          <div className={styles.formActions}>
-            <PriceBlock pricePerDay={tool.pricePerDay} />
-            <button
-              className={styles.button}
-              type="submit"
-              disabled={isPending}
+            <fieldset
+              className={`${styles.fieldGroup} ${styles.fieldsetReset}`}
             >
-              {isPending ? "Бронювання..." : "Забронювати"}
-            </button>
-          </div>
-        </Form>
+              <div className={styles.inputWrapper}>
+                <label className={styles.label}>Місто</label>
+                <Field
+                  className={`${styles.input} ${errors.deliveryCity && touched.deliveryCity ? styles.inputError : ""}`}
+                  name="deliveryCity"
+                />
+                <ErrorMessage
+                  name="deliveryCity"
+                  component="span"
+                  className={styles.errorText}
+                />
+              </div>
+              <div className={styles.inputWrapper}>
+                <label className={styles.label}>Відділення НП</label>
+                <Field
+                  className={`${styles.input} ${errors.deliveryBranch && touched.deliveryBranch ? styles.inputError : ""}`}
+                  name="deliveryBranch"
+                />
+                <ErrorMessage
+                  name="deliveryBranch"
+                  component="span"
+                  className={styles.errorText}
+                />
+              </div>
+            </fieldset>
+
+            <div className={styles.formActions}>
+              <PriceBlock pricePerDay={tool.pricePerDay} />
+              <button
+                className={styles.button}
+                type="submit"
+                disabled={isPending}
+              >
+                {isPending ? "Бронювання..." : "Забронювати"}
+              </button>
+            </div>
+          </Form>
+        )}
       </Formik>
     </section>
   );
